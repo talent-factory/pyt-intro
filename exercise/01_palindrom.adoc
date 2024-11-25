@@ -1,0 +1,74 @@
+= Aufgabe: Palindrom-Checker erstellen und testen
+
+== Aufgabenbeschreibung
+
+Ein Palindrom ist ein Wort, eine Zahl oder ein Satz, der vorwärts und rückwärts gelesen dasselbe ergibt.
+Beispiele für Palindrome sind:
+
+** `radar`
+** `otto`
+** `rentner`
+** `12321`
+
+Deine Aufgabe ist es, eine Python-Funktion zu erstellen, die überprüft, ob ein übergebener String ein Palindrom ist.
+Zusätzlich sollst du die Funktion mithilfe von doctest testen.
+
+== Anforderungen
+
+=== 1. Funktion schreiben
+
+** Erstelle eine Funktion mit dem Namen ist_palindrom, die einen Parameter text annimmt.
+** Die Funktion soll True zurückgeben, wenn der übergebene String ein Palindrom ist, und False, wenn nicht.
+** Die Funktion soll nicht auf Groß- und Kleinschreibung achten und Leerzeichen ignorieren.
+
+Beispiel:
+
+[source,python]
+----
+>>> is_palindrom("Otto")
+True
+>>> is_palindrom("Hallo")
+False
+>>> is_palindrom("Lagerregal")
+True
+----
+
+=== 2. Doctest hinzufügen
+
+* Füge die Beispiele aus der Aufgabenbeschreibung als doctest in den Docstring der Funktion ein.
+* Stelle sicher, dass der doctest erfolgreich durchgeführt werden kann.
+
+=== 3. Die Funktion testen
+
+* Teste deine Funktion direkt aus dem Python-Skript heraus, indem du doctest verwendest.
+'''
+
+*Hinweise*
+
+* *String-Operationen*:
++
+Du kannst die Methode `.lower()` verwenden, um den String in Kleinbuchstaben umzuwandeln,
+und `.replace(" ", "")`, um Leerzeichen zu entfernen.
+* *Umkehren eines Strings*:
++
+In Python kannst du einen String mit `text[::-1]` umkehren.
+* *Doctest ausführen*:
++
+Um doctest auszuführen, kannst du den folgenden Code am Ende deines Skripts einfügen:
++
+[source,python]
+----
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+----
+
+*Erwartetes Ergebnis*
+
+Am Ende solltest du ein Python-Skript erstellt haben, das:
+
+1. Eine korrekt arbeitende Funktion `ist_palindrom` enthält.
+2. Die Funktion mit `doctest` überprüft.
+3. Für alle genannten Testfälle (z. B. `Otto`, `Hallo`, `Lagerregal`) die korrekten Ergebnisse liefert.
+
+Viel Erfolg! 😊
