@@ -23,7 +23,7 @@ Zusätzlich sollst du die Funktion mithilfe von doctest testen.
 
 Beispiel:
 
-[source,python]
+[source,pycon]
 ----
 >>> is_palindrom("Otto")
 True

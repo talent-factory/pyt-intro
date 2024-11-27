@@ -22,17 +22,17 @@ Die Funktion soll ein Dictionary mit diesen Informationen zurückgeben.
 
 Füge folgende Testfälle als Doctest hinzu:
 
-[source,python]
+[source,pycon]
 ----
 >>> result = analyze_text("Hello World! Python is amazing.")
 >>> result['word_count']
-4
+5
 >>> result['longest_word']
 'amazing'
 >>> result['avg_word_length']
 5.0
 >>> sorted(result['letter_frequency'].items())[:3]
-[('a', 3), ('d', 1), ('e', 1)]
+[('a', 2), ('d', 1), ('e', 1)]
 ----
 
 === 3. Implementierung

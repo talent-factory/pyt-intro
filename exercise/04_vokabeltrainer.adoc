@@ -1,0 +1,32 @@
+= Aufgabe: Vokabeltrainer
+
+== Aufgabenbeschreibung
+
+Entwickle einen einfachen Vokabeltrainer, der Wörter in verschiedenen Sprachen speichert und abfragt.
+Das Programm soll Mengen (sets) für das Tracking bereits gelernter Wörter und Dictionaries für die Übersetzungen verwenden.
+
+== Anforderungen
+
+=== 1. Klasse implementieren
+
+Erstelle eine Klasse `VocabularyTrainer` mit folgenden Methoden:
+
+* `add_word(word, translation, language="EN")`: Fügt ein neues Wort hinzu
+* `practice_word()`: Wählt zufällig ein Wort aus und fragt die Übersetzung ab
+* `mark_as_learned(word)`: Markiert ein Wort als gelernt
+* `get_statistics()`: Gibt Statistiken über gelernte/nicht gelernte Wörter zurück
+
+=== 2. Doctest erstellen
+
+[source,pycon]
+----
+>>> trainer = VocabularyTrainer()
+>>> trainer.add_word("house", "Haus")
+>>> trainer.add_word("cat", "Katze")
+>>> trainer.mark_as_learned("house")
+>>> stats = trainer.get_statistics()
+>>> stats["learned_count"]
+1
+>>> stats["total_count"]
+2
+----

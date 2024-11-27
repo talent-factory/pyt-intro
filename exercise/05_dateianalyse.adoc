@@ -1,0 +1,40 @@
+= Aufgabe: Dateianalyse-Tool
+
+== Aufgabenbeschreibung
+
+Entwickle ein Tool zur Analyse von Textdateien, das verschiedene Statistiken erstellt und die Ergebnisse in verschiedenen Formaten ausgeben kann.
+Kombiniere dabei die Konzepte von Dateihandling, Mengen, Dictionaries und Listen.
+
+== Anforderungen
+
+=== 1. Klasse implementieren
+
+Erstelle eine Klasse `FileAnalyzer` mit folgenden Methoden:
+
+* `analyze_file(filename)`: Liest und analysiert eine Textdatei
+* `get_word_frequency()`: Gibt die Häufigkeit aller Wörter zurück
+* `get_unique_words()`: Gibt eine Liste aller einzigartigen Wörter zurück
+* `export_statistics(format="dict")`: Exportiert die Statistiken in verschiedenen Formaten (dict/list/set)
+* `find_similar_words(word)`: Findet ähnliche Wörter basierend auf gemeinsamen Buchstaben
+
+=== 2. Doctest erstellen
+
+[source,pycon]
+----
+>>> analyzer = FileAnalyzer()
+>>> analyzer.analyze_file("sample.txt")  # Enthält: "Hello world hello python"
+>>> analyzer.get_unique_words()
+['hello', 'python', 'world']
+>>> freq = analyzer.get_word_frequency()
+>>> freq['hello']
+2
+>>> similar = analyzer.find_similar_words('python')
+>>> 'python' in similar
+True
+----
+
+=== 3. Zusatzanforderungen
+
+* Implementiere eine Fehlerbehandlung für nicht existierende Dateien
+* Füge eine Methode hinzu, die die häufigsten N Wörter zurückgibt
+* Implementiere eine Methode zur Visualisierung der Worthäufigkeiten
