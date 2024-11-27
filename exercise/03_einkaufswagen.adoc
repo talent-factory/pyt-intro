@@ -1,0 +1,33 @@
+= Aufgabe: Einkaufswagen-Verwaltung
+
+== Aufgabenbeschreibung
+
+Implementiere eine Klasse `ShoppingCart`, die einen Einkaufswagen verwaltet. Die Klasse soll die Konzepte von Dictionaries und Listen kombinieren und verschiedene Methoden zur Verwaltung der Artikel bieten.
+
+== Anforderungen
+
+=== 1. Klasse implementieren
+
+Die Klasse soll folgende Methoden bieten:
+
+* `add_item(name, price, quantity=1)`: Fügt einen Artikel hinzu oder erhöht die Menge
+* `remove_item(name, quantity=1)`: Entfernt eine bestimmte Menge eines Artikels
+* `get_total()`: Berechnet die Gesamtsumme
+* `get_item_count()`: Gibt die Gesamtanzahl der Artikel zurück
+* `clear()`: Leert den Einkaufswagen
+
+=== 2. Doctest erstellen
+
+[source,python]
+----
+>>> cart = ShoppingCart()
+>>> cart.add_item("Apfel", 0.5, 3)
+>>> cart.add_item("Banane", 0.3, 2)
+>>> cart.get_total()
+2.1
+>>> cart.get_item_count()
+5
+>>> cart.remove_item("Apfel", 1)
+>>> cart.get_total()
+1.6
+----
