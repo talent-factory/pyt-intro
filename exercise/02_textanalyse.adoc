@@ -1,0 +1,85 @@
+= Aufgabe: Einfache Textanalyse
+
+== Aufgabenbeschreibung
+
+Erstelle eine Funktion `analyze_text`, die einen Text analysiert und verschiedene Informationen darüber zurückgibt.
+Die Funktion soll die Konzepte aus den Kapiteln zu Strings, Listen und Dictionaries kombinieren.
+
+== Anforderungen
+
+=== 1. Funktion schreiben
+
+Erstelle eine Funktion `analyze_text`, die:
+
+* Die Anzahl der Wörter zählt
+* Die Häufigkeit jedes Buchstabens ermittelt (case-insensitive)
+* Das längste Wort findet
+* Die durchschnittliche Wortlänge berechnet
+
+Die Funktion soll ein Dictionary mit diesen Informationen zurückgeben.
+
+=== 2. Doctest hinzufügen
+
+Füge folgende Testfälle als Doctest hinzu:
+
+[source,python]
+----
+>>> result = analyze_text("Hello World! Python is amazing.")
+>>> result['word_count']
+4
+>>> result['longest_word']
+'amazing'
+>>> result['avg_word_length']
+5.0
+>>> sorted(result['letter_frequency'].items())[:3]
+[('a', 3), ('d', 1), ('e', 1)]
+----
+
+=== 3. Implementierung
+
+Hier ein Grundgerüst für die Implementierung:
+
+[source,python]
+----
+def analyze_text(text):
+    """
+    Analysiert einen Text und gibt verschiedene Statistiken zurück.
+
+    Args:
+        text (str): Der zu analysierende Text
+
+    Returns:
+        dict: Dictionary mit verschiedenen Textstatistiken
+
+    Examples:
+        >>> result = analyze_text("Hello World! Python is amazing.")
+        >>> result['word_count']
+        5
+        >>> result['longest_word']
+        'amazing'
+        >>> result['avg_word_length']
+        5.0
+        >>> sorted(result['letter_frequency'].items())[:3]
+        [('a', 2), ('d', 1), ('e', 1)]
+    """
+    # Implementierung hier einfügen
+    pass
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+----
+
+*Hinweise*
+
+* Nutze `.split()` um den Text in Wörter zu zerlegen
+* Verwende ein Dictionary für die Buchstabenhäufigkeit
+* Entferne Satzzeichen vor der Analyse
+* Nutze list comprehension für effizientere Berechnungen
+
+Diese erste Aufgabe kombiniert verschiedene grundlegende Konzepte:
+
+* Strings und deren Methoden
+* Listen und Listenoperationen
+* Dictionaries zur Datenspeicherung
+* Grundlegende mathematische Operationen
