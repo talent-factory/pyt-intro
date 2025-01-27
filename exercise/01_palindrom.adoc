@@ -25,11 +25,11 @@ Beispiel:
 
 [source,pycon]
 ----
->>> is_palindrom("Otto")
+>>> is_palindrome("Otto")
 True
->>> is_palindrom("Hallo")
+>>> is_palindrome("Hallo")
 False
->>> is_palindrom("Lagerregal")
+>>> is_palindrome("Lagerregal")
 True
 ----
 
@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
 Am Ende solltest du ein Python-Skript erstellt haben, das:
 
-1. Eine korrekt arbeitende Funktion `ist_palindrom` enthält.
+1. Eine korrekt arbeitende Funktion `is_palindrome` enthält.
 2. Die Funktion mit `doctest` überprüft.
 3. Für alle genannten Testfälle (z. B. `Otto`, `Hallo`, `Lagerregal`) die korrekten Ergebnisse liefert.
 
