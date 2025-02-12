@@ -2,8 +2,8 @@
 # transition.py
 #-----------------------------------------------------------------------
 
-import stdio
 import stdarray
+import stdio
 
 # Read links from standard input and write the corresponding
 # transition matrix to standard output. First, process the input
@@ -11,15 +11,15 @@ import stdarray
 # compute the transition matrix. Assume that there are no pages that
 # have no outlinks in the input.
 
-n = stdio.read_int()
+n = stdio.read_number()
 
 linkCounts = stdarray.create_2d(n, n, 0)
 outDegrees = stdarray.create_1d(n, 0)
 
 while not stdio.is_empty():
     # Accumulate link counts.
-    i = stdio.read_int()
-    j = stdio.read_int()
+    i = stdio.read_number()
+    j = stdio.read_number()
     outDegrees[i] += 1
     linkCounts[i][j] += 1
 

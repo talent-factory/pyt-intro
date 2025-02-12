@@ -3,9 +3,11 @@
 #-----------------------------------------------------------------------
 
 import math
-import stdio
+
 import stdarray
 import stdaudio
+import stdio
+
 
 #-----------------------------------------------------------------------
 
@@ -51,7 +53,7 @@ def note(pitch, t):
 # the resulting the sound to standard audio.
 
 while not stdio.is_empty():
-    pitch = stdio.read_int()
+    pitch = stdio.read_number()
     duration = stdio.read_float()
     a = note(pitch, duration)
     stdaudio.playSamples(a)

@@ -2,9 +2,10 @@
 # markov.py
 #-----------------------------------------------------------------------
 
-import stdio
-import stdarray
 import sys
+
+import stdarray
+import stdio
 
 # Accept integer moves from the command-line, and read a transition
 # matrix from standard input. Compute the probabilities that a
@@ -14,8 +15,8 @@ import sys
 
 moves = int(sys.argv[1])
 
-n = stdio.read_int()
-stdio.read_int() # Discard the second int of standard input.
+n = stdio.read_number()
+stdio.read_number() # Discard the second int of standard input.
 
 # Read the transition matrix from standard input.
 # probs[i][j] is the probability that the surfer moves from

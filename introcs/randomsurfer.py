@@ -2,10 +2,11 @@
 # randomsurfer.py
 #-----------------------------------------------------------------------
 
-import stdio
-import stdarray
-import sys
 import random
+import sys
+
+import stdarray
+import stdio
 
 # Accept an integer moves as a command-line argument. Read a
 # transition matrix from standard input. Perform moves moves as
@@ -14,8 +15,8 @@ import random
 
 moves = int(sys.argv[1])
 
-n = stdio.read_int()
-stdio.read_int() # Discard the second int of standard input.
+n = stdio.read_number()
+stdio.read_number() # Discard the second int of standard input.
 
 # Read the transition matrix from standard input.
 # p[i][j] is the probability that the surfer moves from

@@ -3,9 +3,10 @@
 #-----------------------------------------------------------------------
 
 import math
-import stdio
+
 import stdarray
 import stdaudio
+import stdio
 
 # Read sound samples from standard input, and play the sound to
 # standard audio.
@@ -16,7 +17,7 @@ NOTES_ON_SCALE = 12.0
 
 while not stdio.is_empty():
 
-    pitch = stdio.read_int()
+    pitch = stdio.read_number()
     duration = stdio.read_float()
     hz = CONCERT_A * (2.0 ** (pitch / NOTES_ON_SCALE))
     n = int(SPS * duration)

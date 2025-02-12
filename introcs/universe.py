@@ -3,11 +3,14 @@
 #-----------------------------------------------------------------------
 
 import sys
+
 import stdarray
 import stddraw
-from body import Body 
 from instream import InStream
+
+from body import Body
 from vector import Vector
+
 
 #-----------------------------------------------------------------------
 
@@ -18,7 +21,7 @@ class Universe:
 
     def __init__(self, filename):
         instream = InStream(filename)
-        n = instream.read_int()
+        n = instream.read_number()
         radius = instream.read_float()
         stddraw.set_xscale(-radius, +radius)
         stddraw.set_yscale(-radius, +radius)
