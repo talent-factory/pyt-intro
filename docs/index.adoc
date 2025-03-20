@@ -1,0 +1,21 @@
+= Einführung: Programmieren mit Python
+:author: Daniel Senften
+:email: daniel.senften@gibb.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+:title-page:
+:pdf-theme: themes/pdf-theme.yml
+:title-page-background-image: image:title-image.png[top=0%, align=left, width=20%]
+:pdf-page-size: A4
+
+:referencde: https://pythonbuch.com/index.html
+
+include::01-einleitung.adoc[]

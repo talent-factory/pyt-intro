@@ -1,0 +1,29 @@
+== Einführung ins Programmieren
+
+:sourcedir: scripts
+
+In den meisten Programmiersprachen - so auch in Python - ist ein Programm eine einfache Textdatei, welche mit einem beliebigen Texteditor bearbeitet werden kann.
+
+Das Ausführen des Programms bedeutet einfach, dass Python die Anweisungen in der Textdatei Zeile für Zeile durcharbeitet, bis es am Ende der Datei angelangt ist.
+
+Das erste Beispielprogramm, welches üblicherweise in einer Programmiersprache verfasst wird, ist ein sogenanntes "Hello World"-Programm, welches nichts anderes macht, als den Text "Hello World" auf dem Bildschirm auszugeben.
+
+In Python ist ein solches Programm im Vergleich zu anderen Programmiersprachen sehr einfach umzusetzen.
+Es besteht nur aus einer Zeile:
+
+.hello.py
+[source,python,numbers]
+----
+include::{sourcedir}/hello.py[]
+----
+
+Die Zahl `1` vor dem Programm gehört nicht zum Programm.
+Dies ist die Zeilennummer.
+In diesem Skript sind alle Programme mit Zeilennummern versehen.
+Zeilennummern sind im Programmieren wichtig, um über Programme zu sprechen und Fehler zu finden.
+So wird zum Beispiel bei einer Fehlermeldung oft die Zeilennummer angegeben, wo der Fehler passiert ist.
+Die hilft dir dann, den Fehler in deinem Programm zu finden.
+
+
+=== Editoren und IDEs
+
