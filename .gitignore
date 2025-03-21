@@ -6,6 +6,7 @@
 .codebuddy/
 .idea/
 .ipynb_checkpoints/
+*.html
 
 **/__pycache__/
 
