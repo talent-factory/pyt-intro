@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "cs-py-intro"
+name = "pyt-intro"
 version = "1.0.0"
-description = "Python Einführung"
+description = "Einführung in Python"
 authors = ["Daniel Senften <daniel.senften@talent-factory.ch>"]
 license = "MIT"
 readme = "README.md"

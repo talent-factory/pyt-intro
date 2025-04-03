@@ -1,0 +1,256 @@
+= Tutorial: Testen von Funktionen mit Doctest
+:author: Daniel Senften
+:email: daniel.senften@gibb.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: coderay
+:icons: font
+:title-page:
+:pdf-page-size: A4
+
+== Einführung
+
+Doctest ist ein einfaches, aber mächtiges Test-Werkzeug, das in der Python-Standardbibliothek enthalten ist.
+Es ermöglicht das Schreiben von Tests direkt in der Dokumentation (Docstrings) einer Funktion.
+Diese Tests sehen aus wie Beispiele für die Verwendung der Funktion - was sie besonders nützlich für Anfänger macht.
+
+In diesem Tutorial lernen Sie:
+
+1. Wie man Doctests schreibt
+2. Wie man Doctests ausführt
+3. Vorteile von Doctests im Lernprozess
+
+== 1. Doctests schreiben
+
+Ein Doctest besteht aus einer Python-Prompt (`>>>`), gefolgt von einem Python-Ausdruck und dem erwarteten Ergebnis.
+
+[source,python]
+----
+def quadrat(x):
+    """
+    Berechnet das Quadrat einer Zahl.
+
+    Args:
+        x (int/float): Die zu quadrierende Zahl
+
+    Returns:
+        int/float: Das Quadrat der Eingabezahl
+
+    Beispiele:
+        >>> quadrat(2)
+        4
+        >>> quadrat(3.5)
+        12.25
+        >>> quadrat(-1)
+        1
+    """
+    return x * x
+----
+
+In diesem Beispiel enthält der Docstring drei Testfälle, die verschiedene Eingaben und die erwarteten Ausgaben zeigen.
+
+== 2. Doctests ausführen
+
+Es gibt zwei Hauptwege, um Doctests auszuführen:
+
+=== a) Innerhalb einer Datei
+
+Am Ende Ihrer Python-Datei können Sie folgenden Code hinzufügen:
+
+[source,python]
+----
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+----
+
+Wenn Sie die Datei ausführen, werden die Doctests automatisch durchgeführt:
+
+[source,bash]
+----
+$ python meine_funktionen.py
+----
+
+Wenn alle Tests bestehen, wird nichts ausgegeben.
+Für detailliertere Ausgaben können Sie die `-v` (verbose) Option verwenden:
+
+[source,bash]
+----
+$ python meine_funktionen.py -v
+----
+
+=== b) Von der Kommandozeile
+
+Sie können auch den Doctest-Modul direkt auf eine Datei anwenden:
+
+[source,bash]
+----
+$ python -m doctest meine_funktionen.py
+----
+
+== 3. Ein vollständiges Beispiel
+
+Hier ist ein vollständiges Beispiel für eine einfache Funktion zum Umrechnen von Celsius in Fahrenheit mit Doctests:
+
+[source,python]
+----
+def celsius_zu_fahrenheit(celsius):
+    """
+    Konvertiert eine Temperatur von Celsius zu Fahrenheit.
+
+    Die Formel lautet: F = C * 9/5 + 32
+
+    Args:
+        celsius (float): Die Temperatur in Celsius
+
+    Returns:
+        float: Die Temperatur in Fahrenheit
+
+    Beispiele:
+        >>> celsius_zu_fahrenheit(0)
+        32.0
+        >>> celsius_zu_fahrenheit(100)
+        212.0
+        >>> celsius_zu_fahrenheit(-40)
+        -40.0
+        >>> celsius_zu_fahrenheit(21)
+        69.8
+    """
+    return celsius * 9/5 + 32
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+----
+
+Wenn Sie diese Datei ausführen, erhalten Sie eine detaillierte Ausgabe darüber, welche Tests bestanden wurden.
+
+== 4. Besondere Fälle und Tipps
+
+=== Umgang mit Rundungsfehlern
+
+Bei Berechnungen mit Fließkommazahlen kann es zu Rundungsfehlern kommen.
+Sie können in solchen Fällen `doctest.ELLIPSIS` verwenden:
+
+[source,python]
+----
+def wurzel(x):
+    """
+    Berechnet die Quadratwurzel einer Zahl.
+
+    Args:
+        x (float): Die Zahl, von der die Wurzel berechnet werden soll
+
+    Returns:
+        float: Die Quadratwurzel der Eingabe
+
+    Beispiele:
+        >>> wurzel(4)
+        2.0
+        >>> wurzel(2)  # Rundungsfehler möglich
+        1.414...
+    """
+    return x ** 0.5
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(optionflags=doctest.ELLIPSIS)
+----
+
+=== Mehrzeilige Ausgaben
+
+Für Funktionen, die mehrzeilige Ausgaben erzeugen:
+
+[source,python]
+----
+def zahlenreihe(n):
+    """
+    Gibt eine formatierte Zahlenreihe von 1 bis n zurück.
+
+    Args:
+        n (int): Obergrenze der Zahlenreihe
+
+    Returns:
+        str: Formatierte Zahlenreihe
+
+    Beispiele:
+        >>> print(zahlenreihe(3))
+        Zahlenreihe:
+        1
+        2
+        3
+    """
+    result = "Zahlenreihe:\n"
+    for i in range(1, n+1):
+        result += f"{i}\n"
+    return result.rstrip()
+----
+
+== 5. Vorteile von Doctests
+
+1. *Dokumentation und Test in einem*: Doctests dienen sowohl als Beispiele für die Verwendung der Funktion als auch als Tests.
+
+2. *Leicht verständlich*: Besonders für Anfänger sind Doctests intuitiv zu verstehen.
+
+3. *Selbstüberprüfung*: Studenten können ihre Implementierungen selbst testen und unmittelbares Feedback erhalten.
+
+4. *Einfache Integration*: Keine zusätzlichen Dateien oder Frameworks notwendig.
+
+== 6. Praktische Übung
+
+Erstellen Sie eine Funktion `ist_palindrom(text)`, die prüft, ob ein Text vorwärts und rückwärts gelesen gleich ist.
+Schreiben Sie Doctests für verschiedene Testfälle.
+
+[source,python]
+----
+def ist_palindrom(text):
+    """
+    Prüft, ob ein Text ein Palindrom ist (vorwärts und rückwärts gelesen gleich).
+    Groß- und Kleinschreibung wird ignoriert, ebenso Leerzeichen.
+
+    Args:
+        text (str): Der zu prüfende Text
+
+    Returns:
+        bool: True, wenn der Text ein Palindrom ist, sonst False
+
+    Beispiele:
+        >>> ist_palindrom("Anna")
+        True
+        >>> ist_palindrom("Otto")
+        True
+        >>> ist_palindrom("Ein Neger mit Gazelle zagt im Regen nie")
+        True
+        >>> ist_palindrom("Python")
+        False
+        >>> ist_palindrom("")
+        True
+    """
+    # Entfernen von Leerzeichen und Umwandeln in Kleinbuchstaben
+    text = text.lower().replace(" ", "")
+    # Vergleichen des Texts mit seiner umgekehrten Version
+    return text == text[::-1]
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+----
+
+== Fazit
+
+Doctests sind ein hervorragendes Werkzeug für Anfänger, um das Testen von Code zu erlernen.
+Sie verbinden Dokumentation mit Tests und machen es einfach, Funktionen zu überprüfen.
+Durch die Integration von Doctests in Ihre Programmierübungen können Studierende lernen, systematisch zu testen und Fehler frühzeitig zu erkennen.
+
+Mit zunehmender Erfahrung können Sie auch fortgeschrittenere Test-Frameworks wie `unittest` oder `pytest` kennenlernen, aber für den Einstieg sind Doctests eine ausgezeichnete Wahl.
+
+== Weiterführende Ressourcen
+
+* Offizielle Python-Dokumentation zu Doctest: https://docs.python.org/3/library/doctest.html
+* Python Testing with pytest: https://www.amazon.de/Python-Testing-pytest-Brian-Okken/dp/1680502409/

@@ -1,0 +1,58 @@
+= Aufgabe 2: Einfacher Rechner mit Funktionen
+:author: Python Einführungskurs
+:revdate: 2025-03-27
+:source-highlighter: coderay
+
+== Beschreibung
+
+In dieser Aufgabe erstellen Sie mehrere Funktionen, die zusammen einen einfachen Rechner bilden.
+
+== Aufgabenstellung
+
+1. Erstellen Sie vier Funktionen:
+   * `addiere(a, b)`: Gibt die Summe von a und b zurück
+   * `subtrahiere(a, b)`: Gibt die Differenz von a und b zurück (a - b)
+   * `multipliziere(a, b)`: Gibt das Produkt von a und b zurück
+   * `dividiere(a, b)`: Gibt den Quotienten von a und b zurück (a / b)
+
+2. Achten Sie bei der Funktion `dividiere` darauf, dass eine Division durch 0 abgefangen wird. In diesem Fall soll die Funktion den Text "Division durch 0 nicht möglich" zurückgeben.
+
+3. Erstellen Sie eine weitere Funktion `rechner(operation, a, b)`, die:
+   * einen Parameter `operation` entgegennimmt (mögliche Werte: "+", "-", "*", "/")
+   * je nach übergebener Operation die entsprechende Funktion aufruft
+   * das Ergebnis zurückgibt
+   * bei einer ungültigen Operation den Text "Ungültige Operation" zurückgibt
+
+== Beispiel
+
+[source,python]
+----
+# So könnten Ihre Funktionen aussehen:
+def addiere(a, b):
+    # Ihr Code hier
+    pass
+
+# Weitere Funktionen hier...
+
+def rechner(operation, a, b):
+    # Ihr Code hier
+    pass
+
+# Beispielaufrufe:
+print(rechner("+", 5, 3))  # Sollte 8 ausgeben
+print(rechner("-", 10, 4))  # Sollte 6 ausgeben
+print(rechner("*", 3, 7))  # Sollte 21 ausgeben
+print(rechner("/", 8, 2))  # Sollte 4.0 ausgeben
+print(rechner("/", 8, 0))  # Sollte "Division durch 0 nicht möglich" ausgeben
+print(rechner("?", 5, 5))  # Sollte "Ungültige Operation" ausgeben
+----
+
+== Hinweise
+
+* Verwenden Sie `if`-`elif`-`else`-Anweisungen, um die verschiedenen Operationen zu unterscheiden.
+* Beachten Sie, dass die Division in Python mit dem Operator `/` immer ein Gleitkommazahl (float) zurückgibt.
+* Um zu prüfen, ob der zweite Parameter 0 ist, können Sie einen einfachen Vergleich verwenden: `if b == 0:`.
+
+== Abgabe
+
+Speichern Sie Ihre Lösung in einer Datei mit dem Namen `aufgabe2_loesung.py` und laden Sie diese hoch.

@@ -1,0 +1,78 @@
+= Aufgabe 4: Funktionen zur Listenverarbeitung
+:author: Python Einführungskurs
+:revdate: 2025-03-27
+:source-highlighter: coderay
+
+== Beschreibung
+
+In dieser Aufgabe erstellen Sie Funktionen, die mit Listen arbeiten und verschiedene Berechnungen durchführen.
+
+== Aufgabenstellung
+
+1. Erstellen Sie folgende Funktionen:
+
+   a) `liste_filtern(zahlen, minimum=0)`:
+      * nimmt eine Liste von Zahlen und einen optionalen Mindestwert entgegen
+      * gibt eine neue Liste zurück, die nur Zahlen enthält, die größer oder gleich dem Mindestwert sind
+
+   b) `mittelwert_berechnen(zahlen)`:
+      * nimmt eine Liste von Zahlen entgegen
+      * berechnet den Mittelwert (Durchschnitt) der Zahlen
+      * gibt diesen zurück
+      * wenn die Liste leer ist, soll 0 zurückgegeben werden
+
+   c) `statistik(zahlen)`:
+      * nimmt eine Liste von Zahlen entgegen
+      * ruft die Funktion `mittelwert_berechnen` auf
+      * findet das Minimum und Maximum der Liste
+      * gibt ein Dictionary mit den Schlüsseln "mittelwert", "minimum" und "maximum" zurück
+      * wenn die Liste leer ist, sollen alle Werte im Dictionary 0 sein
+
+2. Testen Sie Ihre Funktionen mit verschiedenen Listen.
+
+== Beispiel
+
+[source,python]
+----
+# So könnten Ihre Funktionen aussehen:
+def liste_filtern(zahlen, minimum=0):
+    # Ihr Code hier
+    pass
+
+def mittelwert_berechnen(zahlen):
+    # Ihr Code hier
+    pass
+
+def statistik(zahlen):
+    # Ihr Code hier
+    pass
+
+# Beispielaufrufe:
+meine_zahlen = [5, -3, 9, 1, -7, 4, 8]
+
+gefilterte_liste = liste_filtern(meine_zahlen)
+print(gefilterte_liste)  # Sollte [5, 9, 1, 4, 8] ausgeben
+
+gefilterte_liste_min_5 = liste_filtern(meine_zahlen, 5)
+print(gefilterte_liste_min_5)  # Sollte [5, 9, 8] ausgeben
+
+mittelwert = mittelwert_berechnen(meine_zahlen)
+print(mittelwert)  # Sollte ca. 2.4285... ausgeben
+
+stats = statistik(meine_zahlen)
+print(stats)
+# Sollte etwas wie {'mittelwert': 2.4285..., 'minimum': -7, 'maximum': 9} ausgeben
+----
+
+== Hinweise
+
+* Um eine neue Liste zu erstellen, die bestimmte Elemente einer anderen Liste enthält, können Sie die List Comprehension verwenden: `[element for element in liste if bedingung]`.
+* Der Mittelwert wird berechnet, indem Sie die Summe aller Zahlen durch die Anzahl der Zahlen teilen: `sum(zahlen) / len(zahlen)`.
+* Achten Sie auf die Behandlung von leeren Listen, um Division durch Null zu vermeiden.
+* Die Funktionen `min()` und `max()` können verwendet werden, um das Minimum bzw. Maximum einer Liste zu finden.
+* Ein Dictionary kann so erstellt werden: `{"schlüssel1": wert1, "schlüssel2": wert2}`.
+
+== Abgabe
+
+Speichern Sie Ihre Lösung in einer Datei mit dem Namen `aufgabe4_loesung.py` und laden Sie diese hoch.
+

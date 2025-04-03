@@ -1,0 +1,85 @@
+= Aufgabe 5: Passwort-Validator
+:author: Python Einführungskurs
+:revdate: 2025-03-27
+:source-highlighter: coderay
+
+== Beschreibung
+
+In dieser fortgeschrittenen Aufgabe erstellen Sie eine Reihe von Funktionen, die zusammen einen Passwort-Validator bilden.
+Diese Aufgabe kombiniert mehrere Konzepte: Funktionen, bedingte Anweisungen und Stringverarbeitung.
+
+== Aufgabenstellung
+
+1. Erstellen Sie folgende Hilfsfunktionen, die jeweils einen Boolean (True/False) zurückgeben:
+
+   a) `hat_mindestlaenge(passwort, laenge=8)`:
+      * prüft, ob das Passwort mindestens die angegebene Länge hat
+
+   b) `hat_kleinbuchstaben(passwort)`:
+      * prüft, ob das Passwort mindestens einen Kleinbuchstaben enthält
+
+   c) `hat_grossbuchstaben(passwort)`:
+      * prüft, ob das Passwort mindestens einen Großbuchstaben enthält
+
+   d) `hat_zahlen(passwort)`:
+      * prüft, ob das Passwort mindestens eine Zahl enthält
+
+   e) `hat_sonderzeichen(passwort)`:
+      * prüft, ob das Passwort mindestens ein Sonderzeichen enthält
+      * Als Sonderzeichen gelten: !@#$%^&*()_+-=[]{}|;':\",./<>?
+
+2. Erstellen Sie eine Hauptfunktion `passwort_pruefen(passwort)`, die:
+* alle Hilfsfunktionen aufruft
+* ein Dictionary zurückgibt, das für jede Regel angibt, ob sie erfüllt ist oder nicht
+* zusätzlich einen Schlüssel "gueltig" enthält, der True ist, wenn alle Regeln erfüllt sind, sonst False
+
+3. Erstellen Sie eine Funktion `passwort_feedback(passwort)`, die:
+* die Funktion `passwort_pruefen` für das Passwort aufruft
+* basierend auf dem Ergebnis einen hilfreichen Text zurückgibt, der dem Benutzer sagt:
+* ob das Passwort gültig ist
+* welche Regeln nicht erfüllt sind (falls welche nicht erfüllt sind)
+
+== Beispiel
+
+[source,python]
+----
+# So könnten Ihre Funktionen aussehen:
+def hat_mindestlaenge(passwort, laenge=8):
+    # Ihr Code hier
+    pass
+
+# Weitere Hilfsfunktionen hier...
+
+def passwort_pruefen(passwort):
+    # Ihr Code hier
+    pass
+
+def passwort_feedback(passwort):
+    # Ihr Code hier
+    pass
+
+# Beispielaufrufe:
+print(passwort_pruefen("abc"))
+# Mögliche Ausgabe: {'mindestlaenge': False, 'kleinbuchstaben': True, 'grossbuchstaben': False, 'zahlen': False, 'sonderzeichen': False, 'gueltig': False}
+
+print(passwort_pruefen("Sicheres-Passwort-123"))
+# Mögliche Ausgabe: {'mindestlaenge': True, 'kleinbuchstaben': True, 'grossbuchstaben': True, 'zahlen': True, 'sonderzeichen': True, 'gueltig': True}
+
+print(passwort_feedback("abc"))
+# Mögliche Ausgabe: "Das Passwort ist nicht gültig. Folgende Regeln sind nicht erfüllt: Mindestlänge, Großbuchstaben, Zahlen, Sonderzeichen."
+
+print(passwort_feedback("Sicheres-Passwort-123"))
+# Mögliche Ausgabe: "Das Passwort ist gültig und erfüllt alle Sicherheitsregeln."
+----
+
+== Hinweise
+
+* Um zu prüfen, ob ein Zeichen in einem String vorkommt, können Sie die `for`-Schleife verwenden: `for zeichen in string:`.
+* Alternativ können Sie auch mit der `any()`-Funktion prüfen: `any(zeichen in sonderzeichen for zeichen in passwort)`.
+* Um zu prüfen, ob ein Zeichen ein Kleinbuchstabe ist, können Sie die Methode `islower()` verwenden: `zeichen.islower()`.
+* Ähnlich gibt es für Großbuchstaben `isupper()` und für Zahlen `isdigit()`.
+* Beachten Sie, dass `islower()` und `isupper()` nur für einzelne Buchstaben das gewünschte Ergebnis liefern, nicht für Strings mit mehreren Zeichen.
+
+== Abgabe
+
+Speichern Sie Ihre Lösung in einer Datei mit dem Namen `aufgabe5_loesung.py` und laden Sie diese hoch.

@@ -1,0 +1,56 @@
+= Aufgabe 3: Funktionen mit verschiedenen Parameterarten
+:author: Python Einführungskurs
+:revdate: 2025-03-27
+:source-highlighter: coderay
+
+== Beschreibung
+
+In dieser Aufgabe lernen Sie verschiedene Arten von Funktionsparametern in Python kennen.
+
+== Aufgabenstellung
+
+1. Erstellen Sie eine Funktion `bestellung_aufgeben`, die folgende Parameter hat:
+   * `gericht` - ein Pflichtparameter für den Namen des Hauptgerichts
+   * `beilage` - ein optionaler Parameter mit dem Standardwert "Pommes"
+   * `getränk` - ein optionaler Parameter mit dem Standardwert "Wasser"
+   * `nachtisch` - ein optionaler Parameter mit dem Standardwert `None`
+
+2. Die Funktion soll einen Text zurückgeben, der die Bestellung zusammenfasst:
+   * Wenn kein Nachtisch bestellt wurde (also `nachtisch=None`): "Bestellung: [gericht] mit [beilage] und [getränk] zum Trinken."
+   * Wenn ein Nachtisch bestellt wurde: "Bestellung: [gericht] mit [beilage], [getränk] zum Trinken und [nachtisch] als Nachtisch."
+
+3. Testen Sie Ihre Funktion mit verschiedenen Aufrufen, bei denen Sie unterschiedliche Kombinationen von Parametern angeben.
+
+== Beispiel
+
+[source,python]
+----
+# So könnte Ihre Funktion aussehen:
+def bestellung_aufgeben(gericht, beilage="Pommes", getränk="Wasser", nachtisch=None):
+    # Ihr Code hier
+    pass
+
+# Beispielaufrufe:
+print(bestellung_aufgeben("Schnitzel"))
+# Sollte ausgeben: "Bestellung: Schnitzel mit Pommes und Wasser zum Trinken."
+
+print(bestellung_aufgeben("Fisch", "Reis"))
+# Sollte ausgeben: "Bestellung: Fisch mit Reis und Wasser zum Trinken."
+
+print(bestellung_aufgeben("Pizza", getränk="Cola"))
+# Sollte ausgeben: "Bestellung: Pizza mit Pommes und Cola zum Trinken."
+
+print(bestellung_aufgeben("Burger", "Salat", "Limonade", "Eis"))
+# Sollte ausgeben: "Bestellung: Burger mit Salat, Limonade zum Trinken und Eis als Nachtisch."
+----
+
+== Hinweise
+
+* Optionale Parameter werden definiert, indem Sie einen Standardwert angeben: `parameter=standardwert`.
+* Beim Aufruf einer Funktion können Sie Parameter in der Reihenfolge ihrer Definition angeben oder durch Nennung ihres Namens: `parameter=wert`.
+* Sie können `if`-Anweisungen verwenden, um zu prüfen, ob ein Parameter einen bestimmten Wert hat.
+
+== Abgabe
+
+Speichern Sie Ihre Lösung in einer Datei mit dem Namen `aufgabe3_loesung.py` und laden Sie diese hoch.
+

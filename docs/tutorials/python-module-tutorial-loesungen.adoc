@@ -1,0 +1,913 @@
+= Musterlösungen zu den Python-Übungsaufgaben
+:author: Daniel Senften
+:email: daniel.senften@gibb.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+:title-page:
+:pdf-page-size: A4
+
+== 1. Externe Module in Python
+
+=== Übungsaufgabe 1.1
+
+*Aufgabe:* Schreiben Sie ein Programm, das das Modul `random` importiert und eine zufällige Zahl zwischen 1 und 100 ausgibt.
+
+*Lösung:*
+
+[source,python]
+----
+import random
+
+# Generiert eine zufällige Zahl zwischen 1 und 100 (inklusive)
+zufallszahl = random.randint(1, 100)
+print(f"Zufällige Zahl: {zufallszahl}")
+----
+
+=== Übungsaufgabe 1.2
+
+*Aufgabe:* Importieren Sie nur die Funktion `choice` aus dem Modul `random` und wählen Sie einen zufälligen Wochentag aus einer Liste von Wochentagen aus.
+
+*Lösung:*
+
+[source,python]
+----
+from random import choice
+
+# Liste der Wochentage
+wochentage = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
+
+# Wählt einen zufälligen Wochentag aus
+zufallstag = choice(wochentage)
+print(f"Zufälliger Wochentag: {zufallstag}")
+----
+
+=== Übungsaufgabe 1.3
+
+*Aufgabe:* Importieren Sie das Modul `datetime` mit dem Alias `dt` und geben Sie das aktuelle Datum und die aktuelle Uhrzeit aus.
+
+*Lösung:*
+
+[source,python]
+----
+import datetime as dt
+
+# Aktuelles Datum und aktuelle Uhrzeit
+jetzt = dt.datetime.now()
+print(f"Aktuelles Datum und Uhrzeit: {jetzt}")
+
+# Formatierte Ausgabe
+datum_formatiert = jetzt.strftime("%d.%m.%Y")
+zeit_formatiert = jetzt.strftime("%H:%M:%S")
+print(f"Datum: {datum_formatiert}")
+print(f"Uhrzeit: {zeit_formatiert}")
+----
+
+== 2. Wie Python Module findet
+
+=== Übungsaufgabe 2.1
+
+*Aufgabe:* Schreiben Sie ein Programm, das den aktuellen Python-Suchpfad ausgibt und zählt, wie viele Verzeichnisse enthalten sind.
+
+*Lösung:*
+
+[source,python]
+----
+import sys
+
+# Ausgabe des Python-Suchpfads
+print("Python-Suchpfad:")
+for i, pfad in enumerate(sys.path, 1):
+    print(f"{i}. {pfad}")
+
+# Zählen der Verzeichnisse
+anzahl_verzeichnisse = len(sys.path)
+print(f"\nAnzahl der Verzeichnisse im Suchpfad: {anzahl_verzeichnisse}")
+----
+
+=== Übungsaufgabe 2.2
+
+*Aufgabe:* Erstellen Sie eine virtuelle Umgebung für ein neues Projekt und aktivieren Sie diese.
+Überprüfen Sie mit `pip list`, welche Module bereits installiert sind.
+
+*Lösung:*
+
+[source,bash]
+----
+# Erstellen der virtuellen Umgebung
+# Unter Windows
+python -m venv mein_projekt_env
+
+# Unter macOS/Linux
+# python3 -m venv mein_projekt_env
+
+# Aktivieren der virtuellen Umgebung
+# Unter Windows
+mein_projekt_env\Scripts\activate
+
+# Unter macOS/Linux
+# source mein_projekt_env/bin/activate
+
+# Anzeigen der installierten Module
+pip list
+----
+
+=== Übungsaufgabe 2.3
+
+*Aufgabe:* Schreiben Sie ein eigenes kleines Modul `helper.py` mit einer Funktion `gruss()`, die einen Begrüßungstext ausgibt.
+Importieren Sie dieses Modul in einem anderen Skript und rufen Sie die Funktion auf.
+
+*Lösung:*
+
+Datei: `helper.py`
+
+[source,python]
+----
+def gruss(name="Welt"):
+    """
+    Gibt einen personalisierten Begrüßungstext aus.
+    
+    Args:
+        name (str): Der Name der zu begrüßenden Person. Standard ist "Welt".
+    """
+    print(f"Hallo, {name}! Willkommen zum Python-Kurs.")
+
+def verabschiedung(name="Welt"):
+    """
+    Gibt einen personalisierten Verabschiedungstext aus.
+    
+    Args:
+        name (str): Der Name der zu verabschiedenden Person. Standard ist "Welt".
+    """
+    print(f"Auf Wiedersehen, {name}! Bis zum nächsten Mal.")
+
+# Diese Zeile wird nur ausgeführt, wenn die Datei direkt gestartet wird
+if __name__ == "__main__":
+    print("Diese Datei wurde direkt ausgeführt.")
+    gruss("Testperson")
+----
+
+Datei: `hauptprogramm.py`
+
+[source,python]
+----
+# Import des eigenen Moduls
+import helper
+
+# Aufruf der Funktion aus dem Modul
+helper.gruss("Max")
+
+# Aufruf einer anderen Funktion aus dem Modul
+helper.verabschiedung("Max")
+----
+
+== 3. Externe Module finden und installieren
+
+=== Übungsaufgabe 3.1
+
+*Aufgabe:* Gehen Sie auf PyPI.org und suchen Sie nach einem Modul, das für die Bildverarbeitung verwendet werden kann.
+Notieren Sie den Namen und eine kurze Beschreibung.
+
+*Lösung:*
+
+[source,text]
+----
+Modul: Pillow (PIL Fork)
+Beschreibung: Pillow ist eine benutzerfreundliche Bibliothek zur Bildverarbeitung in Python. 
+Sie unterstützt eine Vielzahl von Bildformaten (JPEG, PNG, GIF, BMP, TIFF, ...) und 
+bietet Funktionen für Bildtransformationen, Filterung, Farbmanipulation und vieles mehr.
+
+Installation: pip install Pillow
+Dokumentation: https://pillow.readthedocs.io/
+----
+
+=== Übungsaufgabe 3.2
+
+*Aufgabe:* Erstellen Sie eine `requirements.txt`-Datei für ein Projekt, das die Module `pandas`,
+`matplotlib` und `requests` benötigt.
+
+*Lösung:*
+
+Datei: `requirements.txt`
+
+[source,text]
+----
+# Datenanalyse und -manipulation
+pandas>=1.3.0
+
+# Datenvisualisierung
+matplotlib>=3.4.0
+
+# HTTP-Anfragen
+requests>=2.26.0
+----
+
+=== Übungsaufgabe 3.3
+
+*Aufgabe:* Installieren Sie das Modul `tabulate` und recherchieren Sie, wofür es verwendet wird.
+
+*Lösung:*
+
+[source,bash]
+----
+# Installation des Moduls
+pip install tabulate
+----
+
+[source,text]
+----
+Modul: tabulate
+Beschreibung: tabulate ist ein Modul zum Erstellen von formatierten Tabellen in Python.
+Es kann Daten in verschiedenen Formaten ausgeben, wie ASCII-Tabellen, Markdown, HTML, 
+LaTeX und mehr. Es ist besonders nützlich für die Darstellung von Daten in der Konsole 
+oder für die Generierung von Tabellen für Dokumentationen.
+
+Beispiel:
+----
+
+[source,python]
+----
+from tabulate import tabulate
+
+# Beispieldaten
+daten = [
+    ["Max Mustermann", 1, 85.5],
+    ["Erika Beispiel", 2, 92.0],
+    ["Otto Normal", 3, 78.5]
+]
+
+# Tabellenkopf
+kopf = ["Name", "ID", "Punktzahl"]
+
+# Ausgabe als ASCII-Tabelle
+print(tabulate(daten, headers=kopf, tablefmt="grid"))
+
+# Ausgabe als Markdown-Tabelle
+print(tabulate(daten, headers=kopf, tablefmt="pipe"))
+
+# Ausgabe als HTML-Tabelle
+print(tabulate(daten, headers=kopf, tablefmt="html"))
+----
+
+== 4. Arbeiten mit Excel-Dateien in Python
+
+=== Übungsaufgabe 4.1
+
+*Aufgabe:* Erstellen Sie eine einfache Excel-Datei mit Namen und Noten von 5 fiktiven Studierenden.
+Lesen Sie diese Datei mit pandas ein und berechnen Sie den Durchschnitt der Noten.
+
+*Lösung:*
+
+Zuerst erstellen wir eine Excel-Datei (hier wird gezeigt, wie man sie auch programmatisch erstellen kann):
+
+[source,python]
+----
+import pandas as pd
+
+# Daten für die Excel-Datei
+daten = {
+    'Name': ['Max Mustermann', 'Erika Beispiel', 'Otto Normal', 'Lisa Müller', 'Tim Schmidt'],
+    'Matrikelnummer': [12345, 23456, 34567, 45678, 56789],
+    'Note': [1.7, 2.3, 1.0, 3.7, 2.0]
+}
+
+# DataFrame erstellen
+df = pd.DataFrame(daten)
+
+# In Excel-Datei speichern
+df.to_excel('studierende.xlsx', index=False)
+print("Excel-Datei wurde erstellt.")
+----
+
+Dann lesen wir die Datei ein und berechnen den Durchschnitt:
+
+[source,python]
+----
+import pandas as pd
+
+# Excel-Datei einlesen
+df = pd.read_excel('studierende.xlsx')
+
+# Anzeigen des DataFrames
+print("Eingelesene Daten:")
+print(df)
+
+# Berechnung des Durchschnitts
+durchschnitt = df['Note'].mean()
+print(f"\nDurchschnittliche Note: {durchschnitt:.2f}")
+
+# Beste und schlechteste Note
+beste_note = df['Note'].min()
+schlechteste_note = df['Note'].max()
+print(f"Beste Note: {beste_note}")
+print(f"Schlechteste Note: {schlechteste_note}")
+----
+
+=== Übungsaufgabe 4.2
+
+*Aufgabe:* Filtern Sie aus dem DataFrame nur die Studierenden, die eine Note besser als 2,0 haben, und speichern Sie diese in einer neuen Excel-Datei.
+
+*Lösung:*
+
+[source,python]
+----
+import pandas as pd
+
+# Excel-Datei einlesen
+df = pd.read_excel('studierende.xlsx')
+
+# Filtern der Daten (Noten besser als 2.0)
+gute_noten = df[df['Note'] < 2.0]
+
+# Anzeigen der gefilterten Daten
+print("Studierende mit Noten besser als 2,0:")
+print(gute_noten)
+
+# Speichern in einer neuen Excel-Datei
+gute_noten.to_excel('gute_noten.xlsx', index=False)
+print("\nDie gefilterten Daten wurden in 'gute_noten.xlsx' gespeichert.")
+----
+
+=== Übungsaufgabe 4.3
+
+*Aufgabe:* Fügen Sie dem DataFrame eine neue Spalte "Bestanden" hinzu, die "Ja" enthält, wenn die Note besser oder gleich 4,0 ist, und "Nein", wenn die Note schlechter ist.
+Speichern Sie den aktualisierten DataFrame zurück in die Excel-Datei.
+
+*Lösung:*
+
+[source,python]
+----
+import pandas as pd
+
+# Excel-Datei einlesen
+df = pd.read_excel('studierende.xlsx')
+
+# Neue Spalte "Bestanden" hinzufügen
+df['Bestanden'] = df['Note'].apply(lambda note: "Ja" if note <= 4.0 else "Nein")
+
+# Anzeigen des aktualisierten DataFrames
+print("Aktualisierte Daten:")
+print(df)
+
+# Speichern in die Excel-Datei
+df.to_excel('studierende.xlsx', index=False)
+print("\nDie aktualisierten Daten wurden in 'studierende.xlsx' gespeichert.")
+----
+
+== 5. Daten von SharePoint lesen
+
+=== Übungsaufgabe 5.1
+
+*Aufgabe:* Recherchieren Sie, welche anderen Möglichkeiten es gibt, sich bei SharePoint zu authentifizieren (z.B. mit Client ID und Secret).
+
+*Lösung:*
+
+[source,text]
+----
+Authentifizierungsmethoden für SharePoint mit Python:
+
+1. Benutzername und Passwort (Basic Authentication):
+   - Am einfachsten zu implementieren
+   - Wird in vielen Umgebungen nicht mehr unterstützt (aus Sicherheitsgründen)
+
+2. App-only Authentication (Client ID und Client Secret):
+   - Für Anwendungen ohne Benutzerinteraktion
+   - Benötigt registrierte App in Azure AD
+   - Code-Beispiel:
+----
+
+[source,python]
+----
+from office365.runtime.auth.client_credential import ClientCredential
+from office365.sharepoint.client_context import ClientContext
+
+client_id = "YOUR_CLIENT_ID"
+client_secret = "YOUR_CLIENT_SECRET"
+site_url = "https://yourtenant.sharepoint.com/sites/yoursite"
+
+credentials = ClientCredential(client_id, client_secret)
+ctx = ClientContext(site_url).with_credentials(credentials)
+----
+
+[source,text]
+----
+3. OAuth 2.0 / ADAL (Azure Active Directory Authentication Library):
+   - Moderne Authentifizierungsmethode
+   - Unterstützt Multi-Faktor-Authentifizierung
+   - Code-Beispiel:
+----
+
+[source,python]
+----
+import adal
+from office365.sharepoint.client_context import ClientContext
+
+tenant = "yourtenant.onmicrosoft.com"
+client_id = "YOUR_CLIENT_ID"
+app_url = "https://yourtenant.sharepoint.com/sites/yoursite"
+
+authority_url = f"https://login.microsoftonline.com/{tenant}"
+context = adal.AuthenticationContext(authority_url)
+token = context.acquire_token_with_client_credentials(
+    "https://yourtenant.sharepoint.com",
+    client_id,
+    "YOUR_CLIENT_SECRET"
+)
+
+ctx = ClientContext(app_url).with_access_token(token["accessToken"])
+----
+
+[source,text]
+----
+4. Certificate-Based Authentication:
+   - Sehr sichere Methode
+   - Verwendet ein Zertifikat anstelle eines Client Secret
+   - Erfordert zusätzliche Konfiguration in Azure AD
+
+5. Device Code Flow:
+   - Nützlich für Anwendungen ohne Benutzeroberfläche
+   - Benutzer authentifizieren sich über einen separaten Gerät/Browser
+
+6. Interactive Authentication:
+   - Für Desktop-Anwendungen
+   - Öffnet ein Browserfenster für die Benutzeranmeldung
+----
+
+=== Übungsaufgabe 5.2
+
+*Aufgabe:* Schreiben Sie ein Programm, das alle Excel-Dateien in einem bestimmten SharePoint-Ordner auflistet.
+
+*Lösung:*
+
+[source,python]
+----
+from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import ClientContext
+
+def liste_excel_dateien(sharepoint_url, username, password, folder_relative_url):
+    """
+    Listet alle Excel-Dateien in einem bestimmten SharePoint-Ordner auf.
+    
+    Args:
+        sharepoint_url (str): Die URL zur SharePoint-Site
+        username (str): Benutzername für SharePoint
+        password (str): Passwort für SharePoint
+        folder_relative_url (str): Relativer URL zum Ordner in SharePoint
+    """
+    try:
+        # Authentifizierung
+        auth_context = AuthenticationContext(sharepoint_url)
+        auth_context.acquire_token_for_user(username, password)
+        ctx = ClientContext(sharepoint_url, auth_context)
+        
+        # Ordner abrufen
+        web = ctx.web
+        folder = web.get_folder_by_server_relative_url(folder_relative_url)
+        files = folder.files
+        ctx.load(files)
+        ctx.execute_query()
+        
+        # Excel-Dateien filtern und anzeigen
+        excel_dateien = [file for file in files 
+                         if file.properties["Name"].lower().endswith(('.xlsx', '.xls'))]
+        
+        print(f"Excel-Dateien in {folder_relative_url}:")
+        for i, file in enumerate(excel_dateien, 1):
+            file_name = file.properties["Name"]
+            file_size = file.properties["Length"] / 1024  # Konvertierung in KB
+            print(f"{i}. {file_name} ({file_size:.2f} KB)")
+        
+        print(f"\nInsgesamt {len(excel_dateien)} Excel-Dateien gefunden.")
+        
+    except Exception as e:
+        print(f"Fehler beim Auflisten der Dateien: {str(e)}")
+
+# Beispielaufruf
+if __name__ == "__main__":
+    # Diese Werte sollten sicher gespeichert werden (z.B. in Umgebungsvariablen)
+    sharepoint_url = "https://ihrfirma.sharepoint.com/sites/IhrSite"
+    username = "ihr_benutzername@ihrfirma.com"
+    password = "ihr_passwort"  # In der Praxis aus sicherer Quelle lesen!
+    
+    # Relativer Pfad zum Ordner (von der Site-Root)
+    folder_relative_url = "/sites/IhrSite/Freigegebene Dokumente/Berichte"
+    
+    liste_excel_dateien(sharepoint_url, username, password, folder_relative_url)
+----
+
+=== Übungsaufgabe 5.3
+
+*Aufgabe:* Entwerfen Sie ein kleines Programm, das täglich automatisch Daten von SharePoint herunterlädt, eine Berechnung durchführt und die Ergebnisse zurück nach SharePoint hochlädt.
+
+*Lösung:*
+
+[source,python]
+----
+import io
+import os
+import pandas as pd
+import schedule
+import time
+from datetime import datetime
+from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import ClientContext
+from office365.sharepoint.files.file import File
+
+# SharePoint-Anmeldedaten (sollten sicher gespeichert werden)
+SHAREPOINT_URL = os.environ.get("SHAREPOINT_URL", "https://ihrfirma.sharepoint.com/sites/IhrSite")
+USERNAME = os.environ.get("SHAREPOINT_USERNAME", "")
+PASSWORD = os.environ.get("SHAREPOINT_PASSWORD", "")
+
+# SharePoint-Dateipfade
+VERKAUFSDATEN_PFAD = "/sites/IhrSite/Freigegebene Dokumente/Verkaufsdaten.xlsx"
+BERICHT_PFAD = "/sites/IhrSite/Freigegebene Dokumente/Berichte/Tagesbericht_{datum}.xlsx"
+
+def sharepoint_auth():
+    """Authentifizierung bei SharePoint"""
+    auth_context = AuthenticationContext(SHAREPOINT_URL)
+    auth_context.acquire_token_for_user(USERNAME, PASSWORD)
+    return ClientContext(SHAREPOINT_URL, auth_context)
+
+def download_from_sharepoint(ctx, file_url):
+    """Lädt eine Datei von SharePoint herunter und gibt sie als DataFrame zurück"""
+    try:
+        response = File.open_binary(ctx, file_url)
+        bytes_file_obj = io.BytesIO(response.content)
+        return pd.read_excel(bytes_file_obj)
+    except Exception as e:
+        print(f"Fehler beim Herunterladen der Datei: {str(e)}")
+        return None
+
+def upload_to_sharepoint(ctx, df, file_url):
+    """Lädt einen DataFrame als Excel-Datei nach SharePoint hoch"""
+    try:
+        # DataFrame in Excel-Bytes umwandeln
+        excel_buffer = io.BytesIO()
+        df.to_excel(excel_buffer, index=False)
+        excel_buffer.seek(0)
+        
+        # Nach SharePoint hochladen
+        File.save_binary(ctx, file_url, excel_buffer.getvalue())
+        print(f"Datei wurde erfolgreich nach {file_url} hochgeladen")
+        return True
+    except Exception as e:
+        print(f"Fehler beim Hochladen der Datei: {str(e)}")
+        return False
+
+def analyze_data(df):
+    """Führt Berechnungen auf den Verkaufsdaten durch"""
+    try:
+        # Kopie des DataFrames erstellen
+        result_df = df.copy()
+        
+        # Beispielberechnungen (können an Ihre Bedürfnisse angepasst werden)
+        # Summen pro Kategorie berechnen
+        kategorien_summe = df.groupby('Kategorie')['Umsatz'].sum().reset_index()
+        
+        # Durchschnittlicher Umsatz pro Produkt
+        avg_umsatz = df['Umsatz'].mean()
+        
+        # Top 5 Produkte nach Umsatz
+        top_produkte = df.sort_values('Umsatz', ascending=False).head(5)
+        
+        # Erstellung eines Berichts-DataFrames
+        bericht = {
+            'Kategorie_Zusammenfassung': kategorien_summe,
+            'Durchschnittlicher_Umsatz': avg_umsatz,
+            'Top_Produkte': top_produkte
+        }
+        
+        return bericht
+    except Exception as e:
+        print(f"Fehler bei der Datenanalyse: {str(e)}")
+        return None
+
+def tagesverarbeitung():
+    """Hauptfunktion, die den täglichen Prozess durchführt"""
+    print(f"Starte Tagesverarbeitung: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Bei SharePoint authentifizieren
+    ctx = sharepoint_auth()
+    
+    # Verkaufsdaten herunterladen
+    df = download_from_sharepoint(ctx, VERKAUFSDATEN_PFAD)
+    if df is None:
+        return
+    
+    print(f"Verkaufsdaten heruntergeladen. {len(df)} Einträge gefunden.")
+    
+    # Daten analysieren
+    bericht_daten = analyze_data(df)
+    if bericht_daten is None:
+        return
+    
+    # Aktuelles Datum für den Berichtsnamen
+    heute = datetime.now().strftime('%Y-%m-%d')
+    bericht_pfad = BERICHT_PFAD.format(datum=heute)
+    
+    # Bericht erstellen und hochladen
+    with pd.ExcelWriter(io.BytesIO()) as writer:
+        # Verschiedene Arbeitsblätter für verschiedene Berichtsteile
+        bericht_daten['Kategorie_Zusammenfassung'].to_excel(writer, sheet_name='Kategorien', index=False)
+        pd.DataFrame([{'Durchschnittlicher Umsatz': bericht_daten['Durchschnittlicher_Umsatz']}]).to_excel(
+            writer, sheet_name='Durchschnitte', index=False)
+        bericht_daten['Top_Produkte'].to_excel(writer, sheet_name='Top Produkte', index=False)
+        
+        # In SharePoint hochladen
+        writer.book.save(writer.path)
+        bericht_bytes = writer.path.getvalue()
+        
+        # Nach SharePoint hochladen
+        File.save_binary(ctx, bericht_pfad, bericht_bytes)
+        print(f"Bericht wurde nach {bericht_pfad} hochgeladen")
+
+def main():
+    """Hauptfunktion, die den Zeitplan einrichtet"""
+    print("Starte automatische Berichterstellung...")
+    
+    # Tagesverarbeitung um 8:00 Uhr morgens einplanen
+    schedule.every().day.at("08:00").do(tagesverarbeitung)
+    
+    # Für Testzwecke können wir die Verarbeitung sofort starten
+    tagesverarbeitung()
+    
+    # Scheduler-Schleife
+    try:
+        while True:
+            schedule.run_pending()
+            time.sleep(60)  # Prüft jede Minute auf anstehende Jobs
+    except KeyboardInterrupt:
+        print("Programm wurde beendet.")
+
+if __name__ == "__main__":
+    main()
+----
+
+== Abschlussprojekt-Lösung
+
+*Aufgabe:* Entwickeln Sie ein kleines Programm, das:
+1. Eine Excel-Datei mit Produktdaten (Name, Preis, Kategorie, Bestand) einliest 2. Die Daten nach verschiedenen Kriterien analysiert 3. Einen Bericht erstellt und als neue Excel-Datei speichert 4. Optional: Den Bericht auf SharePoint hochlädt
+
+*Lösung:*
+
+[source,python]
+----
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+import os
+from datetime import datetime
+
+# Optional für SharePoint-Upload
+from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import ClientContext
+from office365.sharepoint.files.file import File
+
+class ProduktAnalyse:
+    """Klasse zur Analyse von Produktdaten und Berichterstellung"""
+    
+    def __init__(self, datei_pfad):
+        """
+        Initialisiert die Analyse mit dem Pfad zur Excel-Datei.
+        
+        Args:
+            datei_pfad (str): Pfad zur Excel-Datei mit Produktdaten
+        """
+        self.datei_pfad = datei_pfad
+        self.daten = None
+        self.bericht = {}
+        self.bericht_pfad = f"Produktbericht_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        
+    def daten_laden(self):
+        """Lädt die Produktdaten aus der Excel-Datei"""
+        try:
+            self.daten = pd.read_excel(self.datei_pfad)
+            print(f"Daten erfolgreich geladen. {len(self.daten)} Produkte gefunden.")
+            
+            # Spalten überprüfen
+            erforderliche_spalten = ['Name', 'Preis', 'Kategorie', 'Bestand']
+            fehlende_spalten = [spalte for spalte in erforderliche_spalten if spalte not in self.daten.columns]
+            
+            if fehlende_spalten:
+                raise ValueError(f"Fehlende Spalten in der Excel-Datei: {', '.join(fehlende_spalten)}")
+                
+            return True
+        except Exception as e:
+            print(f"Fehler beim Laden der Daten: {str(e)}")
+            return False
+    
+    def preisstatistik_berechnen(self):
+        """Berechnet Preisstatistiken (Min, Max, Durchschnitt) pro Kategorie"""
+        try:
+            stats = self.daten.groupby('Kategorie')['Preis'].agg(['min', 'max', 'mean'])
+            stats = stats.rename(columns={'min': 'Mindestpreis', 'max': 'Höchstpreis', 'mean': 'Durchschnittspreis'})
+            stats = stats.reset_index()
+            stats['Durchschnittspreis'] = stats['Durchschnittspreis'].round(2)
+            
+            self.bericht['Preisstatistik'] = stats
+            print("Preisstatistik berechnet.")
+            return stats
+        except Exception as e:
+            print(f"Fehler bei der Berechnung der Preisstatistik: {str(e)}")
+            return None
+    
+    def bestandsanalyse(self, niedriger_bestand_schwelle=10):
+        """
+        Identifiziert Produkte mit niedrigem Bestand.
+        
+        Args:
+            niedriger_bestand_schwelle (int): Schwellenwert für niedrigen Bestand
+        """
+        try:
+            # Produkte mit niedrigem Bestand finden
+            niedrig = self.daten[self.daten['Bestand'] <= niedriger_bestand_schwelle]
+            niedrig = niedrig.sort_values('Bestand')
+            
+            # Bestandssumme pro Kategorie
+            bestand_pro_kategorie = self.daten.groupby('Kategorie')['Bestand'].sum().reset_index()
+            bestand_pro_kategorie = bestand_pro_kategorie.rename(columns={'Bestand': 'Gesamtbestand'})
+            
+            self.bericht['NiedrigerBestand'] = niedrig
+            self.bericht['BestandProKategorie'] = bestand_pro_kategorie
+            
+            print(f"{len(niedrig)} Produkte mit niedrigem Bestand (≤ {niedriger_bestand_schwelle}) identifiziert.")
+            return niedrig, bestand_pro_kategorie
+        except Exception as e:
+            print(f"Fehler bei der Bestandsanalyse: {str(e)}")
+            return None, None
+    
+    def umsatzpotential_berechnen(self):
+        """Berechnet das Umsatzpotential (Preis * Bestand) für jedes Produkt"""
+        try:
+            self.daten['Umsatzpotential'] = self.daten['Preis'] * self.daten['Bestand']
+            
+            # Top-Produkte nach Umsatzpotential
+            top_produkte = self.daten.sort_values('Umsatzpotential', ascending=False).head(10)
+            
+            # Umsatzpotential pro Kategorie
+            kategorie_umsatz = self.daten.groupby('Kategorie')['Umsatzpotential'].sum().reset_index()
+            kategorie_umsatz = kategorie_umsatz.sort_values('Umsatzpotential', ascending=False)
+            
+            self.bericht['TopProdukte'] = top_produkte
+            self.bericht['KategorieUmsatz'] = kategorie_umsatz
+            
+            print("Umsatzpotential berechnet.")
+            return top_produkte, kategorie_umsatz
+        except Exception as e:
+            print(f"Fehler bei der Berechnung des Umsatzpotentials: {str(e)}")
+            return None, None
+    
+    def diagramme_erstellen(self):
+        """Erstellt Diagramme für die Visualisierung der Daten"""
+        try:
+            # Verzeichnis für Diagramme erstellen, falls es nicht existiert
+            diagramm_ordner = "diagramme"
+            os.makedirs(diagramm_ordner, exist_ok=True)
+            
+            # 1. Bestand pro Kategorie (Balkendiagramm)
+            plt.figure(figsize=(10, 6))
+            bestand_pro_kat = self.daten.groupby('Kategorie')['Bestand'].sum()
+            bestand_pro_kat.plot(kind='bar', color='skyblue')
+            plt.title('Gesamtbestand pro Kategorie')
+            plt.xlabel('Kategorie')
+            plt.ylabel('Bestand')
+            plt.tight_layout()
+            plt.savefig(f"{diagramm_ordner}/bestand_pro_kategorie.png")
+            plt.close()
+            
+            # 2. Umsatzpotential pro Kategorie (Kuchendiagramm)
+            plt.figure(figsize=(10, 8))
+            umsatz_pro_kat = self.daten.groupby('Kategorie')['Umsatzpotential'].sum()
+            umsatz_pro_kat.plot(kind='pie', autopct='%1.1f%%')
+            plt.title('Umsatzpotential pro Kategorie')
+            plt.ylabel('')  # Entfernt die y-Achsenbeschriftung
+            plt.tight_layout()
+            plt.savefig(f"{diagramm_ordner}/umsatzpotential_pie.png")
+            plt.close()
+            
+            # 3. Preisverteilung (Histogramm)
+            plt.figure(figsize=(10, 6))
+            self.daten['Preis'].plot(kind='hist', bins=20, color='lightgreen')
+            plt.title('Preisverteilung')
+            plt.xlabel('Preis')
+            plt.ylabel('Anzahl Produkte')
+            plt.tight_layout()
+            plt.savefig(f"{diagramm_ordner}/preisverteilung.png")
+            plt.close()
+            
+            print(f"Diagramme wurden im Ordner '{diagramm_ordner}' erstellt.")
+            return True
+        except Exception as e:
+            print(f"Fehler bei der Erstellung der Diagramme: {str(e)}")
+            return False
+    
+    def bericht_erstellen(self):
+        """Erstellt einen Excel-Bericht mit allen Analysen"""
+        try:
+            with pd.ExcelWriter(self.bericht_pfad) as writer:
+                # Originaldaten
+                self.daten.to_excel(writer, sheet_name='Rohdaten', index=False)
+                
+                # Preisstatistik
+                if 'Preisstatistik' in self.bericht:
+                    self.bericht['Preisstatistik'].to_excel(writer, sheet_name='Preisstatistik', index=False)
+                
+                # Bestandsanalyse
+                if 'NiedrigerBestand' in self.bericht:
+                    self.bericht['NiedrigerBestand'].to_excel(writer, sheet_name='Niedriger Bestand', index=False)
+                
+                if 'BestandProKategorie' in self.bericht:
+                    self.bericht['BestandProKategorie'].to_excel(writer, sheet_name='Bestand pro Kategorie', index=False)
+                
+                # Umsatzpotential
+                if 'TopProdukte' in self.bericht:
+                    self.bericht['TopProdukte'].to_excel(writer, sheet_name='Top 10 Produkte', index=False)
+                
+                if 'KategorieUmsatz' in self.bericht:
+                    self.bericht['KategorieUmsatz'].to_excel(writer, sheet_name='Umsatz pro Kategorie', index=False)
+                
+            print(f"Bericht wurde als '{self.bericht_pfad}' gespeichert.")
+            return True
+        except Exception as e:
+            print(f"Fehler bei der Erstellung des Berichts: {str(e)}")
+            return False
+    
+    def sharepoint_hochladen(self, sharepoint_url, username, password, folder_relative_url):
+        """
+        Lädt den Bericht nach SharePoint hoch.
+        
+        Args:
+            sharepoint_url (str): Die URL zur SharePoint-Site
+            username (str): Benutzername für SharePoint
+            password (str): Passwort für SharePoint
+            folder_relative_url (str): Relativer URL zum Ordner in SharePoint
+        """
+        try:
+            # Authentifizierung
+            auth_context = AuthenticationContext(sharepoint_url)
+            auth_context.acquire_token_for_user(username, password)
+            ctx = ClientContext(sharepoint_url, auth_context)
+            
+            # Dateipfad auf SharePoint
+            sp_datei_pfad = f"{folder_relative_url}/{os.path.basename(self.bericht_pfad)}"
+            
+            # Datei einlesen
+            with open(self.bericht_pfad, "rb") as file_content:
+                content = file_content.read()
+            
+            # Nach SharePoint hochladen
+            File.save_binary(ctx, sp_datei_pfad, content)
+            print(f"Bericht wurde erfolgreich nach SharePoint hochgeladen: {sp_datei_pfad}")
+            return True
+        except Exception as e:
+            print(f"Fehler beim Hochladen nach SharePoint: {str(e)}")
+            return False
+    
+    def volle_analyse_durchfuehren(self, niedriger_bestand_schwelle=10):
+        """
+        Führt die komplette Analyse durch.
+        
+        Args:
+            niedriger_bestand_schwelle (int): Schwellenwert für niedrigen Bestand
+        """
+        if not self.daten_laden():
+            return False
+        
+        self.preisstatistik_berechnen()
+        self.bestandsanalyse(niedriger_bestand_schwelle)
+        self.umsatzpotential_berechnen()
+        self.diagramme_erstellen()
+        return self.bericht_erstellen()
+
+
+# Beispielaufruf
+if __name__ == "__main__":
+    # 1. Einfache Analyse ohne SharePoint-Upload
+    analyse = ProduktAnalyse("produktdaten.xlsx")
+    erfolg = analyse.volle_analyse_durchfuehren()
+    
+    if erfolg:
+        print("\nAnalyse erfolgreich abgeschlossen!")
+        print(f"Bericht wurde als '{analyse.bericht_pfad}' gespeichert.")
+    else:
+        print("\nFehler bei der Analyse.")
+    
+    # 2. Mit SharePoint-Upload (auskommentiert, da Anmeldedaten erforderlich)
+    """
+    # SharePoint-Anmeldedaten (sollten sicher gespeichert werden)
+    sharepoint_url = "https://ihrfirma.sharepoint.com/sites/IhrSite"
+    username = os.environ.get("SHAREPOINT_USERNAME", "")
+    password = os.environ.get("SHAREPOINT_PASSWORD", "")
+    folder_url = "/sites/IhrSite/Freigegebene Dokumente/Berichte"
+    
+    if erfolg:
+        analyse.sharepoint_hochladen(sharepoint_url, username, password, folder_url)
+    """
+----
