@@ -1,13 +1,18 @@
 = Objektorientierte Programmierung in Python: Von Grundlagen bis zu fortgeschrittenen Konzepten
-:toc:
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: coderay
 :icons: font
-:source-highlighter: pygments
-:pygments-style: github
-:tip-caption: Tipp
-:note-caption: Hinweis
-:important-caption: Wichtig
-:caution-caption: Achtung
-:warning-caption: Warnung
+:title-page:
+:pdf-page-size: A4
 
 == Einführung in die Objektorientierte Programmierung
 
