@@ -1,0 +1,1975 @@
+= Pydantic Tutorial: Moderne Datenvalidierung in Python
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: coderay
+:icons: font
+:title-page:
+:pdf-page-size: A4
+
+== Einführung in Pydantic
+
+=== Was ist Pydantic?
+
+Pydantic ist eine leistungsstarke Python-Bibliothek für Datenvalidierung und -einstellungen, die auf Python-Typannotationen basiert.
+Anders als traditionelle Validierungsansätze nutzt Pydantic das native Python-Typsystem, um sicherzustellen, dass Ihre Daten korrekt und konsistent sind.
+
+*Warum Pydantic verwenden?*
+
+* **Sicherheit**: Validiert Daten automatisch gegen definierte Typen und Einschränkungen
+* **Lesbarkeit**: Nutzt Standard-Python-Typannotationen für klaren, verständlichen Code
+* **Performance**: Implementiert in Rust und optimiert für Geschwindigkeit
+* **Integrationsmöglichkeiten**: Lässt sich hervorragend in moderne Frameworks wie FastAPI integrieren
+* **Produktivität**: Reduziert Code und Fehler durch automatische Typkonvertierung und Validierung
+
+=== Reales Beispiel: Online-Bestellsystem
+
+Stellen wir uns vor, Sie entwickeln ein Online-Bestellsystem für ein Restaurant.
+Ohne eine Validierungsbibliothek müssten Sie manuell prüfen, ob alle erforderlichen Felder vorhanden sind, ob die Telefonnummer gültig ist, ob die Bestellmenge positiv ist, usw.
+
+Mit Pydantic definieren Sie einfach ein Modell mit Typannotationen:
+
+[source,python]
+----
+from pydantic import BaseModel, Field, EmailStr
+from typing import List, Optional
+from datetime import datetime
+
+class MenuItem(BaseModel):
+    id: int
+    name: str
+    price: float = Field(gt=0)
+    description: Optional[str] = None
+
+class Order(BaseModel):
+    customer_name: str
+    email: EmailStr
+    items: List[MenuItem]
+    total: float = Field(gt=0)
+    address: str
+    order_time: datetime = Field(default_factory=datetime.now)
+    special_instructions: Optional[str] = None
+----
+
+Pydantic validiert dann automatisch alle eingehenden Daten gegen dieses Modell und wandelt sie in die richtigen Typen um.
+
+=== Installation und erste Schritte
+
+Die Installation von Pydantic ist einfach:
+
+[source,bash]
+----
+pip install pydantic
+----
+
+Um E-Mail-Validierung zu nutzen, installieren Sie auch:
+
+[source,bash]
+----
+pip install pydantic[email]
+----
+
+Erstellen wir ein einfaches Beispiel, um den Einstieg zu erleichtern:
+
+[source,python]
+----
+from pydantic import BaseModel
+from typing import Optional
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+    is_active: bool = True
+    age: Optional[int] = None
+
+# Erzeugen einer User-Instanz mit gültigen Daten
+user1 = User(id=1, name="Max Mustermann", email="max@example.com")
+print(user1)
+# Ausgabe: id=1 name='Max Mustermann' email='max@example.com' is_active=True age=None
+
+# Pydantic konvertiert automatisch kompatible Typen
+user2 = User(id="2", name="Anna Schmidt", email="anna@example.com", age="28")
+print(user2)
+# Ausgabe: id=2 name='Anna Schmidt' email='anna@example.com' is_active=True age=28
+
+# Bei ungültigen Daten wird ein ValidationError ausgelöst
+try:
+    invalid_user = User(id="nicht_numerisch", name=123, email="keine_email")
+except Exception as e:
+    print(f"Validierungsfehler: {e}")
+----
+
+=== Übungen zu den Grundlagen
+
+==== Übung 1: Einfaches Datenmodell
+
+Erstellen Sie ein Pydantic-Modell `Student` mit den Feldern:
+- `matrikelnummer` (int) - `name` (str) - `email` (str) - `studienfach` (str) - `semester` (int, optional) - `aktiv` (bool, Standardwert True)
+
+Testen Sie das Modell mit verschiedenen Eingabedaten.
+
+==== Übung 2: Fehlerbehandlung
+
+Erstellen Sie absichtlich ungültige Daten für Ihr `Student`-Modell und fangen Sie den ValidationError ab.
+Untersuchen Sie die Fehlermeldung, um zu verstehen, welche Informationen Pydantic über die Validierungsfehler bereitstellt.
+
+==== Übung 3: Typenkonvertierung
+
+Testen Sie, wie Pydantic verschiedene Eingabetypen automatisch konvertiert.
+Erstellen Sie einen `Student` mit einer Matrikelnummer als String und einem Semester als String.
+Überprüfen Sie den Typ der resultierenden Attribute.
+
+== Grundlegende Konzepte
+
+=== Modelle und Felder
+
+Das Herzstück von Pydantic sind Modelle, die Datenstrukturen repräsentieren.
+Jedes Modell erbt von `BaseModel` und definiert Felder mit Typannotationen.
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from typing import Optional, List
+from datetime import date
+
+class Buch(BaseModel):
+    isbn: str = Field(..., min_length=10, max_length=13)
+    titel: str
+    autoren: List[str]
+    seitenzahl: int = Field(gt=0)
+    erscheinungsdatum: date
+    verfügbar: bool = True
+    beschreibung: Optional[str] = None
+    preis: float = Field(gt=0)
+    
+    class Config:
+        # Zusätzliche Konfigurationsoptionen
+        title = "Buchmodell für die Bibliotheksverwaltung"
+----
+
+In diesem Beispiel verwenden wir:
+
+* **Field**: Für zusätzliche Validierungsregeln wie Min/Max-Länge und Wertebereiche
+* **...**: Als Standardwert bedeutet, dass ein Feld erforderlich ist
+* **Optional**: Für Felder, die `None` sein dürfen
+* **List**: Für Listen von Werten
+* **Config**: Eine innere Klasse für zusätzliche Konfigurationsoptionen
+
+=== Validierung und Fehlerbehandlung
+
+Pydantic validiert Daten automatisch:
+
+[source,python]
+----
+# Gültiges Buch
+gültiges_buch = Buch(
+    isbn="9783161484100",
+    titel="Python für Einsteiger",
+    autoren=["Max Mustermann", "Anna Schmidt"],
+    seitenzahl=250,
+    erscheinungsdatum=date(2023, 1, 15),
+    preis=29.99
+)
+
+# Ungültiges Buch
+try:
+    ungültiges_buch = Buch(
+        isbn="123",  # Zu kurz
+        titel="Python für Einsteiger",
+        autoren=["Max Mustermann"],
+        seitenzahl=-10,  # Negative Seitenzahl
+        erscheinungsdatum="2023-01-15",  # String statt date
+        preis=0  # Preis muss größer als 0 sein
+    )
+except Exception as e:
+    print(f"Validierungsfehler: {e}")
+----
+
+Die Fehlermeldung enthält detaillierte Informationen über jeden einzelnen Validierungsfehler, was das Debugging erleichtert.
+
+=== Typenkonvertierung
+
+Pydantic versucht automatisch, Eingabedaten in die angegebenen Typen zu konvertieren:
+
+[source,python]
+----
+# Typenkonvertierung demonstrieren
+konvertiertes_buch = Buch(
+    isbn="9783161484100",
+    titel="Python für Fortgeschrittene",
+    autoren=["Dr. Python"],
+    seitenzahl="300",  # String statt int
+    erscheinungsdatum="2023-05-20",  # String statt date
+    preis="39.99"  # String statt float
+)
+
+print(konvertiertes_buch)
+print(f"Typ der Seitenzahl: {type(konvertiertes_buch.seitenzahl)}")
+print(f"Typ des Erscheinungsdatums: {type(konvertiertes_buch.erscheinungsdatum)}")
+print(f"Typ des Preises: {type(konvertiertes_buch.preis)}")
+----
+
+Pydantic konvertiert hier "300" in einen Integer, "2023-05-20" in ein date-Objekt und "39.99" in einen Float.
+Das macht die Arbeit mit Daten aus verschiedenen Quellen wie Formularen, APIs oder Datenbanken viel einfacher.
+
+=== Übungen zu den Grundkonzepten
+
+==== Übung 1: Komplexes Modell
+
+Erstellen Sie ein Modell `Rezept` mit den Feldern:
+- `id` (str, UUID-Format) - `name` (str, 5-100 Zeichen) - `zubereitungszeit` (int, Minuten, positiv) - `schwierigkeitsgrad` (str, Enum: "einfach", "mittel", "schwer") - `zutaten` (List[Dict] mit Name, Menge und Einheit) - `anleitung` (List[str], mindestens 2 Schritte) - `kalorien` (Optional[int], wenn bekannt) - `tags` (List[str], optional)
+
+==== Übung 2: Benutzerdefinierte Konfiguration
+
+Erweitern Sie das Modell `Rezept` um eine Config-Klasse mit:
+- `schema_extra` für Beispieldaten - `allow_population_by_field_name = True`
+- `anystr_strip_whitespace = True`
+Testen Sie, wie sich diese Konfigurationsoptionen auswirken.
+
+==== Übung 3: JSON-Verarbeitung
+
+Konvertieren Sie ein `Rezept`-Objekt in JSON und zurück.
+Verwenden Sie die Methoden `.json()` und `.parse_raw()`.
+
+== Fortgeschrittene Validierung
+
+=== Benutzerdefinierte Validatoren
+
+Pydantic erlaubt benutzerdefinierte Validierungslogik mit Validatoren:
+
+[source,python]
+----
+from pydantic import BaseModel, validator, root_validator
+from typing import List
+import re
+
+class Kreditkarte(BaseModel):
+    nummer: str
+    inhaber: str
+    ablaufdatum: str
+    sicherheitscode: str
+    
+    @validator('nummer')
+    def validate_card_number(cls, v):
+        # Entferne Leerzeichen und Bindestriche
+        v = re.sub(r'[\s-]', '', v)
+        
+        # Prüfe, ob nur Ziffern und richtige Länge
+        if not v.isdigit() or len(v) != 16:
+            raise ValueError('Kreditkartennummer muss 16 Ziffern enthalten')
+        
+        # Einfache Luhn-Algorithmus-Implementierung
+        summe = 0
+        für_verdopplung = False
+        
+        for ziffer in reversed(v):
+            ziffer = int(ziffer)
+            if für_verdopplung:
+                ziffer *= 2
+                if ziffer > 9:
+                    ziffer -= 9
+            
+            summe += ziffer
+            für_verdopplung = not für_verdopplung
+            
+        if summe % 10 != 0:
+            raise ValueError('Ungültige Kreditkartennummer (Luhn-Check fehlgeschlagen)')
+            
+        # Maskieren der Kartennummer für die Sicherheit
+        return f"{'*' * 12}{v[-4:]}"
+    
+    @validator('ablaufdatum')
+    def validate_expiry_date(cls, v):
+        # Prüfe das Datumsformat MM/YY
+        if not re.match(r'^(0[1-9]|1[0-2])/[0-9]{2}$', v):
+            raise ValueError('Ablaufdatum muss im Format MM/YY sein')
+        return v
+    
+    @validator('sicherheitscode')
+    def validate_security_code(cls, v):
+        # Prüfe, ob der Sicherheitscode 3 oder 4 Ziffern hat
+        if not re.match(r'^[0-9]{3,4}$', v):
+            raise ValueError('Sicherheitscode muss 3 oder 4 Ziffern haben')
+        return v
+    
+    @root_validator
+    def check_card_data(cls, values):
+        # Prüfe, ob der Karteninhaber auf der Karte steht
+        if 'inhaber' in values and 'nummer' in values:
+            if len(values['inhaber']) < 2:
+                raise ValueError('Karteninhaber-Name ist zu kurz')
+        return values
+----
+
+In diesem Beispiel:
+
+* `@validator` dekoriert Methoden, die einzelne Felder validieren
+* `@root_validator` validiert mehrere Felder gleichzeitig
+* Die Validatoren können Werte verändern (z.B. Maskierung der Kreditkartennummer)
+* Validierungsfehler werden durch das Auslösen von `ValueError` signalisiert
+
+Testen wir die Validierung:
+
+[source,python]
+----
+# Gültige Kreditkarte
+try:
+    karte = Kreditkarte(
+        nummer="4532 7568 2951 4366",  # Valid test number
+        inhaber="MAX MUSTERMANN",
+        ablaufdatum="12/25",
+        sicherheitscode="123"
+    )
+    print(f"Kreditkarte akzeptiert: {karte}")
+except Exception as e:
+    print(f"Validierungsfehler: {e}")
+
+# Ungültige Kreditkarte
+try:
+    ungültige_karte = Kreditkarte(
+        nummer="1234 5678 9012 3456",  # Fails Luhn check
+        inhaber="A",  # Name too short
+        ablaufdatum="13/25",  # Invalid month
+        sicherheitscode="12"  # Too short
+    )
+except Exception as e:
+    print(f"Validierungsfehler: {e}")
+----
+
+=== Komplexe Datenstrukturen
+
+Pydantic unterstützt verschachtelte Modelle und komplexe Datenstrukturen:
+
+[source,python]
+----
+from pydantic import BaseModel, Field, HttpUrl
+from typing import List, Dict, Optional, Set
+from datetime import datetime
+from enum import Enum
+
+class BewertungsSterne(int, Enum):
+    EINS = 1
+    ZWEI = 2
+    DREI = 3
+    VIER = 4
+    FÜNF = 5
+
+class Adresse(BaseModel):
+    straße: str
+    hausnummer: str
+    plz: str
+    ort: str
+    land: str = "Deutschland"
+
+class Bewertung(BaseModel):
+    benutzer_id: int
+    sterne: BewertungsSterne
+    kommentar: Optional[str] = None
+    datum: datetime = Field(default_factory=datetime.now)
+
+class Restaurant(BaseModel):
+    id: int
+    name: str
+    küchen: Set[str]  # Keine Duplikate erlaubt
+    adresse: Adresse
+    öffnungszeiten: Dict[str, List[str]]  # z.B. {"Montag": ["11:30-14:30", "18:00-22:00"]}
+    website: Optional[HttpUrl] = None
+    bewertungen: List[Bewertung] = []
+    durchschnittliche_bewertung: Optional[float] = None
+    
+    def aktualisiere_durchschnitt(self):
+        if not self.bewertungen:
+            self.durchschnittliche_bewertung = None
+            return
+            
+        sterne_summe = sum(bewertung.sterne for bewertung in self.bewertungen)
+        self.durchschnittliche_bewertung = round(sterne_summe / len(self.bewertungen), 1)
+----
+
+Verwendung:
+
+[source,python]
+----
+# Restaurant erstellen
+pizzeria = Restaurant(
+    id=1,
+    name="Mamma Mia Pizzeria",
+    küchen={"Italienisch", "Pizza", "Pasta"},
+    adresse=Adresse(
+        straße="Pizzastraße",
+        hausnummer="42",
+        plz="12345",
+        ort="Leckerstadt"
+    ),
+    öffnungszeiten={
+        "Montag": ["11:30-14:30", "18:00-22:00"],
+        "Dienstag": ["11:30-14:30", "18:00-22:00"],
+        "Mittwoch": ["11:30-14:30", "18:00-22:00"],
+        "Donnerstag": ["11:30-14:30", "18:00-22:00"],
+        "Freitag": ["11:30-14:30", "18:00-23:00"],
+        "Samstag": ["12:00-23:00"],
+        "Sonntag": ["12:00-22:00"]
+    },
+    website="https://mammamia-pizzeria.example.com"
+)
+
+# Bewertungen hinzufügen
+pizzeria.bewertungen.append(
+    Bewertung(benutzer_id=101, sterne=5, kommentar="Beste Pizza in der Stadt!")
+)
+pizzeria.bewertungen.append(
+    Bewertung(benutzer_id=102, sterne=4, kommentar="Sehr lecker, aber etwas teuer")
+)
+pizzeria.bewertungen.append(
+    Bewertung(benutzer_id=103, sterne=5, kommentar="Authentisch italienisch!")
+)
+
+# Durchschnittliche Bewertung berechnen
+pizzeria.aktualisiere_durchschnitt()
+print(f"Restaurant: {pizzeria.name}")
+print(f"Durchschnittliche Bewertung: {pizzeria.durchschnittliche_bewertung}")
+----
+
+=== Übungen zur fortgeschrittenen Validierung
+
+==== Übung 1: Benutzerdefinierter Validator
+
+Erstellen Sie ein `Email`-Modell mit den Feldern `adresse`, `betreff` und `inhalt`.
+Schreiben Sie einen Validator, der prüft, ob die E-Mail-Adresse ein gültiges Format hat (enthält @, enthält einen Punkt nach dem @, etc.).
+
+==== Übung 2: Root-Validator
+
+Erweitern Sie das `Email`-Modell um ein Feld `anhänge` (List[str]).
+Schreiben Sie einen Root-Validator, der sicherstellt, dass der E-Mail-Inhalt mindestens 10 Zeichen lang ist, wenn Anhänge vorhanden sind.
+
+==== Übung 3: Verschachtelte Modelle
+
+Implementieren Sie ein `Blogsystem`-Modell mit:
+- `Benutzer`-Modell (ID, Name, E-Mail, Registrierungsdatum) - `Beitrag`-Modell (ID, Titel, Inhalt, Autor (Benutzer), Veröffentlichungsdatum, Tags) - `Kommentar`-Modell (ID, Beitrag-ID, Autor (Benutzer), Inhalt, Datum) Erstellen Sie einige Beispieldaten und validieren Sie sie.
+
+== Praktische Anwendungsfälle
+
+=== API-Anfragen validieren
+
+Pydantic ist ideal für die Validierung von API-Anfragen, besonders in Kombination mit Frameworks wie FastAPI:
+
+[source,python]
+----
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, Field, EmailStr
+from typing import List, Optional
+from datetime import date
+
+app = FastAPI()
+
+class KundenRegistrierung(BaseModel):
+    vorname: str = Field(..., min_length=2)
+    nachname: str = Field(..., min_length=2)
+    email: EmailStr
+    geburtsdatum: date
+    passwort: str = Field(..., min_length=8)
+    newsletter_abonnieren: bool = False
+
+class RegistrierungsAntwort(BaseModel):
+    kunden_id: int
+    benutzername: str
+    erfolg: bool
+    nachricht: str
+
+@app.post("/api/kunden/registrieren", response_model=RegistrierungsAntwort)
+async def kunde_registrieren(kunde: KundenRegistrierung):
+    """
+    Registriert einen neuen Kunden.
+    
+    Pydantic validiert automatisch die Eingabedaten:
+    - Prüft, ob alle erforderlichen Felder vorhanden sind
+    - Validiert E-Mail-Format
+    - Prüft Mindestlängen
+    - Konvertiert das Geburtsdatum von String zu date
+    """
+    
+    # Hier würde normalerweise die Geschäftslogik folgen (Datenbankoperationen, etc.)
+    
+    # Beispielantwort
+    return RegistrierungsAntwort(
+        kunden_id=12345,
+        benutzername=f"{kunde.vorname[0].lower()}{kunde.nachname.lower()}",
+        erfolg=True,
+        nachricht=f"Willkommen, {kunde.vorname}! Ihre Registrierung war erfolgreich."
+    )
+----
+
+=== Konfigurationsdateien verarbeiten
+
+Pydantic eignet sich hervorragend zum Verarbeiten von Konfigurationsdateien:
+
+[source,python]
+----
+import json
+from pydantic import BaseModel, Field, ValidationError
+from typing import Dict, List, Optional
+from enum import Enum
+
+class LogLevel(str, Enum):
+    DEBUG = "debug"
+    INFO = "info"
+    WARNING = "warning"
+    ERROR = "error"
+    CRITICAL = "critical"
+
+class DatabaseConfig(BaseModel):
+    host: str
+    port: int = 5432
+    username: str
+    password: str
+    database_name: str
+    ssl_enabled: bool = False
+    connection_timeout: int = 30
+    max_connections: int = 100
+
+class LoggingConfig(BaseModel):
+    level: LogLevel = LogLevel.INFO
+    file_path: Optional[str] = None
+    rotate_daily: bool = True
+    max_file_size_mb: int = Field(default=10, ge=1, le=1000)
+
+class ServiceConfig(BaseModel):
+    name: str
+    host: str = "localhost"
+    port: int
+    workers: int = Field(default=4, ge=1, le=32)
+    timeout: int = 30
+    dependencies: List[str] = []
+
+class AppConfig(BaseModel):
+    debug_mode: bool = False
+    environment: str
+    database: DatabaseConfig
+    logging: LoggingConfig
+    services: Dict[str, ServiceConfig]
+    allowed_origins: List[str] = ["http://localhost:8080"]
+    secret_key: str
+
+# Konfigurationsdatei laden und validieren
+def load_config(file_path: str) -> AppConfig:
+    try:
+        with open(file_path, 'r') as f:
+            config_data = json.load(f)
+        
+        return AppConfig(**config_data)
+    except ValidationError as e:
+        print(f"Konfigurationsfehler: {e}")
+        raise
+    except Exception as e:
+        print(f"Fehler beim Laden der Konfiguration: {e}")
+        raise
+
+# Verwendung
+try:
+    config = load_config('config.json')
+    print(f"Konfiguration für {config.environment}-Umgebung geladen")
+    print(f"Datenbank: {config.database.host}:{config.database.port}")
+    print(f"Dienste: {', '.join(config.services.keys())}")
+except Exception:
+    print("Anwendung wird mit Standardkonfiguration gestartet")
+----
+
+=== Daten für maschinelles Lernen strukturieren
+
+Pydantic kann auch verwendet werden, um Daten für ML-Modelle zu strukturieren:
+
+[source,python]
+----
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional, Dict, Union, Literal
+import numpy as np
+from datetime import datetime
+
+class NumericFeatures(BaseModel):
+    alter: int = Field(..., ge=0, le=120)
+    einkommen: float = Field(..., ge=0)
+    kreditwürdigkeit: float = Field(..., ge=300, le=850)
+    bisherige_kredite: int = Field(..., ge=0)
+    beschäftigungsdauer_jahre: float = Field(..., ge=0)
+    
+    # Numpy-Arrays für das ML-Modell erstellen
+    def as_array(self) -> np.ndarray:
+        return np.array([
+            self.alter,
+            self.einkommen,
+            self.kreditwürdigkeit,
+            self.bisherige_kredite,
+            self.beschäftigungsdauer_jahre
+        ])
+
+class KategorischeFeatures(BaseModel):
+    bildungsabschluss: Literal["kein_abschluss", "hauptschule", "realschule", "abitur", "bachelor", "master", "doktor"]
+    beschäftigungsstatus: Literal["vollzeit", "teilzeit", "selbstständig", "arbeitslos", "student", "rentner"]
+    wohnsituation: Literal["miete", "eigentum", "bei_eltern", "wg"]
+    familienstand: Literal["ledig", "verheiratet", "geschieden", "verwitwet"]
+    
+    # One-Hot-Encoding für das ML-Modell
+    def one_hot_encode(self, encoders: Dict) -> Dict[str, np.ndarray]:
+        result = {}
+        for field_name, value in self.dict().items():
+            if field_name in encoders:
+                encoder = encoders[field_name]
+                # Hier würde normalerweise der Encoder verwendet werden
+                # Beispiel-Implementation:
+                one_hot = np.zeros(len(encoder.categories_[0]))
+                index = encoder.categories_[0].tolist().index(value)
+                one_hot[index] = 1
+                result[field_name] = one_hot
+        return result
+
+class Kreditantrag(BaseModel):
+    antrag_id: str
+    antragsdatum: datetime
+    kreditsumme: float = Field(..., gt=0)
+    laufzeit_monate: int = Field(..., ge=1, le=360)
+    zinssatz: float = Field(..., ge=0, le=100)
+    zweck: str
+    
+    numerische_features: NumericFeatures
+    kategorische_features: KategorischeFeatures
+    
+    # Zusätzliche berechnete Features
+    @property
+    def monatliche_rate(self) -> float:
+        r = self.zinssatz / 100 / 12
+        n = self.laufzeit_monate
+        return self.kreditsumme * (r * (1 + r) ** n) / ((1 + r) ** n - 1)
+    
+    @property
+    def verhältnis_rate_einkommen(self) -> float:
+        monatliches_einkommen = self.numerische_features.einkommen / 12
+        return self.monatliche_rate / monatliches_einkommen
+    
+    @validator('verhältnis_rate_einkommen', check_fields=False)
+    def check_income_ratio(cls, v):
+        if v > 0.5:
+            raise ValueError("Monatliche Rate übersteigt 50% des Einkommens")
+        return v
+
+# Beispielverwendung für ein ML-Modell
+def kreditantrag_vorbereiten(antrag: Kreditantrag, encoders: Dict) -> Dict:
+    """Bereitet einen Kreditantrag für ein ML-Modell vor."""
+    
+    # Numerische Features als Array
+    num_features = antrag.numerische_features.as_array()
+    
+    # Kategorische Features als One-Hot-Encoded Arrays
+    cat_features = antrag.kategorische_features.one_hot_encode(encoders)
+    
+    # Antragsspezifische Features
+    zusätzliche_features = np.array([
+        antrag.kreditsumme,
+        antrag.laufzeit_monate,
+        antrag.zinssatz,
+        antrag.monatliche_rate,
+        antrag.verhältnis_rate_einkommen
+    ])
+    
+    # Alle Features zusammenführen (in der Praxis würde hier mehr passieren)
+    return {
+        "antrag_id": antrag.antrag_id,
+        "num_features": num_features,
+        "cat_features": cat_features,
+        "zusätzliche_features": zusätzliche_features
+    }
+----
+
+=== Übungen zu den Anwendungsfällen
+
+==== Übung 1: FastAPI-Endpunkt
+
+Implementieren Sie einen FastAPI-Endpunkt `/api/produkte/suche`, der eine Suchanfrage für Produkte akzeptiert.
+Definieren Sie ein Pydantic-Modell `Suchanfrage` mit Feldern wie `suchbegriff`, `kategorie` (optional), `min_preis` und `max_preis` (beide optional), sowie `sortierung`.
+
+==== Übung 2: Konfigurations-Manager
+
+Erstellen Sie einen Konfigurations-Manager für eine Webanwendung mit Pydantic.
+Die Konfiguration sollte Einstellungen für Datenbank, Cache (Redis), API-Schlüssel für externe Dienste und Server-Einstellungen enthalten.
+
+==== Übung 3: Datenvorverarbeitung
+
+Entwickeln Sie ein System zur Validierung und Vorverarbeitung von Kundendaten für eine Datenanalyse.
+Definieren Sie Modelle für Kundendaten, Transaktionen und Produktbewertungen.
+Integrieren Sie Validatoren, die Ausreißer und fehlende Werte behandeln.
+
+== Fortgeschrittene Funktionen
+
+=== Benutzerdefinierte Typen und Konvertierungen
+
+Pydantic erlaubt die Definition benutzerdefinierter Typen:
+
+[source,python]
+----
+from pydantic import BaseModel, validator, constr
+from typing import NewType, List, Dict, Any, Callable
+import re
+from pathlib import Path
+from datetime import time, datetime
+
+# Benutzerdefinierter Typ für eine deutsche Postleitzahl
+PLZ = NewType('PLZ', str)
+
+# Benutzerdefinierter Typ für eine IBAN
+IBAN = NewType('IBAN', str)
+
+# Benutzerdefinierter Typ für einen Farbcode
+HexColor = NewType('HexColor', str)
+
+class HexColorValidator:
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate
+    
+    @classmethod
+    def validate(cls, v):
+        if not isinstance(v, str):
+            raise TypeError('String erforderlich')
+        
+        if not re.match(r'^#[0-9A-Fa-f]{6}', v):
+            raise ValueError('Ungültiger HEX-Farbcode (Format: #RRGGBB)')
+        
+        return v.upper()
+
+# Beispiel für ein Modell mit benutzerdefinierten Typen
+class Geschäft(BaseModel):
+    name: str
+    adresse: str
+    plz: PLZ
+    stadt: str
+    öffnungszeiten_start: time
+    öffnungszeiten_ende: time
+    farbe: HexColor
+    bankverbindung: IBAN
+    
+    @validator('plz')
+    def plz_validieren(cls, v):
+        if not re.match(r'^[0-9]{5}', v):
+            raise ValueError('Ungültige PLZ (5 Ziffern erforderlich)')
+        return v
+    
+    @validator('bankverbindung')
+    def iban_validieren(cls, v):
+        # Vereinfachte IBAN-Validierung (nur für Deutschland)
+        v = v.replace(' ', '').upper()
+        if not re.match(r'^DE[0-9]{2}[0-9]{18}', v):
+            raise ValueError('Ungültige deutsche IBAN')
+        return v
+    
+    @validator('öffnungszeiten_ende')
+    def öffnungszeiten_validieren(cls, v, values):
+        if 'öffnungszeiten_start' in values and v < values['öffnungszeiten_start']:
+            raise ValueError('Die Öffnungszeit-Ende muss nach der Öffnungszeit-Start liegen')
+        return v
+
+# Verwendung
+bäckerei = Geschäft(
+    name="Bäckerei Müller",
+    adresse="Hauptstraße 123",
+    plz="12345",
+    stadt="Berlin",
+    öffnungszeiten_start=time(6, 0),   # 6:00 Uhr
+    öffnungszeiten_ende=time(18, 30),  # 18:30 Uhr
+    farbe="#A52A2A",  # Braun
+    bankverbindung="DE89 3704 0044 0532 0130 00"
+)
+print(f"Geschäft: {bäckerei.name}")
+print(f"Adresse: {bäckerei.adresse}, {bäckerei.plz} {bäckerei.stadt}")
+print(f"Öffnungszeiten: {bäckerei.öffnungszeiten_start} - {bäckerei.öffnungszeiten_ende}")
+print(f"Farbcode: {bäckerei.farbe}")
+print(f"IBAN: {bäckerei.bankverbindung}")
+----
+
+=== Generische Modelle
+
+Pydantic unterstützt generische Modelle, die mit verschiedenen Typen parametrisiert werden können:
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from typing import Generic, TypeVar, List, Optional
+
+T = TypeVar('T')
+ID = TypeVar('ID')
+
+class PaginationParams(BaseModel):
+    page: int = Field(1, ge=1)
+    items_per_page: int = Field(20, ge=1, le=100)
+    
+class ApiResponse(Generic[T]):
+    data: T
+    success: bool = True
+    message: Optional[str] = None
+
+class Entity(Generic[ID]):
+    id: ID
+    created_at: datetime
+    updated_at: datetime
+
+class Produkt(Entity[int]):
+    name: str
+    beschreibung: str
+    preis: float
+    auf_lager: bool = True
+
+class BenutzerProfil(Entity[str]):
+    email: str
+    vollständiger_name: str
+    bio: Optional[str] = None
+
+# Verwendung generischer Modelle
+def produkte_suchen(suchbegriff: str, pagination: PaginationParams) -> ApiResponse[List[Produkt]]:
+    # Hier würde die Datenbankabfrage stattfinden
+    ergebnis = [
+        Produkt(
+            id=1,
+            name="Laptop XYZ",
+            beschreibung=f"Leistungsstarker Laptop mit {suchbegriff}",
+            preis=999.99,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
+        ),
+        Produkt(
+            id=2,
+            name="Smartphone ABC",
+            beschreibung=f"Modernes Smartphone mit {suchbegriff}",
+            preis=599.99,
+            created_at=datetime.now(),
+            updated_at=datetime.now()
+        )
+    ]
+    
+    return ApiResponse(
+        data=ergebnis,
+        message=f"2 Produkte mit '{suchbegriff}' gefunden"
+    )
+
+pagination = PaginationParams(page=1, items_per_page=10)
+antwort = produkte_suchen("Retina Display", pagination)
+
+print(f"Erfolg: {antwort.success}")
+print(f"Nachricht: {antwort.message}")
+print("Produkte:")
+for produkt in antwort.data:
+    print(f"  - {produkt.name}: {produkt.preis}€")
+----
+
+=== Dynamische Modellgenerierung
+
+In manchen Fällen müssen Sie Modelle dynamisch zur Laufzeit erstellen:
+
+[source,python]
+----
+from pydantic import create_model, Field
+from typing import Dict, Any, Optional
+
+def create_dynamisches_modell(schema: Dict[str, Any], model_name: str = "DynamischesModell"):
+    """Erstellt dynamisch ein Pydantic-Modell basierend auf einem Schema."""
+    feld_definitionen = {}
+    
+    for feldname, feldconfig in schema.items():
+        feldtyp = feldconfig.get("typ", str)
+        erforderlich = feldconfig.get("erforderlich", True)
+        beschreibung = feldconfig.get("beschreibung", "")
+        
+        # Standardwert basierend auf "erforderlich" festlegen
+        default_value = ... if erforderlich else None
+        
+        # Zusätzliche Validierungsattribute sammeln
+        extra_kwargs = {}
+        if "min_length" in feldconfig:
+            extra_kwargs["min_length"] = feldconfig["min_length"]
+        if "max_length" in feldconfig:
+            extra_kwargs["max_length"] = feldconfig["max_length"]
+        if "regex" in feldconfig:
+            extra_kwargs["regex"] = feldconfig["regex"]
+        
+        # Feld mit Validierungsregeln erstellen
+        feld = (
+            Optional[feldtyp] if not erforderlich else feldtyp,
+            Field(default_value, description=beschreibung, **extra_kwargs)
+        )
+        
+        feld_definitionen[feldname] = feld
+    
+    # Modell erstellen
+    return create_model(model_name, **feld_definitionen)
+
+# Beispiel-Schema für ein Kontaktformular
+kontaktformular_schema = {
+    "name": {
+        "typ": str,
+        "erforderlich": True,
+        "beschreibung": "Vollständiger Name des Kontakts",
+        "min_length": 2,
+        "max_length": 100
+    },
+    "email": {
+        "typ": str,
+        "erforderlich": True,
+        "beschreibung": "E-Mail-Adresse für Rückmeldungen",
+        "regex": r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    },
+    "telefon": {
+        "typ": str,
+        "erforderlich": False,
+        "beschreibung": "Telefonnummer für Rückfragen"
+    },
+    "nachricht": {
+        "typ": str,
+        "erforderlich": True,
+        "beschreibung": "Nachrichteninhalt",
+        "min_length": 10
+    },
+    "thema": {
+        "typ": str,
+        "erforderlich": False,
+        "beschreibung": "Thema der Anfrage"
+    }
+}
+
+# Dynamisches Modell erstellen
+KontaktFormular = create_dynamisches_modell(kontaktformular_schema, "KontaktFormular")
+
+# Modell verwenden
+formular = KontaktFormular(
+    name="Maria Schmidt",
+    email="maria.schmidt@example.com",
+    nachricht="Ich habe eine Frage zu Ihrem Produkt. Bitte kontaktieren Sie mich."
+)
+
+print(f"Formular von: {formular.name}")
+print(f"E-Mail: {formular.email}")
+print(f"Nachricht: {formular.nachricht}")
+----
+
+=== Übungen zu fortgeschrittenen Funktionen
+
+==== Übung 1: Benutzerdefinierte Typen
+
+Erstellen Sie einen benutzerdefinierten Typ `Telefonnummer` mit einem Validator, der deutsche Telefonnummern in ein einheitliches Format bringt (z.B. +49 xxxx xxxxxx).
+Verwenden Sie diesen Typ in einem `Kontakt`-Modell.
+
+==== Übung 2: Generisches Modell
+
+Implementieren Sie ein generisches `Repository`-Modell, das CRUD-Operationen für verschiedene Entitätstypen abbildet.
+Erstellen Sie dann spezialisierte Repositories für `Kunde` und `Bestellung`.
+
+==== Übung 3: Dynamische Konfiguration
+
+Entwickeln Sie einen dynamischen Konfigurationsgenerator, der aus einer JSON-Datei ein Pydantic-Modell erzeugt.
+Die JSON-Datei sollte Typen, Standardwerte und Validierungsregeln definieren können.
+
+== Integration mit anderen Bibliotheken
+
+=== FastAPI
+
+Pydantic und FastAPI sind das perfekte Duo für die API-Entwicklung:
+
+[source,python]
+----
+from fastapi import FastAPI, HTTPException, Depends, Query
+from pydantic import BaseModel, Field, EmailStr
+from typing import List, Optional
+from datetime import date
+import uvicorn
+
+app = FastAPI(title="Buchhandlung API", version="1.0.0")
+
+# Pydantic-Modelle für Request/Response
+class BuchBasis(BaseModel):
+    titel: str = Field(..., min_length=1, max_length=100)
+    autor: str = Field(..., min_length=2)
+    isbn: str = Field(..., regex=r"^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$")
+    erscheinungsdatum: date
+    preis: float = Field(..., gt=0)
+    auf_lager: bool = True
+
+class BuchErstellen(BuchBasis):
+    pass
+
+class Buch(BuchBasis):
+    id: int
+    
+    class Config:
+        orm_mode = True  # Erlaubt die Konvertierung von ORM-Objekten
+
+class BuchUpdate(BaseModel):
+    titel: Optional[str] = Field(None, min_length=1, max_length=100)
+    autor: Optional[str] = None
+    preis: Optional[float] = Field(None, gt=0)
+    auf_lager: Optional[bool] = None
+
+# Eine einfache In-Memory-Datenbank für das Beispiel
+bücher_db = {}
+bücher_zähler = 0
+
+@app.post("/bücher/", response_model=Buch, status_code=201)
+def buch_erstellen(buch: BuchErstellen):
+    global bücher_zähler
+    bücher_zähler += 1
+    neues_buch = Buch(id=bücher_zähler, **buch.dict())
+    bücher_db[bücher_zähler] = neues_buch
+    return neues_buch
+
+@app.get("/bücher/", response_model=List[Buch])
+def bücher_auflisten(
+    titel: Optional[str] = Query(None, description="Nach Titel filtern"),
+    auf_lager: Optional[bool] = Query(None, description="Nur verfügbare Bücher anzeigen")
+):
+    ergebnis = list(bücher_db.values())
+    
+    if titel:
+        ergebnis = [b for b in ergebnis if titel.lower() in b.titel.lower()]
+    
+    if auf_lager is not None:
+        ergebnis = [b for b in ergebnis if b.auf_lager == auf_lager]
+        
+    return ergebnis
+
+@app.get("/bücher/{buch_id}", response_model=Buch)
+def buch_details(buch_id: int):
+    if buch_id not in bücher_db:
+        raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+    return bücher_db[buch_id]
+
+@app.patch("/bücher/{buch_id}", response_model=Buch)
+def buch_aktualisieren(buch_id: int, update_data: BuchUpdate):
+    if buch_id not in bücher_db:
+        raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+    
+    buch = bücher_db[buch_id]
+    update_dict = update_data.dict(exclude_unset=True)
+    
+    for key, value in update_dict.items():
+        setattr(buch, key, value)
+    
+    bücher_db[buch_id] = buch
+    return buch
+
+@app.delete("/bücher/{buch_id}", status_code=204)
+def buch_löschen(buch_id: int):
+    if buch_id not in bücher_db:
+        raise HTTPException(status_code=404, detail="Buch nicht gefunden")
+    
+    del bücher_db[buch_id]
+    return None
+
+# Server starten (in einer echten Anwendung würde man die uvicorn-CLI verwenden)
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+----
+
+=== SQLAlchemy
+
+Pydantic funktioniert gut mit SQLAlchemy für die Datenbankintegration:
+
+[source,python]
+----
+from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, Date, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from pydantic import BaseModel
+from datetime import date
+from typing import List, Optional
+
+# SQLAlchemy-Setup
+Base = declarative_base()
+engine = create_engine("sqlite:///buchhandlung.db")
+SessionLocal = sessionmaker(bind=engine)
+
+# SQLAlchemy-Modelle (ORM)
+class VerlagORM(Base):
+    __tablename__ = "verlage"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    adresse = Column(String)
+    website = Column(String)
+    
+    bücher = relationship("BuchORM", back_populates="verlag")
+
+class BuchORM(Base):
+    __tablename__ = "bücher"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    titel = Column(String, index=True)
+    autor = Column(String, index=True)
+    isbn = Column(String, unique=True, index=True)
+    erscheinungsdatum = Column(Date)
+    preis = Column(Float)
+    auf_lager = Column(Boolean, default=True)
+    verlag_id = Column(Integer, ForeignKey("verlage.id"))
+    
+    verlag = relationship("VerlagORM", back_populates="bücher")
+
+# Pydantic-Modelle
+class Verlag(BaseModel):
+    id: int
+    name: str
+    adresse: Optional[str] = None
+    website: Optional[str] = None
+    
+    class Config:
+        orm_mode = True
+
+class Buch(BaseModel):
+    id: int
+    titel: str
+    autor: str
+    isbn: str
+    erscheinungsdatum: date
+    preis: float
+    auf_lager: bool = True
+    verlag_id: int
+    verlag: Optional[Verlag] = None
+    
+    class Config:
+        orm_mode = True
+
+# Datenbank initialisieren
+Base.metadata.create_all(bind=engine)
+
+# Beispielfunktionen zur Datenbankinteraktion
+def verlag_erstellen(name: str, adresse: Optional[str] = None, website: Optional[str] = None) -> Verlag:
+    db = SessionLocal()
+    db_verlag = VerlagORM(name=name, adresse=adresse, website=website)
+    db.add(db_verlag)
+    db.commit()
+    db.refresh(db_verlag)
+    db.close()
+    return Verlag.from_orm(db_verlag)
+
+def buch_erstellen(
+    titel: str,
+    autor: str,
+    isbn: str,
+    erscheinungsdatum: date,
+    preis: float,
+    verlag_id: int,
+    auf_lager: bool = True
+) -> Buch:
+    db = SessionLocal()
+    db_buch = BuchORM(
+        titel=titel,
+        autor=autor,
+        isbn=isbn,
+        erscheinungsdatum=erscheinungsdatum,
+        preis=preis,
+        verlag_id=verlag_id,
+        auf_lager=auf_lager
+    )
+    db.add(db_buch)
+    db.commit()
+    db.refresh(db_buch)
+    db.close()
+    return Buch.from_orm(db_buch)
+
+def bücher_auflisten() -> List[Buch]:
+    db = SessionLocal()
+    bücher = db.query(BuchORM).all()
+    db.close()
+    return [Buch.from_orm(buch) for buch in bücher]
+
+# Beispielverwendung
+try:
+    # Verlag erstellen
+    dtv_verlag = verlag_erstellen(
+        name="Deutscher Taschenbuch Verlag",
+        adresse="Friedrichstraße 1a, 80801 München",
+        website="https://www.dtv.de"
+    )
+    
+    # Buch erstellen
+    neues_buch = buch_erstellen(
+        titel="Python für Fortgeschrittene",
+        autor="Dr. Code",
+        isbn="978-3-12345-678-9",
+        erscheinungsdatum=date(2023, 5, 15),
+        preis=29.99,
+        verlag_id=dtv_verlag.id
+    )
+    
+    # Alle Bücher auflisten
+    alle_bücher = bücher_auflisten()
+    for buch in alle_bücher:
+        print(f"{buch.titel} von {buch.autor} (ISBN: {buch.isbn})")
+        
+except Exception as e:
+    print(f"Fehler: {e}")
+----
+
+=== Datenverarbeitung mit Pandas
+
+Pydantic kann auch mit Pandas für Datenanalysen kombiniert werden:
+
+[source,python]
+----
+import pandas as pd
+from pydantic import BaseModel, validator
+from typing import List, Optional, Dict
+import numpy as np
+from datetime import datetime
+
+class Verkauf(BaseModel):
+    produkt_id: int
+    menge: int
+    preis_pro_einheit: float
+    verkaufsdatum: datetime
+    rabatt_prozent: Optional[float] = 0.0
+    
+    @validator('menge')
+    def menge_positiv(cls, v):
+        if v <= 0:
+            raise ValueError('Menge muss positiv sein')
+        return v
+    
+    @validator('rabatt_prozent')
+    def rabatt_gültig(cls, v):
+        if v < 0 or v > 100:
+            raise ValueError('Rabatt muss zwischen 0 und 100 Prozent liegen')
+        return v
+    
+    @property
+    def gesamtpreis(self) -> float:
+        return self.menge * self.preis_pro_einheit * (1 - self.rabatt_prozent / 100)
+
+class VerkaufsAnalyse:
+    def __init__(self, verkäufe: List[Verkauf]):
+        self.verkäufe = verkäufe
+    
+    def erstelle_dataframe(self) -> pd.DataFrame:
+        """Konvertiert die Verkaufsdaten in einen Pandas DataFrame."""
+        daten = []
+        for verkauf in self.verkäufe:
+            daten.append({
+                'produkt_id': verkauf.produkt_id,
+                'menge': verkauf.menge,
+                'preis_pro_einheit': verkauf.preis_pro_einheit,
+                'verkaufsdatum': verkauf.verkaufsdatum,
+                'rabatt_prozent': verkauf.rabatt_prozent,
+                'gesamtpreis': verkauf.gesamtpreis
+            })
+        
+        return pd.DataFrame(daten)
+    
+    def tägliche_verkäufe(self) -> pd.DataFrame:
+        """Analysiert die Verkäufe nach Datum."""
+        df = self.erstelle_dataframe()
+        df['datum'] = df['verkaufsdatum'].dt.date
+        
+        tägliche_stats = df.groupby('datum').agg({
+            'menge': 'sum',
+            'gesamtpreis': 'sum',
+            'produkt_id': 'count'
+        }).rename(columns={'produkt_id': 'anzahl_verkäufe'})
+        
+        return tägliche_stats
+    
+    def produkt_verkäufe(self) -> pd.DataFrame:
+        """Analysiert die Verkäufe nach Produkt."""
+        df = self.erstelle_dataframe()
+        
+        produkt_stats = df.groupby('produkt_id').agg({
+            'menge': 'sum',
+            'gesamtpreis': 'sum',
+            'verkaufsdatum': 'count'
+        }).rename(columns={'verkaufsdatum': 'anzahl_verkäufe'})
+        
+        return produkt_stats
+
+# Beispieldaten
+verkaufsdaten = [
+    Verkauf(
+        produkt_id=1, 
+        menge=5, 
+        preis_pro_einheit=19.99, 
+        verkaufsdatum=datetime(2023, 5, 1, 10, 30),
+        rabatt_prozent=10.0
+    ),
+    Verkauf(
+        produkt_id=2, 
+        menge=2, 
+        preis_pro_einheit=29.99, 
+        verkaufsdatum=datetime(2023, 5, 1, 14, 15)
+    ),
+    Verkauf(
+        produkt_id=1, 
+        menge=3, 
+        preis_pro_einheit=19.99, 
+        verkaufsdatum=datetime(2023, 5, 2, 9, 45)
+    ),
+    Verkauf(
+        produkt_id=3, 
+        menge=1, 
+        preis_pro_einheit=49.99, 
+        verkaufsdatum=datetime(2023, 5, 2, 16, 20),
+        rabatt_prozent=5.0
+    ),
+    Verkauf(
+        produkt_id=2, 
+        menge=4, 
+        preis_pro_einheit=29.99, 
+        verkaufsdatum=datetime(2023, 5, 3, 11, 10)
+    ),
+]
+
+# Analyse durchführen
+analyse = VerkaufsAnalyse(verkaufsdaten)
+
+# DataFrame erstellen
+df = analyse.erstelle_dataframe()
+print("Verkaufsdaten als DataFrame:")
+print(df.head())
+
+# Tägliche Verkäufe analysieren
+tägliche_verkäufe = analyse.tägliche_verkäufe()
+print("\nTägliche Verkaufsstatistiken:")
+print(tägliche_verkäufe)
+
+# Verkäufe nach Produkt analysieren
+produkt_verkäufe = analyse.produkt_verkäufe()
+print("\nVerkaufsstatistiken nach Produkt:")
+print(produkt_verkäufe)
+----
+
+=== Übungen zur Integration
+
+==== Übung 1: REST-API mit FastAPI
+
+Erstellen Sie eine einfache REST-API mit FastAPI und Pydantic für die Verwaltung von Aufgaben (ToDo-App).
+Implementieren Sie Endpunkte zum Erstellen, Lesen, Aktualisieren und Löschen von Aufgaben.
+
+==== Übung 2: Datenbankintegration
+
+Erweitern Sie die ToDo-App um eine SQLite-Datenbank mit SQLAlchemy.
+Erstellen Sie sowohl SQLAlchemy-ORM-Modelle als auch entsprechende Pydantic-Modelle für die Datenbankinteraktion.
+
+==== Übung 3: Datenanalyse
+
+Implementieren Sie ein System, das Verkaufsdaten aus einer CSV-Datei einliest, mit Pydantic validiert und dann mit Pandas analysiert.
+Erstellen Sie aussagekräftige Berichte und Visualisierungen.
+
+== Schema-Generierung und JSON Schema
+
+Eine der mächtigsten Funktionen von Pydantic ist die Fähigkeit, automatisch JSON-Schemas aus Ihren Modellen zu generieren. Dies ist besonders nützlich für API-Dokumentation und Client-Generierung.
+
+=== JSON Schema generieren
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from typing import List, Optional
+from datetime import date
+
+class Adresse(BaseModel):
+    straße: str
+    hausnummer: str
+    plz: str
+    ort: str
+    land: str = "Deutschland"
+
+class Benutzer(BaseModel):
+    id: int
+    name: str = Field(..., min_length=2, description="Name des Benutzers")
+    email: str
+    geburtsdatum: Optional[date] = None
+    adressen: List[Adresse] = []
+    
+    class Config:
+        schema_extra = {
+            "example": {
+                "id": 1,
+                "name": "Max Mustermann",
+                "email": "max@example.com",
+                "geburtsdatum": "1990-01-01",
+                "adressen": [
+                    {
+                        "straße": "Musterstraße",
+                        "hausnummer": "42",
+                        "plz": "12345",
+                        "ort": "Musterstadt"
+                    }
+                ]
+            }
+        }
+
+# JSON Schema als Python-Dictionary
+schema = Benutzer.schema()
+print(schema)
+
+# JSON Schema als formatierter JSON-String
+schema_json = Benutzer.schema_json(indent=2)
+print(schema_json)
+----
+
+=== Schema-Anpassung
+
+Sie können das generierte Schema mit zusätzlichen Informationen anreichern:
+
+[source,python]
+----
+from pydantic import BaseModel, Field, Schema
+
+class Produkt(BaseModel):
+    id: int
+    name: str = Field(
+        ...,
+        min_length=3,
+        description="Produktname",
+        examples=["Laptop", "Smartphone"]
+    )
+    preis: float = Field(
+        ...,
+        gt=0,
+        description="Preis in Euro",
+        examples=[499.99, 999.99]
+    )
+    
+    class Config:
+        title = "Produktmodell"
+        description = "Modell zur Darstellung von Produkten im Shop"
+----
+
+=== Verwendung mit OpenAPI
+
+Besonders in Kombination mit FastAPI können Sie die Schema-Generierung nutzen, um automatisch API-Dokumentation zu erstellen:
+
+[source,python]
+----
+from fastapi import FastAPI, Path, Query
+from pydantic import BaseModel, Field
+from typing import List, Optional
+
+app = FastAPI(title="Produktverwaltung")
+
+class Produkt(BaseModel):
+    id: int
+    name: str = Field(..., min_length=3, description="Produktname")
+    preis: float = Field(..., gt=0, description="Preis in Euro")
+    beschreibung: Optional[str] = None
+
+@app.post("/produkte/", response_model=Produkt)
+def create_product(produkt: Produkt):
+    # Hier würde die Logik zum Erstellen eines Produkts stehen
+    return produkt
+
+@app.get("/produkte/{produkt_id}", response_model=Produkt)
+def get_product(produkt_id: int = Path(..., description="ID des Produkts")):
+    # Hier würde die Logik zum Abrufen eines Produkts stehen
+    return {"id": produkt_id, "name": "Beispielprodukt", "preis": 99.99}
+
+@app.get("/produkte/", response_model=List[Produkt])
+def get_products(
+    name: Optional[str] = Query(None, description="Filtern nach Produktname"),
+    min_preis: Optional[float] = Query(None, description="Minimaler Preis")
+):
+    # Hier würde die Logik zum Filtern von Produkten stehen
+    return [{"id": 1, "name": "Beispielprodukt", "preis": 99.99}]
+----
+
+=== Übungen zur Schema-Generierung
+
+==== Übung 1: API-Dokumentation
+
+Erstellen Sie ein Pydantic-Modell für ein Blogsystem (mit Beiträgen, Autoren, Kommentaren) und generieren Sie das JSON-Schema. Analysieren Sie die Struktur des generierten Schemas.
+
+==== Übung 2: OpenAPI-Integration
+
+Integrieren Sie Ihre Modelle aus Übung 1 in eine FastAPI-Anwendung und erkunden Sie die automatisch generierte Swagger-Dokumentation unter `/docs`.
+
+== Pydantic v2 Features und Migration
+
+Pydantic v2 wurde mit einem Fokus auf Performance und Benutzerfreundlichkeit neu implementiert. In diesem Abschnitt lernen Sie die wichtigsten Neuerungen und Migrationsschritte kennen.
+
+=== Wichtige Neuerungen in Pydantic v2
+
+[source,python]
+----
+# Pydantic v2 Beispiel
+from pydantic import BaseModel, Field, field_validator, model_validator
+from typing import List
+
+class Bestellung(BaseModel):
+    kunden_id: int
+    produkt_ids: List[int]
+    gesamtpreis: float = Field(gt=0)
+    
+    # Neuer Validator-Dekorator in v2
+    @field_validator('produkt_ids')
+    def validate_product_ids(cls, v):
+        if not v:  # Leere Liste
+            raise ValueError("Mindestens ein Produkt muss bestellt werden")
+        return v
+    
+    # Ersetzt root_validator in v1
+    @model_validator(mode='after')
+    def validate_total(self):
+        # Hier könnte eine Prüfung des Gesamtpreises erfolgen
+        if self.gesamtpreis < len(self.produkt_ids) * 10:  # Mindestpreis pro Produkt
+            raise ValueError("Gesamtpreis zu niedrig für die Anzahl der Produkte")
+        return self
+----
+
+=== Performance-Verbesserungen
+
+Pydantic v2 bietet erhebliche Performance-Verbesserungen durch eine Neuimplementierung des Kerns in Rust:
+
+* Bis zu 50x schnellere Validierung
+* Geringerer Speicherverbrauch
+* Optimierte Serialisierung und Deserialisierung
+
+[source,python]
+----
+# Performance-Vergleich demonstrieren
+import time
+from pydantic import BaseModel
+
+class BenutzerV2(BaseModel):
+    id: int
+    name: str
+    email: str
+
+# Erstellen von 10.000 Benutzerobjekten
+start_time = time.time()
+for i in range(10000):
+    BenutzerV2(id=i, name=f"Benutzer {i}", email=f"benutzer{i}@example.com")
+end_time = time.time()
+
+print(f"Zeit für 10.000 Validierungen: {end_time - start_time:.4f} Sekunden")
+----
+
+=== Migrationsschritte von v1 zu v2
+
+==== 1. Validatoren umstellen
+
+[source,python]
+----
+# Pydantic v1
+from pydantic import BaseModel, validator, root_validator
+
+class ProduktV1(BaseModel):
+    name: str
+    preis: float
+    
+    @validator('name')
+    def name_must_be_valid(cls, v):
+        if len(v) < 3:
+            raise ValueError("Name muss mindestens 3 Zeichen haben")
+        return v.title()
+    
+    @root_validator
+    def check_price(cls, values):
+        if 'preis' in values and values['preis'] <= 0:
+            raise ValueError("Preis muss positiv sein")
+        return values
+
+# Pydantic v2
+from pydantic import BaseModel, field_validator, model_validator
+
+class ProduktV2(BaseModel):
+    name: str
+    preis: float
+    
+    @field_validator('name')
+    def name_must_be_valid(cls, v):
+        if len(v) < 3:
+            raise ValueError("Name muss mindestens 3 Zeichen haben")
+        return v.title()
+    
+    @model_validator(mode='after')
+    def check_price(self):
+        if self.preis <= 0:
+            raise ValueError("Preis muss positiv sein")
+        return self
+----
+
+==== 2. Config-Klasse Änderungen
+
+[source,python]
+----
+# Pydantic v1
+class BenutzerV1(BaseModel):
+    name: str
+    email: str
+    
+    class Config:
+        orm_mode = True
+        allow_population_by_field_name = True
+        validate_assignment = True
+
+# Pydantic v2
+class BenutzerV2(BaseModel):
+    name: str
+    email: str
+    
+    model_config = {
+        'from_attributes': True,  # Ersetzt orm_mode
+        'populate_by_name': True,  # Ersetzt allow_population_by_field_name
+        'validate_assignment': True
+    }
+----
+
+==== 3. Methoden-Änderungen
+
+[source,python]
+----
+# Pydantic v1
+benutzer_v1 = BenutzerV1(name="Max", email="max@example.com")
+benutzer_dict = benutzer_v1.dict()
+benutzer_json = benutzer_v1.json()
+
+# Pydantic v2
+benutzer_v2 = BenutzerV2(name="Max", email="max@example.com")
+benutzer_dict = benutzer_v2.model_dump()  # Ersetzt .dict()
+benutzer_json = benutzer_v2.model_dump_json()  # Ersetzt .json()
+----
+
+=== Übungen zur Migration
+
+==== Übung 1: Validator-Migration
+
+Nehmen Sie ein bestehendes Pydantic v1 Modell mit `validator` und `root_validator` und migrieren Sie es zu Pydantic v2 mit `field_validator` und `model_validator`.
+
+==== Übung 2: Performance-Test
+
+Implementieren Sie einen Benchmark-Test, der die Performance von Pydantic v1 und v2 für ein komplexes Modell vergleicht.
+
+== Benutzerdefinierte Typen und komplexe Validierung
+
+In diesem Abschnitt lernen Sie, wie Sie benutzerdefinierte Typen erstellen und komplexe Validierungsszenarien umsetzen können.
+
+=== Benutzerdefinierte Typen
+
+[source,python]
+----
+from pydantic import BaseModel, validator
+from typing import NewType, List, Dict, Any
+import re
+
+# Benutzerdefinierte Typen definieren
+Postleitzahl = NewType('Postleitzahl', str)
+Telefonnummer = NewType('Telefonnummer', str)
+IBAN = NewType('IBAN', str)
+
+class Kontakt(BaseModel):
+    name: str
+    plz: Postleitzahl
+    telefon: Telefonnummer
+    iban: IBAN
+    
+    @validator('plz')
+    def validate_plz(cls, v):
+        if not re.match(r'^\d{5}$', v):  # Deutsche PLZ
+            raise ValueError("Ungültiges PLZ-Format. Muss 5 Ziffern enthalten.")
+        return v
+    
+    @validator('telefon')
+    def validate_phone(cls, v):
+        # Entferne Leerzeichen, Klammern, Bindestriche
+        cleaned = re.sub(r'[\s\(\)\-]', '', v)
+        if not re.match(r'^(\+\d{1,3})?\d{6,15}$', cleaned):
+            raise ValueError("Ungültiges Telefonnummer-Format")
+        return cleaned
+    
+    @validator('iban')
+    def validate_iban(cls, v):
+        # Vereinfachte IBAN-Validierung
+        cleaned = re.sub(r'\s', '', v.upper())
+        if not re.match(r'^[A-Z]{2}\d{2}[A-Z0-9]{4,30}$', cleaned):
+            raise ValueError("Ungültiges IBAN-Format")
+        return cleaned
+----
+
+=== Generische Typen und komplexe Strukturen
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from typing import Generic, TypeVar, Dict, List, Optional, Union
+from datetime import datetime
+
+# Generischer Typ für Paginierung
+T = TypeVar('T')
+
+class PaginatedResponse(BaseModel, Generic[T]):
+    items: List[T]
+    total: int
+    page: int
+    page_size: int
+    
+    @property
+    def pages_total(self) -> int:
+        return (self.total + self.page_size - 1) // self.page_size
+
+# Komplexe verschachtelte Struktur
+class Metadaten(BaseModel):
+    erstellt_am: datetime = Field(default_factory=datetime.now)
+    tags: List[str] = []
+    eigenschaften: Dict[str, Any] = {}
+
+class Dokument(BaseModel):
+    id: str
+    titel: str
+    inhalt: str
+    metadaten: Metadaten
+    anhänge: Optional[List[str]] = None
+
+# Verwendung mit generischem Typ
+class DokumentenListe(PaginatedResponse[Dokument]):
+    filter_applied: bool = False
+
+# Beispiel für Union-Typ
+class Nachricht(BaseModel):
+    id: str
+    zeitstempel: datetime
+    inhalt: Union[str, Dict[str, Any], List[Any]]
+    priorität: int = 1
+----
+
+=== Rekursive Modelle
+
+Pydantic unterstützt auch rekursive Modellstrukturen, wie sie in Baumstrukturen oder verschachtelten Kommentaren vorkommen:
+
+[source,python]
+----
+from typing import List, Optional
+from pydantic import BaseModel
+
+# Für rekursive Modelle müssen wir die Klasse zuerst deklarieren
+class Kommentar(BaseModel):
+    id: int
+    text: str
+    autor: str
+    antworten: List['Kommentar'] = []  # Rekursive Referenz
+
+# Pydantic muss über die rekursive Referenz informiert werden
+Kommentar.update_forward_refs()
+
+# Beispiel für eine Baumstruktur
+class Kategorie(BaseModel):
+    id: int
+    name: str
+    unterkategorien: List['Kategorie'] = []  # Rekursive Referenz
+
+Kategorie.update_forward_refs()
+
+# Verwendungsbeispiel
+elektronik = Kategorie(
+    id=1,
+    name="Elektronik",
+    unterkategorien=[
+        Kategorie(
+            id=2,
+            name="Computer",
+            unterkategorien=[
+                Kategorie(id=3, name="Laptops"),
+                Kategorie(id=4, name="Desktop-PCs")
+            ]
+        ),
+        Kategorie(id=5, name="Smartphones")
+    ]
+)
+
+# Funktion zum Durchlaufen der Baumstruktur
+def print_category_tree(kategorie: Kategorie, level: int = 0):
+    print("  " * level + f"- {kategorie.name} (ID: {kategorie.id})")
+    for unterkategorie in kategorie.unterkategorien:
+        print_category_tree(unterkategorie, level + 1)
+
+print_category_tree(elektronik)
+----
+
+=== Übungen zu benutzerdefinierten Typen
+
+==== Übung 1: Domain-spezifischer Typ
+
+Entwickeln Sie einen benutzerdefinierten Typ `ISBN` für Buchnummern mit entsprechender Validierung.
+
+==== Übung 2: Rekursive Datenstruktur
+
+Implementieren Sie ein Modell für eine Dateisystemstruktur mit Ordnern und Dateien, wobei Ordner weitere Ordner und Dateien enthalten können.
+
+==== Übung 3: Generisches Repository
+
+Erstellen Sie ein generisches Repository-Muster mit Pydantic, das CRUD-Operationen für verschiedene Modelltypen unterstützt.
+
+== Tipps und Best Practices
+
+=== Optimierung der Performance
+
+Pydantic bietet mehrere Möglichkeiten zur Leistungsoptimierung:
+
+1. **Verwenden Sie `Config.extra = 'ignore'`**, um zusätzliche Felder stillschweigend zu ignorieren, anstatt einen Fehler auszulösen:
+
+[source,python]
+----
+class BenutzerEinstellungen(BaseModel):
+    theme: str = "hell"
+    benachrichtigungen: bool = True
+    sprache: str = "de"
+    
+    class Config:
+        extra = 'ignore'  # Ignoriert unbekannte Felder
+----
+
+2. **Vermeiden Sie übermäßige Validierung** für Daten, die bereits validiert wurden:
+
+[source,python]
+----
+# Bei bereits validiertem Objekt
+benutzer_dict = bereits_validierter_benutzer.dict()
+benutzer_dict["name"] = "Neuer Name"
+aktualisierter_benutzer = Benutzer.construct(**benutzer_dict)  # Umgeht Validierung
+
+# Beim Konvertieren zu JSON
+json_str = bereits_validierter_benutzer.json()
+----
+
+3. **Verwenden Sie `Config.orm_mode = True`** für effiziente ORM-Integration:
+
+[source,python]
+----
+class BenutzerModell(BaseModel):
+    id: int
+    name: str
+    email: str
+    
+    class Config:
+        orm_mode = True  # Ermöglicht .from_orm()
+----
+
+=== Fehlerbehandlung
+
+Effektive Fehlerbehandlung mit Pydantic:
+
+[source,python]
+----
+from pydantic import BaseModel, ValidationError, Field
+from typing import List
+
+class ProduktErstellen(BaseModel):
+    name: str = Field(..., min_length=3)
+    preis: float = Field(..., gt=0)
+    kategorien: List[str]
+
+def produkt_erstellen_handler(daten: dict):
+    try:
+        produkt_model = ProduktErstellen(**daten)
+        # Mit validiertem Modell weiterarbeiten
+        return {
+            "erfolg": True,
+            "produkt": produkt_model.dict()
+        }
+    except ValidationError as e:
+        fehler_details = []
+        for fehler in e.errors():
+            fehler_details.append({
+                "feld": fehler["loc"][0],
+                "nachricht": fehler["msg"],
+                "typ": fehler["type"]
+            })
+        
+        # Fehlerdetails zurückgeben
+        return {
+            "erfolg": False,
+            "fehler": fehler_details
+        }
+
+# Beispielverwendung
+gültige_daten = {
+    "name": "Premium Laptop",
+    "preis": 1299.99,
+    "kategorien": ["Elektronik", "Computer"]
+}
+
+ungültige_daten = {
+    "name": "PC",  # Zu kurz (min_length=3)
+    "preis": -99.99,  # Negativer Preis (gt=0)
+    "kategorien": "Elektronik"  # String statt Liste
+}
+
+print(produkt_erstellen_handler(gültige_daten))
+# Erfolgreiche Validierung
+
+print(produkt_erstellen_handler(ungültige_daten))
+# Gibt Fehlerdetails zurück
+----
+
+=== Bewährte Praktiken für Fehlerbehandlung
+
+1. **Spezifische Fehlermeldungen**: Stellen Sie sicher, dass Ihre Validierungsfehler klar und spezifisch sind.
+
+2. **Strukturierte Fehlerrückgabe**: Geben Sie Fehler in einem strukturierten Format zurück, das leicht zu verarbeiten ist.
+
+3. **Fehlerlokalisation**: Nutzen Sie die `loc`-Information in ValidationError, um genau zu identifizieren, wo der Fehler aufgetreten ist.
+
+4. **Benutzerdefinierte Fehlermeldungen**: Verwenden Sie das `error_msg`-Argument in Field, um benutzerdefinierte Fehlermeldungen zu definieren:
+
+[source,python]
+----
+class Benutzer(BaseModel):
+    name: str = Field(..., min_length=2, error_messages={
+        'min_length': 'Der Name muss mindestens 2 Zeichen lang sein.'
+    })
+----
+
+== Zusammenfassung und weiterführende Ressourcen
+
+=== Zusammenfassung
+
+In diesem Tutorial haben Sie gelernt, wie Sie Pydantic nutzen können, um:
+
+* Datenmodelle mit Typannotationen zu definieren
+* Daten automatisch zu validieren und zu konvertieren
+* Benutzerdefinierte Validatoren zu erstellen
+* Mit verschachtelten Modellen zu arbeiten
+* JSON-Schemas zu generieren
+* Pydantic mit Frameworks wie FastAPI zu integrieren
+* Von Pydantic v1 zu v2 zu migrieren
+* Komplexe Validierungsszenarien zu implementieren
+
+Pydantic ist ein leistungsstarkes Werkzeug für die Datenvalidierung in Python und bildet die Grundlage für viele moderne Python-Frameworks und -Anwendungen.
+
+=== Weiterführende Ressourcen
+
+==== Offizielle Dokumentation
+
+* [Pydantic Dokumentation](https://docs.pydantic.dev/)
+* [Pydantic v2 Migrationsanleitung](https://docs.pydantic.dev/latest/migration/)
+* [Pydantic GitHub Repository](https://github.com/pydantic/pydantic)
+
+==== Tutorials und Artikel
+
+* [FastAPI mit Pydantic](https://fastapi.tiangolo.com/tutorial/body/)
+* [Pydantic mit SQLAlchemy](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html)
+* [Pydantic Best Practices](https://docs.pydantic.dev/latest/usage/best_practices/)
+
+==== Bücher und Kurse
+
+* "Building Data Science Applications with FastAPI" von Francois Voron
+* "FastAPI: Modern Python Web Development" von Packt Publishing
+* "Python API Development Fundamentals" von Packt Publishing
+
+=== Nächste Schritte
+
+Nun, da Sie die Grundlagen von Pydantic beherrschen, können Sie:
+
+* Pydantic in Ihren eigenen Projekten einsetzen
+* Pydantic mit Frameworks wie FastAPI, Django oder Flask integrieren
+* Fortgeschrittene Validierungslogik für Ihre spezifischen Anwendungsfälle entwickeln
+* Zur Pydantic-Community beitragen
+
+Viel Erfolg bei Ihren Projekten mit Pydantic!
