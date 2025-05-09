@@ -1,0 +1,1216 @@
+= Python Grundlagen: Eine umfassende Einführung
+Daniel Senften <daniel.senften@talent-factory.ch>
+v1.0, 2024-04-11
+:toc: left
+:sectnums:
+:icons: font
+:source-highlighter: highlightjs
+:imagesdir: ../images
+
+== Einführung in Python
+
+=== Was ist Python?
+
+Python ist eine vielseitige, interpretierte Programmiersprache, die für ihre klare Syntax und Lesbarkeit bekannt ist. 
+Sie wurde 1991 von Guido van Rossum entwickelt und hat sich zu einer der beliebtesten Programmiersprachen 
+für verschiedenste Anwendungsbereiche entwickelt.
+
+[IMPORTANT]
+====
+Python ist eine interpretierte Sprache, was bedeutet, dass der Code zur Laufzeit ausgeführt wird, 
+ohne dass eine vorherige Kompilierung nötig ist.
+====
+
+=== Warum Python lernen?
+
+* *Einfach zu erlernen*: Klare, lesbare Syntax
+* *Vielseitig*: Geeignet für Webentwicklung, Datenanalyse, KI, Automatisierung, etc.
+* *Große Community*: Umfangreiche Dokumentation und zahlreiche Bibliotheken
+* *Hohe Produktivität*: Schnelle Entwicklung und Prototyping
+* *Plattformunabhängig*: Läuft auf Windows, MacOS, Linux und anderen Systemen
+
+=== Installation und Einrichtung
+
+Um mit Python zu arbeiten, benötigen Sie:
+
+1. *Python-Interpreter*: Laden Sie die neueste Version von https://www.python.org/downloads/[python.org] herunter
+2. *Code-Editor*: Empfehlungen:
+   * Visual Studio Code mit Python-Erweiterung
+   * PyCharm (Community Edition ist kostenlos)
+   * Jupyter Notebooks für interaktives Arbeiten
+
+[source,bash]
+----
+# Überprüfen der Python-Version im Terminal/Kommandozeile
+python --version
+# oder in einigen Systemen
+python3 --version
+----
+
+[TIP]
+====
+Verwenden Sie immer die neueste Python-Version für neue Projekte. Dieses Tutorial basiert auf Python 3.13+.
+====
+
+== Grundlegende Konzepte
+
+=== Der erste Python-Code
+
+Beginnen wir mit dem klassischen "Hello, World!"-Beispiel:
+
+[source,python]
+----
+# Dies ist ein Kommentar
+print("Hello, World!")
+----
+
+Führen Sie diesen Code aus, indem Sie ihn in einer Datei `hello.py` speichern und im Terminal ausführen:
+
+[source,bash]
+----
+python hello.py
+----
+
+=== Variablen und Datentypen
+
+Python verwendet dynamische Typisierung, d.h. Sie müssen den Datentyp einer Variable nicht explizit deklarieren.
+
+[source,python]
+----
+# Grundlegende Datentypen
+name = "Anna"                  # String (Zeichenkette)
+alter = 28                     # Integer (Ganzzahl)
+groesse = 1.75                 # Float (Gleitkommazahl)
+ist_student = True             # Boolean (Wahrheitswert)
+
+# Ausgabe mit Typinformationen
+print(f"Name: {name}, Typ: {type(name)}")
+print(f"Alter: {alter}, Typ: {type(alter)}")
+print(f"Größe: {groesse}, Typ: {type(groesse)}")
+print(f"Student: {ist_student}, Typ: {type(ist_student)}")
+----
+
+[cols="1,3,2", options="header"]
+|===
+|Datentyp |Beschreibung |Beispiel
+|`str` |Zeichenketten (Text) |`"Hallo"`, `'Welt'`
+|`int` |Ganzzahlen |`42`, `-7`
+|`float` |Gleitkommazahlen |`3.14`, `-0.001`
+|`bool` |Wahrheitswerte |`True`, `False`
+|`list` |Veränderbare Sequenz |`[1, 2, 3]`
+|`tuple` |Unveränderbare Sequenz |`(1, 2, 3)`
+|`dict` |Schlüssel-Wert-Paare |`{"name": "Max", "alter": 30}`
+|`set` |Ungeordnete Sammlung einzigartiger Elemente |`{1, 2, 3}`
+|`None` |Repräsentiert "kein Wert" |`None`
+|===
+
+=== Stringverarbeitung
+
+Strings sind in Python sehr mächtig und bieten viele integrierte Methoden:
+
+[source,python]
+----
+text = "Python Programmierung"
+
+# Grundlegende String-Operationen
+print(len(text))                  # Länge: 21
+print(text.upper())               # PYTHON PROGRAMMIERUNG
+print(text.lower())               # python programmierung
+print(text.replace("Python", "Einfache"))  # Einfache Programmierung
+
+# String-Formatierung
+name = "Maria"
+alter = 32
+# f-Strings (ab Python 3.6)
+print(f"{name} ist {alter} Jahre alt.")
+# format()-Methode
+print("{} ist {} Jahre alt.".format(name, alter))
+# %-Notation (ältere Methode)
+print("%s ist %d Jahre alt." % (name, alter))
+
+# String-Indexierung und Slicing
+s = "Hallo Welt"
+print(s[0])      # H (erstes Zeichen)
+print(s[-1])     # t (letztes Zeichen)
+print(s[0:5])    # Hallo (Zeichen 0 bis 4)
+print(s[6:])     # Welt (Zeichen 6 bis Ende)
+print(s[:5])     # Hallo (Anfang bis Zeichen 4)
+----
+
+[CAUTION]
+====
+In Python beginnt die Indexierung bei 0, nicht bei 1!
+====
+
+==== Übung: String-Manipulation
+
+[source,python]
+----
+# Übung: Erstellen Sie eine Funktion, die einen Satz umkehrt
+# Beispiel: "Hallo Welt" -> "Welt Hallo"
+
+def satz_umkehren(satz):
+    # Fügen Sie hier Ihren Code ein
+    pass  # 'pass' ist ein Platzhalter, ersetzen Sie ihn durch Ihren Code
+
+# Testfall
+test_satz = "Python ist eine großartige Sprache"
+print(satz_umkehren(test_satz))  # Sollte "Sprache großartige eine ist Python" ausgeben
+----
+
+=== Zahlen und mathematische Operationen
+
+Python unterstützt alle grundlegenden arithmetischen Operationen:
+
+[source,python]
+----
+# Grundlegende Arithmetik
+a = 10
+b = 3
+
+print(a + b)  # Addition: 13
+print(a - b)  # Subtraktion: 7
+print(a * b)  # Multiplikation: 30
+print(a / b)  # Division: 3.3333...
+print(a // b) # Ganzzahl-Division: 3
+print(a % b)  # Modulo (Rest): 1
+print(a ** b) # Potenz: 1000
+
+# Werte inkrementieren
+a += 2        # Entspricht: a = a + 2
+print(a)      # 12
+----
+
+Für komplexere mathematische Operationen können Sie das `math`-Modul verwenden:
+
+[source,python]
+----
+import math
+
+# Mathematische Funktionen
+print(math.sqrt(16))    # Quadratwurzel: 4.0
+print(math.floor(4.7))  # Abrunden: 4
+print(math.ceil(4.3))   # Aufrunden: 5
+print(math.pi)          # Pi: 3.141592...
+----
+
+==== Übung: Zinsberechnung
+
+[source,python]
+----
+# Übung: Berechnen Sie den Endbetrag einer Investition mit Zinseszins
+# Formel: A = P(1 + r/n)^(nt)
+# Wobei: A = Endbetrag, P = Anfangsbetrag, r = Zinssatz (dezimal), 
+# n = Anzahl der Zinsperioden pro Jahr, t = Zeit in Jahren
+
+def zinseszins_berechnen(anfangsbetrag, zinssatz, perioden_pro_jahr, jahre):
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+# Testfall: 1000€ bei 5% Zinsen, vierteljährlicher Verzinsung über 10 Jahre
+print(zinseszins_berechnen(1000, 0.05, 4, 10))  # Sollte ungefähr 1648.09 ausgeben
+----
+
+=== Listen und Sammlungen
+
+Listen sind eine der wichtigsten Datenstrukturen in Python:
+
+[source,python]
+----
+# Listen erstellen
+zahlen = [1, 2, 3, 4, 5]
+namen = ["Anna", "Ben", "Clara"]
+gemischt = [1, "Text", True, 3.14]
+
+# Auf Listenelemente zugreifen
+print(zahlen[0])        # Erstes Element: 1
+print(namen[-1])        # Letztes Element: Clara
+
+# Listen modifizieren
+zahlen.append(6)        # Hinzufügen: [1, 2, 3, 4, 5, 6]
+zahlen.insert(0, 0)     # Einfügen an Position: [0, 1, 2, 3, 4, 5, 6]
+zahlen.remove(3)        # Entfernen nach Wert: [0, 1, 2, 4, 5, 6]
+popped = zahlen.pop()   # Entfernen und zurückgeben: 6, Liste wird zu [0, 1, 2, 4, 5]
+zahlen.sort()           # Sortieren: [0, 1, 2, 4, 5]
+zahlen.reverse()        # Umkehren: [5, 4, 2, 1, 0]
+
+# Listenoperationen
+a = [1, 2, 3]
+b = [4, 5]
+c = a + b               # Verketten: [1, 2, 3, 4, 5]
+d = a * 3               # Wiederholen: [1, 2, 3, 1, 2, 3, 1, 2, 3]
+
+# Listen-Comprehensions (elegante Listenerstellung)
+quadrate = [x**2 for x in range(1, 6)]  # [1, 4, 9, 16, 25]
+gerade = [x for x in range(10) if x % 2 == 0]  # [0, 2, 4, 6, 8]
+----
+
+Neben Listen gibt es weitere wichtige Sammlungstypen:
+
+[source,python]
+----
+# Tupel (unveränderbar)
+punkt = (10, 20)
+# punkt[0] = 5  # Würde einen Fehler verursachen, da Tupel unveränderbar sind
+
+# Dictionaries (Schlüssel-Wert-Paare)
+person = {
+    "name": "Max Mustermann",
+    "alter": 30,
+    "beruf": "Entwickler"
+}
+print(person["name"])         # Zugriff über Schlüssel
+person["wohnort"] = "Berlin"  # Hinzufügen eines neuen Schlüssel-Wert-Paars
+print(person.get("hobbys", "Nicht angegeben"))  # Sichere Abfrage mit Standardwert
+
+# Sets (ungeordnete Sammlung einzigartiger Elemente)
+farben = {"rot", "grün", "blau"}
+farben.add("gelb")            # Hinzufügen: {"rot", "grün", "blau", "gelb"}
+farben.add("rot")             # Keine Änderung, da "rot" bereits existiert
+print("rot" in farben)        # Überprüfen der Mitgliedschaft: True
+----
+
+==== Übung: Listenverarbeitung
+
+[source,python]
+----
+# Übung: Filtern Sie Duplikate aus einer Liste und geben die eindeutigen Elemente
+# in aufsteigender Reihenfolge zurück
+
+def eindeutige_elemente(liste):
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+# Testfall
+test_liste = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+print(eindeutige_elemente(test_liste))  # Sollte [1, 2, 3, 4, 5, 6, 9] ausgeben
+----
+
+=== Kontrollstrukturen
+
+==== Bedingte Anweisungen
+
+[source,python]
+----
+# If-Elif-Else Struktur
+alter = 18
+
+if alter < 18:
+    print("Minderjährig")
+elif alter == 18:
+    print("Gerade volljährig")
+else:
+    print("Volljährig")
+
+# Kurzform für einfache Bedingungen (Ternary Operator)
+status = "volljährig" if alter >= 18 else "minderjährig"
+print(status)
+
+# Logische Operatoren
+a, b = 5, 10
+if a > 0 and b > 0:
+    print("Beide positiv")
+
+if a > 0 or b < 0:
+    print("Mindestens einer der Werte erfüllt die Bedingung")
+
+if not a == b:
+    print("a und b sind nicht gleich")
+----
+
+==== Schleifen
+
+[source,python]
+----
+# For-Schleifen
+for i in range(5):  # Zahlen 0 bis 4
+    print(i, end=" ")  # Ausgabe: 0 1 2 3 4
+
+print("\n")
+
+# For-Schleife über eine Liste
+namen = ["Anna", "Ben", "Clara"]
+for name in namen:
+    print(f"Hallo {name}!")
+
+# For-Schleife mit Index
+for i, name in enumerate(namen):
+    print(f"{i+1}. {name}")
+
+# While-Schleife
+count = 0
+while count < 5:
+    print(count, end=" ")
+    count += 1  # Inkrementieren, um Endlosschleife zu vermeiden
+
+print("\n")
+
+# Schleifensteuerung
+for i in range(10):
+    if i == 3:
+        continue  # Überspringt den Rest der Schleife für i=3
+    if i == 7:
+        break     # Beendet die Schleife bei i=7
+    print(i, end=" ")  # Ausgabe: 0 1 2 4 5 6
+----
+
+==== Übung: FizzBuzz
+
+[source,python]
+----
+# Übung: Implementieren Sie das klassische FizzBuzz-Problem
+# Für Zahlen von 1 bis n:
+# - Geben Sie "Fizz" aus, wenn die Zahl durch 3 teilbar ist
+# - Geben Sie "Buzz" aus, wenn die Zahl durch 5 teilbar ist
+# - Geben Sie "FizzBuzz" aus, wenn die Zahl durch 3 und 5 teilbar ist
+# - Ansonsten geben Sie die Zahl selbst aus
+
+def fizzbuzz(n):
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+# Testfall
+fizzbuzz(20)
+# Erwartete Ausgabe:
+# 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz, 16, 17, Fizz, 19, Buzz
+----
+
+=== Funktionen
+
+Funktionen sind ein zentrales Konzept in Python, um Code zu organisieren und wiederzuverwenden:
+
+[source,python]
+----
+# Einfache Funktion definieren
+def gruss():
+    print("Hallo, Welt!")
+
+# Funktionsaufruf
+gruss()  # Ausgabe: Hallo, Welt!
+
+# Funktion mit Parametern
+def begruessung(name):
+    print(f"Hallo, {name}!")
+
+begruessung("Maria")  # Ausgabe: Hallo, Maria!
+
+# Funktion mit Rückgabewert
+def quadrat(x):
+    return x * x
+
+ergebnis = quadrat(5)
+print(ergebnis)  # Ausgabe: 25
+
+# Funktion mit Standardwerten
+def begruessung_mit_titel(name, titel="Herr"):
+    print(f"Guten Tag, {titel} {name}!")
+
+begruessung_mit_titel("Schmidt")           # Guten Tag, Herr Schmidt!
+begruessung_mit_titel("Müller", "Frau")    # Guten Tag, Frau Müller!
+
+# Funktion mit variabler Argumentanzahl
+def summe(*zahlen):
+    return sum(zahlen)
+
+print(summe(1, 2, 3))       # 6
+print(summe(1, 2, 3, 4, 5))  # 15
+
+# Funktion mit benannten Argumenten
+def person_info(**info):
+    for key, value in info.items():
+        print(f"{key}: {value}")
+
+person_info(name="Max", alter=30, stadt="Berlin")
+# Ausgabe:
+# name: Max
+# alter: 30
+# stadt: Berlin
+----
+
+[TIP]
+====
+Schreiben Sie Docstrings für Ihre Funktionen, um Ihren Code zu dokumentieren:
+
+[source,python]
+----
+def temperatur_umrechnen(celsius):
+    """
+    Rechnet Celsius in Fahrenheit um.
+    
+    Args:
+        celsius (float): Temperatur in Celsius
+        
+    Returns:
+        float: Temperatur in Fahrenheit
+    """
+    return celsius * 9/5 + 32
+----
+====
+
+==== Übung: Passwort-Validator
+
+[source,python]
+----
+# Übung: Erstellen Sie eine Funktion, die die Stärke eines Passworts prüft
+# Ein starkes Passwort sollte:
+# - Mindestens 8 Zeichen lang sein
+# - Mindestens einen Großbuchstaben enthalten
+# - Mindestens einen Kleinbuchstaben enthalten
+# - Mindestens eine Zahl enthalten
+# - Mindestens ein Sonderzeichen enthalten
+
+def passwort_pruefen(passwort):
+    """
+    Prüft, ob ein Passwort den Sicherheitsanforderungen entspricht.
+    
+    Args:
+        passwort (str): Das zu prüfende Passwort
+        
+    Returns:
+        bool: True, wenn das Passwort stark ist, sonst False
+    """
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+# Testfälle
+test_passwoerter = [
+    "abc123",              # Zu kurz
+    "ABCDEFGH",            # Keine Kleinbuchstaben, Zahlen oder Sonderzeichen
+    "abcdefgh",            # Keine Großbuchstaben, Zahlen oder Sonderzeichen
+    "abcABC123",           # Kein Sonderzeichen
+    "Abcd1234!",           # Erfüllt alle Anforderungen
+    "P@ssw0rt"             # Erfüllt alle Anforderungen
+]
+
+for pw in test_passwoerter:
+    if passwort_pruefen(pw):
+        print(f"{pw}: Starkes Passwort")
+    else:
+        print(f"{pw}: Schwaches Passwort")
+----
+
+=== Module und Pakete
+
+Python bietet ein mächtiges Modulsystem zur Organisation von Code:
+
+[source,python]
+----
+# Standardbibliothek-Module importieren
+import math
+print(math.sqrt(25))  # 5.0
+
+# Nur bestimmte Funktionen importieren
+from random import randint
+print(randint(1, 10))  # Zufällige Zahl zwischen 1 und 10
+
+# Module mit Aliasnamen importieren
+import datetime as dt
+heute = dt.datetime.now()
+print(heute)
+
+# Eigenes Modul erstellen (in einer separaten Datei 'meine_funktionen.py')
+"""
+# Inhalt von meine_funktionen.py
+def begruessung(name):
+    return f"Hallo, {name}!"
+
+def verabschiedung(name):
+    return f"Auf Wiedersehen, {name}!"
+"""
+
+# Eigenes Modul importieren
+from meine_funktionen import begruessung, verabschiedung
+print(begruessung("Welt"))
+print(verabschiedung("Freunde"))
+----
+
+[IMPORTANT]
+====
+Python sucht Module in den Verzeichnissen, die in `sys.path` aufgeführt sind. 
+Der aktuelle Arbeitsverzeichnis ist standardmäßig enthalten.
+====
+
+==== Übung: Modul für mathematische Funktionen
+
+[source,python]
+----
+# Übung: Erstellen Sie ein Modul 'mathutils.py' mit nützlichen mathematischen Funktionen
+# wie Fakultät, Fibonacci-Zahlen und Primzahlprüfung
+
+"""
+# mathutils.py
+
+def fakultaet(n):
+    """Berechnet die Fakultät einer Zahl n (n!)."""
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+def fibonacci(n):
+    """Gibt die n-te Fibonacci-Zahl zurück."""
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+def ist_primzahl(n):
+    """Prüft, ob eine Zahl eine Primzahl ist."""
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+# Beispielaufruf innerhalb des Moduls selbst bei direkter Ausführung
+if __name__ == "__main__":
+    # Diese Testfälle werden nur ausgeführt, wenn die Datei direkt ausgeführt wird,
+    # nicht bei Import
+    print(f"5! = {fakultaet(5)}")
+    print(f"10. Fibonacci-Zahl: {fibonacci(10)}")
+    print(f"Ist 7 eine Primzahl? {ist_primzahl(7)}")
+    print(f"Ist 12 eine Primzahl? {ist_primzahl(12)}")
+"""
+
+# Testprogramm (in einer separaten Datei)
+"""
+# test_mathutils.py
+import mathutils
+
+print(f"6! = {mathutils.fakultaet(6)}")  # 720
+print(f"8. Fibonacci-Zahl: {mathutils.fibonacci(8)}")  # 21
+print(f"Ist 13 eine Primzahl? {mathutils.ist_primzahl(13)}")  # True
+print(f"Ist 20 eine Primzahl? {mathutils.ist_primzahl(20)}")  # False
+"""
+----
+
+=== Dateien und Ausnahmebehandlung
+
+==== Dateien lesen und schreiben
+
+[source,python]
+----
+# Datei schreiben
+with open("beispiel.txt", "w") as datei:
+    datei.write("Erste Zeile\n")
+    datei.write("Zweite Zeile\n")
+    datei.write("Dritte Zeile\n")
+
+# Datei lesen
+with open("beispiel.txt", "r") as datei:
+    inhalt = datei.read()
+    print(inhalt)
+
+# Zeilenweise lesen
+with open("beispiel.txt", "r") as datei:
+    for zeile in datei:
+        print(f"Zeile: {zeile.strip()}")
+
+# An eine Datei anhängen
+with open("beispiel.txt", "a") as datei:
+    datei.write("Vierte Zeile\n")
+----
+
+[CAUTION]
+====
+Verwenden Sie immer den `with`-Block beim Umgang mit Dateien, um sicherzustellen, 
+dass die Datei ordnungsgemäß geschlossen wird, auch wenn Fehler auftreten.
+====
+
+==== Ausnahmebehandlung
+
+[source,python]
+----
+# Grundlegende Ausnahmebehandlung
+try:
+    zahl = int(input("Geben Sie eine Zahl ein: "))
+    ergebnis = 10 / zahl
+    print(f"10 / {zahl} = {ergebnis}")
+except ValueError:
+    print("Das war keine gültige Zahl!")
+except ZeroDivisionError:
+    print("Division durch Null ist nicht erlaubt!")
+except Exception as e:
+    print(f"Ein unerwarteter Fehler ist aufgetreten: {e}")
+finally:
+    print("Dieser Block wird immer ausgeführt, unabhängig von Ausnahmen.")
+
+# Eigene Ausnahmen definieren
+class NegativeZahlError(Exception):
+    """Wird ausgelöst, wenn eine Zahl negativ ist, aber positiv sein sollte."""
+    pass
+
+def quadratwurzel(x):
+    if x < 0:
+        raise NegativeZahlError("Quadratwurzel aus negativer Zahl nicht definiert")
+    return math.sqrt(x)
+
+try:
+    print(quadratwurzel(-4))
+except NegativeZahlError as e:
+    print(e)
+----
+
+==== Übung: Dateianalyse
+
+[source,python]
+----
+# Übung: Schreiben Sie ein Programm, das eine Textdatei analysiert und Statistiken ausgibt:
+# - Anzahl der Zeilen
+# - Anzahl der Wörter
+# - Anzahl der Zeichen
+# - Häufigste Wörter (Top 5)
+
+def datei_analysieren(dateipfad):
+    """
+    Analysiert eine Textdatei und gibt Statistiken zurück.
+    
+    Args:
+        dateipfad (str): Pfad zur zu analysierenden Datei
+        
+    Returns:
+        dict: Statistiken der Datei
+    """
+    # Fügen Sie hier Ihren Code ein
+    pass
+
+# Testfall (mit einer vorhandenen Textdatei)
+statistik = datei_analysieren("beispiel.txt")
+print(f"Zeilen: {statistik['zeilen']}")
+print(f"Wörter: {statistik['woerter']}")
+print(f"Zeichen: {statistik['zeichen']}")
+print("Top 5 Wörter:")
+for wort, anzahl in statistik['top_woerter']:
+    print(f"  {wort}: {anzahl}")
+----
+
+== Projekte und praktische Anwendungen
+
+=== Projekt: Einfacher Taschenrechner
+
+Erstellen Sie einen einfachen Taschenrechner, der grundlegende arithmetische Operationen unterstützt:
+
+[source,python]
+----
+def taschenrechner():
+    """Ein einfacher Taschenrechner mit Grundrechenarten."""
+    print("Einfacher Taschenrechner")
+    print("Operationen: +, -, *, /, ** (Potenz)")
+    print("Eingabe 'q' zum Beenden")
+    
+    while True:
+        try:
+            # Benutzereingabe
+            ausdruck = input("\nGeben Sie eine Berechnung ein (z.B. 2 + 3): ")
+            
+            # Beenden bei 'q'
+            if ausdruck.lower() == 'q':
+                print("Taschenrechner wird beendet.")
+                break
+            
+            # Auswertung des Ausdrucks
+            ergebnis = eval(ausdruck)  # Vorsicht: eval() kann in der Praxis unsicher sein
+            print(f"Ergebnis: {ergebnis}")
+            
+        except Exception as e:
+            print(f"Fehler: {e}")
+
+# Starten des Taschenrechners
+if __name__ == "__main__":
+    taschenrechner()
+----
+
+[CAUTION]
+====
+Die Verwendung von `eval()` kann sicherheitskritisch sein, da es beliebigen Code ausführen kann. 
+In einem echten Projekt sollten Sie eine sicherere Alternative implementieren.
+====
+
+=== Projekt: Todo-Liste
+
+Implementieren Sie eine einfache Todo-Liste-Anwendung mit Speicherfunktion:
+
+[source,python]
+----
+import json
+import os
+
+class TodoListe:
+    """Eine einfache Todo-Listen-Anwendung mit Datei-Speicherfunktion."""
+    
+    def __init__(self, dateiname="todos.json"):
+        """Initialisiert die Todo-Liste."""
+        self.dateiname = dateiname
+        self.todos = []
+        self.laden()
+    
+    def laden(self):
+        """Lädt die Todo-Liste aus einer JSON-Datei."""
+        if os.path.exists(self.dateiname):
+            try:
+                with open(self.dateiname, "r") as datei:
+                    self.todos = json.load(datei)
+            except json.JSONDecodeError:
+                print("Fehler beim Laden der Datei. Starte mit leerer Liste.")
+                self.todos = []
+    
+    def speichern(self):
+        """Speichert die Todo-Liste in einer JSON-Datei."""
+        with open(self.dateiname, "w") as datei:
+            json.dump(self.todos, datei)
+    
+    def hinzufuegen(self, beschreibung, prioritaet=1):
+        """Fügt ein neues Todo zur Liste hinzu."""
+        todo = {
+            "beschreibung": beschreibung,
+            "prioritaet": prioritaet,
+            "erledigt": False
+        }
+        self.todos.append(todo)
+        self.speichern()
+    
+    def entfernen(self, index):
+        """Entfernt ein Todo anhand seines Index."""
+        if 0 <= index < len(self.todos):
+            del self.todos[index]
+            self.speichern()
+            return True
+        return False
+    
+    def erledigt_markieren(self, index):
+        """Markiert ein Todo als erledigt."""
+        if 0 <= index < len(self.todos):
+            self.todos[index]["erledigt"] = True
+            self.speichern()
+            return True
+        return False
+    
+    def anzeigen(self):
+        """Zeigt alle Todos an."""
+        if not self.todos:
+            print("Keine Todos vorhanden.")
+            return
+        
+        print("\nTodo-Liste:")
+        print("------------")
+        for i, todo in enumerate(self.todos):
+            status = "✓" if todo["erledigt"] else " "
+            print(f"{i+1}. [{status}] ({todo['prioritaet']}) {todo['beschreibung']}")
+    
+    def menu(self):
+        """Zeigt das Hauptmenü der Todo-Liste an."""
+        while True:
+            print("\nTodo-Listen-Manager")
+            print("-------------------")
+            print("1. Alle Todos anzeigen")
+            print("2. Neues Todo hinzufügen")
+            print("3. Todo als erledigt markieren")
+            print("4. Todo entfernen")
+            print("5. Beenden")
+            
+            wahl = input("\nWählen Sie eine Option (1-5): ")
+            
+            if wahl == "1":
+                self.anzeigen()
+            
+            elif wahl == "2":
+                beschreibung = input("Beschreibung: ")
+                try:
+                    prioritaet = int(input("Priorität (1-5, Standard: 1): ") or "1")
+                    if not 1 <= prioritaet <= 5:
+                        print("Ungültige Priorität. Verwende 1.")
+                        prioritaet = 1
+                except ValueError:
+                    print("Ungültige Eingabe. Verwende Priorität 1.")
+                    prioritaet = 1
+                
+                self.hinzufuegen(beschreibung, prioritaet)
+                print(f"Todo '{beschreibung}' hinzugefügt.")
+            
+            elif wahl == "3":
+                self.anzeigen()
+                try:
+                    index = int(input("\nWelches Todo ist erledigt? (Nr.): ")) - 1
+                    if self.erledigt_markieren(index):
+                        print("Todo als erledigt markiert.")
+                    else:
+                        print("Ungültige Todo-Nummer.")
+                except ValueError:
+                    print("Bitte geben Sie eine Zahl ein.")
+            
+            elif wahl == "4":
+                self.anzeigen()
+                try:
+                    index = int(input("\nWelches Todo soll entfernt werden? (Nr.): ")) - 1
+                    if self.entfernen(index):
+                        print("Todo entfernt.")
+                    else:
+                        print("Ungültige Todo-Nummer.")
+                except ValueError:
+                    print("Bitte geben Sie eine Zahl ein.")
+            
+            elif wahl == "5":
+                print("Auf Wiedersehen!")
+                break
+            
+            else:
+                print("Ungültige Eingabe. Bitte wählen Sie eine Option zwischen 1 und 5.")
+
+# Starten der Todo-Liste
+if __name__ == "__main__":
+    todo_liste = TodoListe()
+    todo_liste.menu()
+----
+
+=== Abschlussprojekt: Vokabeltrainer
+
+Entwerfen Sie einen einfachen Vokabeltrainer, der Wörter aus einer Datei lädt, 
+den Benutzer abfragt und den Lernfortschritt speichert.
+
+[source,python]
+----
+# Hier können Sie Ihr eigenes Projekt implementieren!
+# Nutzen Sie die erlernten Konzepte zur Dateiverwaltung, Ausnahmebehandlung,
+# Objektorientierten Programmierung usw.
+----
+
+== Zusammenfassung und weiterführende Ressourcen
+
+=== Zusammenfassung
+
+In diesem Tutorial haben Sie die Grundlagen der Python-Programmierung kennengelernt:
+
+* Variablen und Datentypen
+* Kontrollstrukturen (if-Anweisungen, Schleifen)
+* Funktionen und Module
+* Dateien und Ausnahmebehandlung
+* Praktische Anwendungen
+
+Diese Grundlagen bilden das Fundament für jedes Python-Projekt und sind der Ausgangspunkt für weiterführende Themen wie:
+
+* Objektorientierte Programmierung (OOP)
+* Datenbankanbindung
+* Webentwicklung (Django, Flask)
+* Datenanalyse (Pandas, NumPy)
+* Maschinelles Lernen (PyTorch, TensorFlow)
+
+=== Weiterführende Ressourcen
+
+* Offizielle Python-Dokumentation: https://docs.python.org/3/
+* Python Enhancement Proposals (PEPs): https://www.python.org/dev/peps/
+* Online-Lernplattformen:
+  ** Codecademy
+  ** Real Python
+  ** Coursera
+  ** Udemy
+* Bücher:
+  ** "Python Crash Course" von Eric Matthes
+  ** "Automate the Boring Stuff with Python" von Al Sweigart
+
+=== Glossar wichtiger Begriffe
+
+[cols="1,3", options="header"]
+|===
+|Begriff |Erklärung
+|Interpreter |Programm, das Python-Code Zeile für Zeile ausführt
+|PEP 8 |Python Enhancement Proposal 8 - Stilrichtlinien für Python-Code
+|Dynamische Typisierung |Variablentypen werden zur Laufzeit bestimmt und können sich ändern
+|Docstring |Dokumentationsstring in Funktionen und Klassen
+|List Comprehension |Kompakte Syntax zum Erstellen von Listen
+|Virtual Environment |Isolierte Python-Umgebung für projektspezifische Abhängigkeiten
+|pip |Paketmanager für Python-Pakete
+|__name__ |Spezielle Variable, die den Namen des aktuellen Moduls enthält
+|===
+
+== Lösungen der Übungsaufgaben
+
+=== Lösung: String-Manipulation
+
+[source,python]
+----
+def satz_umkehren(satz):
+    """Kehrt die Reihenfolge der Wörter in einem Satz um."""
+    woerter = satz.split()
+    woerter.reverse()
+    return " ".join(woerter)
+
+# Testfall
+test_satz = "Python ist eine großartige Sprache"
+print(satz_umkehren(test_satz))  # Ausgabe: Sprache großartige eine ist Python
+----
+
+=== Lösung: Zinsberechnung
+
+[source,python]
+----
+def zinseszins_berechnen(anfangsbetrag, zinssatz, perioden_pro_jahr, jahre):
+    """
+    Berechnet den Endbetrag einer Investition mit Zinseszins.
+    
+    Args:
+        anfangsbetrag (float): Der Anfangsbetrag der Investition
+        zinssatz (float): Der jährliche Zinssatz als Dezimalzahl (z.B. 0.05 für 5%)
+        perioden_pro_jahr (int): Anzahl der Zinsperioden pro Jahr
+        jahre (int): Anzahl der Jahre
+        
+    Returns:
+        float: Der Endbetrag nach der angegebenen Zeit
+    """
+    endbetrag = anfangsbetrag * (1 + zinssatz / perioden_pro_jahr) ** (perioden_pro_jahr * jahre)
+    return round(endbetrag, 2)
+
+# Testfall: 1000€ bei 5% Zinsen, vierteljährlicher Verzinsung über 10 Jahre
+print(zinseszins_berechnen(1000, 0.05, 4, 10))  # Ausgabe: 1648.09
+----
+
+=== Lösung: Listenverarbeitung
+
+[source,python]
+----
+def eindeutige_elemente(liste):
+    """
+    Filtert Duplikate aus einer Liste und gibt eindeutige Elemente in aufsteigender Reihenfolge zurück.
+    
+    Args:
+        liste (list): Die Eingabeliste mit möglichen Duplikaten
+        
+    Returns:
+        list: Eine sortierte Liste mit eindeutigen Elementen
+    """
+    eindeutig = list(set(liste))
+    eindeutig.sort()
+    return eindeutig
+
+# Alternativ mit einem Set und sorted():
+def eindeutige_elemente_alternativ(liste):
+    return sorted(set(liste))
+
+# Testfall
+test_liste = [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5]
+print(eindeutige_elemente(test_liste))  # Ausgabe: [1, 2, 3, 4, 5, 6, 9]
+----
+
+=== Lösung: FizzBuzz
+
+[source,python]
+----
+def fizzbuzz(n):
+    """
+    Implementiert das klassische FizzBuzz-Problem.
+    
+    Args:
+        n (int): Die obere Grenze (inklusive)
+    """
+    for i in range(1, n + 1):
+        if i % 3 == 0 and i % 5 == 0:
+            print("FizzBuzz", end=", ")
+        elif i % 3 == 0:
+            print("Fizz", end=", ")
+        elif i % 5 == 0:
+            print("Buzz", end=", ")
+        else:
+            print(i, end=", ")
+    print()  # Neue Zeile am Ende
+
+# Testfall
+fizzbuzz(20)
+# Ausgabe: 1, 2, Fizz, 4, Buzz, Fizz, 7, 8, Fizz, Buzz, 11, Fizz, 13, 14, FizzBuzz, 16, 17, Fizz, 19, Buzz, 
+----
+
+=== Lösung: Passwort-Validator
+
+[source,python]
+----
+def passwort_pruefen(passwort):
+    """
+    Prüft, ob ein Passwort den Sicherheitsanforderungen entspricht.
+    
+    Args:
+        passwort (str): Das zu prüfende Passwort
+        
+    Returns:
+        bool: True, wenn das Passwort stark ist, sonst False
+    """
+    # Prüfen der Mindestlänge
+    if len(passwort) < 8:
+        return False
+    
+    # Flags für die Anforderungen
+    hat_grossbuchstaben = False
+    hat_kleinbuchstaben = False
+    hat_zahl = False
+    hat_sonderzeichen = False
+    
+    # Prüfen jedes Zeichens
+    for zeichen in passwort:
+        if zeichen.isupper():
+            hat_grossbuchstaben = True
+        elif zeichen.islower():
+            hat_kleinbuchstaben = True
+        elif zeichen.isdigit():
+            hat_zahl = True
+        elif not zeichen.isalnum():  # Nicht alphanumerisch = Sonderzeichen
+            hat_sonderzeichen = True
+    
+    # Alle Anforderungen müssen erfüllt sein
+    return (hat_grossbuchstaben and hat_kleinbuchstaben and 
+            hat_zahl and hat_sonderzeichen)
+
+# Testfälle
+test_passwoerter = [
+    "abc123",              # Zu kurz
+    "ABCDEFGH",            # Keine Kleinbuchstaben, Zahlen oder Sonderzeichen
+    "abcdefgh",            # Keine Großbuchstaben, Zahlen oder Sonderzeichen
+    "abcABC123",           # Kein Sonderzeichen
+    "Abcd1234!",           # Erfüllt alle Anforderungen
+    "P@ssw0rt"             # Erfüllt alle Anforderungen
+]
+
+for pw in test_passwoerter:
+    if passwort_pruefen(pw):
+        print(f"{pw}: Starkes Passwort")
+    else:
+        print(f"{pw}: Schwaches Passwort")
+----
+
+=== Lösung: Modul für mathematische Funktionen
+
+[source,python]
+----
+# mathutils.py
+
+def fakultaet(n):
+    """
+    Berechnet die Fakultät einer Zahl n (n!).
+    
+    Args:
+        n (int): Eine nicht-negative Ganzzahl
+        
+    Returns:
+        int: Die Fakultät von n
+    """
+    if n < 0:
+        raise ValueError("Fakultät ist nur für nicht-negative Zahlen definiert")
+    if n == 0 or n == 1:
+        return 1
+    
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+
+def fibonacci(n):
+    """
+    Gibt die n-te Fibonacci-Zahl zurück.
+    
+    Args:
+        n (int): Eine positive Ganzzahl
+        
+    Returns:
+        int: Die n-te Fibonacci-Zahl
+    """
+    if n <= 0:
+        raise ValueError("Fibonacci ist nur für positive Ganzzahlen definiert")
+    if n == 1:
+        return 0
+    if n == 2:
+        return 1
+    
+    a, b = 0, 1
+    for _ in range(3, n + 1):
+        a, b = b, a + b
+    return b
+
+def ist_primzahl(n):
+    """
+    Prüft, ob eine Zahl eine Primzahl ist.
+    
+    Args:
+        n (int): Eine zu prüfende ganze Zahl
+        
+    Returns:
+        bool: True, wenn n eine Primzahl ist, sonst False
+    """
+    if n <= 1:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+# Beispielaufruf innerhalb des Moduls selbst bei direkter Ausführung
+if __name__ == "__main__":
+    # Diese Testfälle werden nur ausgeführt, wenn die Datei direkt ausgeführt wird,
+    # nicht bei Import
+    print(f"5! = {fakultaet(5)}")
+    print(f"10. Fibonacci-Zahl: {fibonacci(10)}")
+    print(f"Ist 7 eine Primzahl? {ist_primzahl(7)}")
+    print(f"Ist 12 eine Primzahl? {ist_primzahl(12)}")
+----
+
+=== Lösung: Dateianalyse
+
+[source,python]
+----
+from collections import Counter
+
+def datei_analysieren(dateipfad):
+    """
+    Analysiert eine Textdatei und gibt Statistiken zurück.
+    
+    Args:
+        dateipfad (str): Pfad zur zu analysierenden Datei
+        
+    Returns:
+        dict: Statistiken der Datei
+    """
+    try:
+        with open(dateipfad, 'r', encoding='utf-8') as datei:
+            # Datei einlesen
+            inhalt = datei.read()
+            zeilen = inhalt.split('\n')
+            
+            # Zeichen zählen (inkl. Leerzeichen)
+            zeichen_anzahl = len(inhalt)
+            
+            # Wörter zählen
+            woerter = inhalt.lower().split()
+            woerter_anzahl = len(woerter)
+            
+            # Häufigste Wörter finden
+            woerter_zaehler = Counter(woerter)
+            top_woerter = woerter_zaehler.most_common(5)
+            
+            return {
+                'zeilen': len(zeilen),
+                'woerter': woerter_anzahl,
+                'zeichen': zeichen_anzahl,
+                'top_woerter': top_woerter
+            }
+            
+    except FileNotFoundError:
+        print(f"Fehler: Die Datei '{dateipfad}' wurde nicht gefunden.")
+        return {
+            'zeilen': 0,
+            'woerter': 0,
+            'zeichen': 0,
+            'top_woerter': []
+        }
+    except Exception as e:
+        print(f"Ein Fehler ist aufgetreten: {e}")
+        return {
+            'zeilen': 0,
+            'woerter': 0,
+            'zeichen': 0,
+            'top_woerter': []
+        }
+
+# Testfall (mit einer vorhandenen Textdatei)
+statistik = datei_analysieren("beispiel.txt")
+print(f"Zeilen: {statistik['zeilen']}")
+print(f"Wörter: {statistik['woerter']}")
+print(f"Zeichen: {statistik['zeichen']}")
+print("Top 5 Wörter:")
+for wort, anzahl in statistik['top_woerter']:
+    print(f"  {wort}: {anzahl}")
+----

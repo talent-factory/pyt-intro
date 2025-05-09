@@ -1,0 +1,377 @@
+= SQLAlchemy Tutorial
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {docdate}
+:toc: left
+:toclevels: 3
+:sectnums:
+:icons: font
+:app: SQLAlchemy
+:docname: SQLAlchemy-Tutorial
+:toc-title: Inhaltsverzeichnis
+
+== Einführung
+
+SQLAlchemy ist eine mächtige Python-ORM (Object-Relational Mapping) Bibliothek, die es ermöglicht, mit relationalen Datenbanken auf objektorientierte Weise zu arbeiten. Im Gegensatz zu anderen ORMs bietet SQLAlchemy eine hohe Flexibilität und Leistung.
+
+== Installation
+
+Um SQLAlchemy zu installieren, führen Sie folgenden Befehl aus:
+
+[source,shell]
+----
+pip install sqlalchemy
+----
+
+== Grundlegende Konzepte
+
+=== Engine und Connection
+
+Die Engine ist das zentrale Objekt, das die Verbindung zur Datenbank verwaltet.
+
+[source,python]
+----
+from sqlalchemy import create_engine
+
+# SQLite-Datenbank (in-Memory)
+engine = create_engine('sqlite:///:memory:')
+
+# SQLite-Datenbank (Datei)
+engine = create_engine('sqlite:///meine_datenbank.db')
+
+# PostgreSQL
+engine = create_engine('postgresql://user:password@localhost/dbname')
+
+# MySQL
+engine = create_engine('mysql+pymysql://user:password@localhost/dbname')
+----
+
+=== Session
+
+Die Session ist das zentrale Objekt für alle Datenbankoperationen.
+
+[source,python]
+----
+from sqlalchemy.orm import sessionmaker
+
+# Session erstellen
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Datenbankoperationen
+session.add(mein_objekt)
+session.commit()
+----
+
+=== Declarative Base
+
+Die Declarative Base ist die Basis für alle Modelle.
+
+[source,python]
+----
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+----
+
+== Modelle erstellen
+
+=== Einfaches Modell
+
+[source,python]
+----
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String, unique=True)
+    
+    # Beziehung zu anderen Tabellen
+    posts = relationship('Post', back_populates='author')
+
+# Erstellen der Tabellen
+Base.metadata.create_all(engine)
+----
+
+=== Vererbung
+
+[source,python]
+----
+class Person(Base):
+    __tablename__ = 'persons'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    type = Column(String)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'person',
+        'polymorphic_on': type
+    }
+
+class Student(Person):
+    __tablename__ = 'students'
+    
+    id = Column(Integer, ForeignKey('persons.id'), primary_key=True)
+    matnr = Column(Integer)
+    
+    __mapper_args__ = {
+        'polymorphic_identity': 'student'
+    }
+----
+
+== Abfragen
+
+=== Einfache Abfragen
+
+[source,python]
+----
+# Alle Benutzer
+users = session.query(User).all()
+
+# Einzelner Benutzer
+user = session.query(User).filter_by(id=1).first()
+
+# Mehrere Filter
+users = session.query(User).filter(User.name.like('%Max%')).all()
+----
+
+=== Join-Operationen
+
+[source,python]
+----
+# Einfacher Join
+results = session.query(User, Post).join(Post).all()
+
+# Outer Join
+results = session.query(User, Post).outerjoin(Post).all()
+
+# Multiple Joins
+results = session.query(User, Post, Comment).\
+    join(Post).\
+    join(Comment).\
+    all()
+----
+
+=== Aggregationsfunktionen
+
+[source,python]
+----
+from sqlalchemy import func
+
+# Anzahl der Benutzer
+user_count = session.query(func.count(User.id)).scalar()
+
+# Durchschnittsalter
+avg_age = session.query(func.avg(User.age)).scalar()
+
+# Gruppierung
+results = session.query(User.city, func.count(User.id)).\
+    group_by(User.city).\
+    all()
+----
+
+== Fortgeschrittene Konzepte
+
+=== Transaktionen
+
+[source,python]
+----
+try:
+    # Beginne eine Transaktion
+    with session.begin():
+        # Führe mehrere Operationen durch
+        session.add(user1)
+        session.add(user2)
+        
+        # Wenn alles gut geht, wird automatisch commited
+except Exception as e:
+    # Bei Fehler wird automatisch rolled back
+    print(f"Fehler: {e}")
+----
+
+=== Event-Listener
+
+[source,python]
+----
+from sqlalchemy import event
+
+def before_insert(mapper, connection, target):
+    print(f"Neues Objekt wird eingefügt: {target}")
+
+event.listen(User, 'before_insert', before_insert)
+----
+
+=== Caching
+
+[source,python]
+----
+from sqlalchemy.orm import scoped_session
+
+# Erstelle einen Thread-sicheren Session-Manager
+session_factory = sessionmaker(bind=engine)
+Session = scoped_session(session_factory)
+
+# Verwende den gleichen Session in einem Thread
+session = Session()
+----
+
+== Best Practices
+
+=== 1. Verwenden Sie Declarative Base
+
+Verwenden Sie immer `declarative_base()` für Ihre Modelle, da es die Entwicklung vereinfacht.
+
+=== 2. Verwenden Sie Session-Manager
+
+Verwenden Sie einen Session-Manager wie `scoped_session`, um Thread-sichere Sessions zu gewährleisten.
+
+=== 3. Verwenden Sie Transaktionen
+
+Verwenden Sie immer Transaktionen für mehrere Datenbankoperationen, um Datenkonsistenz zu gewährleisten.
+
+=== 4. Verwenden Sie Query-Optimierungen
+
+Verwenden Sie `lazy loading` und `eager loading` entsprechend, um die Performance zu optimieren.
+
+== Fehlerbehandlung
+
+=== Typische Fehler
+
+[source,python]
+----
+try:
+    # Datenbankoperation
+    session.add(user)
+    session.commit()
+except SQLAlchemyError as e:
+    session.rollback()
+    print(f"Datenbankfehler: {e}")
+----
+
+=== Debugging
+
+[source,python]
+----
+# SQL-Statements anzeigen
+engine.echo = True
+
+# Logging aktivieren
+import logging
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+----
+
+== Praktische Beispiele
+
+=== Beispiel: Blog-System
+
+[source,python]
+----
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    email = Column(String, unique=True)
+    
+    posts = relationship('Post', back_populates='author')
+
+class Post(Base):
+    __tablename__ = 'posts'
+    
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    content = Column(String)
+    author_id = Column(Integer, ForeignKey('users.id'))
+    
+    author = relationship('User', back_populates='posts')
+    comments = relationship('Comment', back_populates='post')
+
+class Comment(Base):
+    __tablename__ = 'comments'
+    
+    id = Column(Integer, primary_key=True)
+    content = Column(String)
+    post_id = Column(Integer, ForeignKey('posts.id'))
+    
+    post = relationship('Post', back_populates='comments')
+----
+
+=== Beispiel: E-Commerce
+
+[source,python]
+----
+class Product(Base):
+    __tablename__ = 'products'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    price = Column(Float)
+    category_id = Column(Integer, ForeignKey('categories.id'))
+    
+    category = relationship('Category', back_populates='products')
+    orders = relationship('OrderItem', back_populates='product')
+
+class Category(Base):
+    __tablename__ = 'categories'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    
+    products = relationship('Product', back_populates='category')
+
+# Abfragen
+expensive_products = session.query(Product).\
+    filter(Product.price > 100).\
+    order_by(Product.price.desc()).\
+    all()
+----
+
+== Troubleshooting
+
+=== Performance-Probleme
+
+- Verwenden Sie `lazy loading` für große Relationen
+- Verwenden Sie `eager loading` für häufig verwendete Relationen
+- Verwenden Sie `subquery load` für komplexe Abfragen
+
+=== Datenbankfehler
+
+- Prüfen Sie die Datenbank-Logs
+- Verwenden Sie `engine.echo = True` für Debugging
+- Prüfen Sie die Tabellenstruktur
+
+=== Memory Leaks
+
+- Schließen Sie Sessions nach der Verwendung
+- Verwenden Sie `scoped_session` für Thread-sichere Sessions
+- Verwenden Sie `session.expunge_all()` für große Operationen
+
+== Zusammenfassung
+
+SQLAlchemy ist eine mächtige ORM-Bibliothek, die es ermöglicht, mit relationalen Datenbanken auf objektorientierte Weise zu arbeiten. Die wichtigsten Konzepte sind:
+
+1. Engine und Session für die Datenbankverbindung
+2. Declarative Base für die Modelldefinition
+3. Query-Objekte für die Datenbankabfragen
+4. Transaktionen für Datenkonsistenz
+5. Event-Listener für zusätzliche Funktionalität
+
+=== Weitere Ressourcen
+
+- Dokumentation: https://docs.sqlalchemy.org/
+- GitHub: https://github.com/sqlalchemy/sqlalchemy
+- Community: https://groups.google.com/g/sqlalchemy
+
+=== Übungsaufgaben
+
+1. Erstellen Sie ein einfaches Modell für einen Buchladen
+2. Implementieren Sie eine Abfrage für die Top-Verkäufe
+3. Erstellen Sie eine Transaktion für einen Buchkauf
+4. Implementieren Sie einen Event-Listener für Bestellbestätigungen

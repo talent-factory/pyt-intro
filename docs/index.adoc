@@ -1,6 +1,6 @@
 = Einführung: Programmieren mit Python
 :author: Daniel Senften
-:email: daniel.senften@talent-factory.ch
+:email: daniel.senften@gibb.ch
 :revnumber: 1.0
 :revdate: {localdate}
 :doctype: book
@@ -19,6 +19,22 @@ include::locale/attributes-de.adoc[]
 :referencde: https://pythonbuch.com/index.html
 
 // Einführung
+== Inhaltsübersicht
+
+=== Grundlagen
+* link:01-einleitung.html[Einführung ins Programmieren]
+* link:tutorials/python-grundlagen-tutorial.html[Python Grundlagen: Eine umfassende Einführung]
+
+=== Weiterführende Tutorials
+* link:tutorials/index.html[Übersicht aller verfügbaren Tutorials]
+* link:tutorials/python-module-tutorial.html[Python Module und Packages]
+* link:tutorials/oop-tutorial.html[Objektorientierte Programmierung]
+* link:tutorials/pydantic-tutorial.html[Datenvalidierung mit Pydantic]
+
+=== Übungen
+* link:exercises/hundealter.html[Aufgabe: Hundealter umrechnen]
+* link:exercises/menu.html[Aufgabe: Menüsystem erstellen]
+
 include::01-einleitung.adoc[]
 
 // Tutorials
