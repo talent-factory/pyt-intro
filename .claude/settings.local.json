@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run pytest:*)",
+      "WebFetch(domain:www.dailydoseofds.com)",
+      "WebFetch(domain:www.dailydoseofds.com)",
+      "Bash(grep:*)",
+      "Bash(awk:*)",
+      "WebSearch"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright"
+  ],
+  "includeCoAuthoredBy": false
+}
