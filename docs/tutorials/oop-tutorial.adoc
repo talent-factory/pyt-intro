@@ -9,7 +9,7 @@ include::../locale/attributes-de.adoc[]
 :sectnums:
 :sectnumlevels: 2
 :imagesdir: images
-:source-highlighter: coderay
+:source-highlighter: highlight.js
 :icons: font
 :title-page:
 :pdf-page-size: A4

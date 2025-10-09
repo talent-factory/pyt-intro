@@ -1,11 +1,18 @@
 = Python Grundlagen: Eine umfassende Einführung
-Daniel Senften <daniel.senften@talent-factory.ch>
-v1.0, 2024-04-11
+:author: Daniel Senften
+:email: daniel.senften@gibb.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
 :toc: left
 :sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
 :icons: font
-:source-highlighter: highlightjs
-:imagesdir: ../images
+:title-page:
+:pdf-page-size: A4
 
 == Einführung in Python
 
