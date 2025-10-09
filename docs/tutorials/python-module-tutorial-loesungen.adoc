@@ -95,7 +95,7 @@ print(f"\nAnzahl der Verzeichnisse im Suchpfad: {anzahl_verzeichnisse}")
 === Übungsaufgabe 2.2
 
 *Aufgabe:* Erstellen Sie eine virtuelle Umgebung für ein neues Projekt und aktivieren Sie diese.
-Überprüfen Sie mit `pip list`, welche Module bereits installiert sind.
+Überprüfen Sie mit `uv pip list`, welche Module bereits installiert sind.
 
 *Lösung:*
 
@@ -116,7 +116,7 @@ mein_projekt_env\Scripts\activate
 # source mein_projekt_env/bin/activate
 
 # Anzeigen der installierten Module
-pip list
+uv pip list
 ----
 
 === Übungsaufgabe 2.3
@@ -184,7 +184,7 @@ Beschreibung: Pillow ist eine benutzerfreundliche Bibliothek zur Bildverarbeitun
 Sie unterstützt eine Vielzahl von Bildformaten (JPEG, PNG, GIF, BMP, TIFF, ...) und 
 bietet Funktionen für Bildtransformationen, Filterung, Farbmanipulation und vieles mehr.
 
-Installation: pip install Pillow
+Installation: uv add Pillow
 Dokumentation: https://pillow.readthedocs.io/
 ----
 
@@ -218,7 +218,7 @@ requests>=2.26.0
 [source,bash]
 ----
 # Installation des Moduls
-pip install tabulate
+uv add tabulate
 ----
 
 [source,text]

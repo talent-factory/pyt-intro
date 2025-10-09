@@ -21,7 +21,7 @@ Um SQLAlchemy zu installieren, führen Sie folgenden Befehl aus:
 
 [source,shell]
 ----
-pip install sqlalchemy
+uv add sqlalchemy
 ----
 
 == Grundlegende Konzepte

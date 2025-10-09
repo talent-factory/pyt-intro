@@ -9,7 +9,7 @@ include::../locale/attributes-de.adoc[]
 :sectnums:
 :sectnumlevels: 2
 :imagesdir: images
-:source-highlighter: coderay
+:source-highlighter: highlight.js
 :icons: font
 :title-page:
 :pdf-page-size: A4
@@ -54,7 +54,7 @@ Für die Beispiele in diesem Tutorial benötigen Sie:
 
 [source,bash]
 ----
-pip install pydantic openai langchain
+uv add pydantic openai langchain
 ----
 
 == Grundlagen: Pydantic im Überblick

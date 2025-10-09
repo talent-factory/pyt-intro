@@ -66,14 +66,14 @@ Die Installation von Pydantic ist einfach:
 
 [source,bash]
 ----
-pip install pydantic
+uv add pydantic
 ----
 
 Um E-Mail-Validierung zu nutzen, installieren Sie auch:
 
 [source,bash]
 ----
-pip install pydantic[email]
+uv add "pydantic[email]"
 ----
 
 Erstellen wir ein einfaches Beispiel, um den Einstieg zu erleichtern:

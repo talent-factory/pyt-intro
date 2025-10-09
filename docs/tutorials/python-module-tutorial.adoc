@@ -187,24 +187,24 @@ Importieren Sie dieses Modul in einem anderen Skript und rufen Sie die Funktion 
 PyPI (https://pypi.org/) ist das offizielle Repository für Python-Module.
 Hier finden wir tausende von Modulen, die wir in unseren Projekten verwenden können.
 
-=== Installieren von Modulen mit pip
+=== Installieren von Modulen mit uv
 
-`pip` ist der Standard-Paketmanager für Python.
+`uv` ist der moderne Paketmanager für Python, der als Ersatz für `pip` und `Poetry` entwickelt wurde.
 Mit ihm können wir Module aus PyPI installieren:
 
 [source,bash]
 ----
 # Ein einzelnes Modul installieren
-pip install requests
+uv add requests
 
 # Eine bestimmte Version installieren
-pip install requests==2.25.1
+uv add requests==2.25.1
 
 # Eine Minimalversion angeben
-pip install requests>=2.25.0
+uv add "requests>=2.25.0"
 
 # Mehrere Module gleichzeitig installieren
-pip install requests pandas matplotlib
+uv add requests pandas matplotlib
 ----
 
 === requirements.txt
@@ -224,7 +224,7 @@ Installation aller Module aus der requirements.txt:
 
 [source,bash]
 ----
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ----
 
 === Module für die Arbeit mit Excel und externen Diensten
@@ -234,10 +234,10 @@ Für die Arbeit mit Excel-Dateien und SharePoint benötigen wir spezielle Module
 [source,bash]
 ----
 # Module für Excel-Dateien
-pip install pandas openpyxl xlrd
+uv add pandas openpyxl xlrd
 
 # Module für SharePoint
-pip install Office365-REST-Python-Client
+uv add Office365-REST-Python-Client
 ----
 
 === Übungsaufgaben:
