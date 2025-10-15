@@ -1,0 +1,621 @@
+= Kursabend 5: Mini-Projekte und Abschluss
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+
+== Einführung
+
+Herzlich willkommen zum letzten Kursabend! Heute habt ihr die Möglichkeit, euer Wissen in einem Mini-Projekt anzuwenden.
+
+*Ziele des heutigen Abends:*
+
+* Selbstständiges Arbeiten an einem zusammenhängenden Projekt
+* Anwendung aller gelernten Konzepte
+* Erfolgserlebnis durch ein funktionierendes Programm
+* Präsentation eurer Arbeit
+
+== Projektauswahl
+
+Wählt eines der folgenden vier Projekte aus. Ihr könnt auch zu zweit arbeiten (Pair Programming).
+
+[TIP]
+====
+*Projektauswahl-Tipps:*
+
+* Wählt ein Projekt, das euch interessiert
+* Überlegt, welche Funktionen ihr unbedingt umsetzen wollt
+* Plant genug Zeit für Tests und Fehlerbehebung ein
+* Es ist besser, ein einfaches Projekt vollständig zu schaffen, als ein komplexes nur halb
+====
+
+== Projekt 1: Digitales Tagebuch
+
+=== Projektbeschreibung
+
+Erstelle eine Tagebuch-Anwendung, in der Benutzer tägliche Einträge schreiben, speichern und später wieder lesen können.
+
+=== Mindestanforderungen (Pflicht)
+
+* Neuen Tagebucheintrag erstellen
+* Einträge werden mit Datum und Uhrzeit gespeichert
+* Alle Einträge anzeigen
+* Einträge in Dateien speichern
+* Benutzerfreundliches Menü
+
+=== Erweiterte Funktionen (Optional)
+
+* Nach Datum suchen
+* Stimmung/Emoji zum Eintrag hinzufügen (😊, 😐, 😢)
+* Tags/Kategorien für Einträge (z.B. #arbeit, #freizeit)
+* Statistik: Anzahl Einträge pro Monat
+* Einträge bearbeiten oder löschen
+* Exportfunktion (alle Einträge in eine Datei)
+
+=== Technische Hinweise
+
+*Dateistruktur:*
+
+----
+tagebuch/
+├── eintraege/
+│   ├── 2025-10-15.txt
+│   ├── 2025-10-16.txt
+│   └── ...
+└── tagebuch.py
+----
+
+*Beispiel-Code für den Start:*
+
+[source,python]
+----
+from datetime import datetime
+import os
+
+def neuer_eintrag():
+    """Erstellt einen neuen Tagebucheintrag."""
+    heute = datetime.now()
+    datum_str = heute.strftime('%Y-%m-%d')
+    zeit_str = heute.strftime('%H:%M:%S')
+    
+    print(f"\n=== Neuer Eintrag ({datum_str}) ===")
+    eintrag = input("Was möchtest du festhalten?\n> ")
+    
+    # Erstelle Verzeichnis, falls nicht vorhanden
+    os.makedirs('eintraege', exist_ok=True)
+    
+    # Speichere Eintrag
+    dateiname = f'eintraege/{datum_str}.txt'
+    with open(dateiname, 'a', encoding='utf-8') as datei:
+        datei.write(f"[{zeit_str}]\n")
+        datei.write(f"{eintrag}\n")
+        datei.write("-" * 50 + "\n")
+    
+    print("✓ Eintrag gespeichert!")
+
+def zeige_eintraege():
+    """Zeigt alle Tagebucheinträge an."""
+    # Dein Code hier
+    pass
+
+def hauptmenu():
+    """Zeigt das Hauptmenü an."""
+    while True:
+        print("\n=== Digitales Tagebuch ===")
+        print("1. Neuer Eintrag")
+        print("2. Einträge anzeigen")
+        print("3. Beenden")
+        
+        wahl = input("\nWähle eine Option: ")
+        
+        if wahl == '1':
+            neuer_eintrag()
+        elif wahl == '2':
+            zeige_eintraege()
+        elif wahl == '3':
+            print("Auf Wiedersehen!")
+            break
+        else:
+            print("Ungültige Eingabe!")
+
+if __name__ == '__main__':
+    hauptmenu()
+----
+
+=== Bewertungskriterien
+
+* ✓ Programm läuft ohne Fehler
+* ✓ Alle Mindestanforderungen erfüllt
+* ✓ Code ist lesbar und kommentiert
+* ✓ Sinnvolle Funktionen verwendet
+* ✓ Fehlerbehandlung (z.B. bei fehlenden Dateien)
+
+== Projekt 2: Ausgaben-Tracker
+
+=== Projektbeschreibung
+
+Erstelle eine Anwendung zur Verwaltung persönlicher Ausgaben. Benutzer können Ausgaben erfassen, kategorisieren und auswerten.
+
+=== Mindestanforderungen (Pflicht)
+
+* Ausgabe erfassen (Datum, Kategorie, Betrag, Beschreibung)
+* Alle Ausgaben anzeigen
+* Ausgaben nach Kategorie filtern
+* Gesamtsumme berechnen
+* Daten in Datei speichern
+
+=== Erweiterte Funktionen (Optional)
+
+* Monatsübersicht (Ausgaben pro Monat)
+* Kategoriestatistik (welche Kategorie kostet am meisten?)
+* Budget setzen und Warnung bei Überschreitung
+* Ausgaben bearbeiten/löschen
+* Export als CSV-Datei
+* Diagramm als ASCII-Art (Balkendiagramm)
+
+=== Technische Hinweise
+
+*Kategorien-Vorschläge:*
+
+* Lebensmittel
+* Transport
+* Freizeit
+* Wohnen
+* Gesundheit
+* Sonstiges
+
+*Beispiel-Code für den Start:*
+
+[source,python]
+----
+from datetime import datetime
+
+def erfasse_ausgabe():
+    """Erfasst eine neue Ausgabe."""
+    print("\n=== Neue Ausgabe erfassen ===")
+    
+    kategorien = ['Lebensmittel', 'Transport', 'Freizeit', 
+                  'Wohnen', 'Gesundheit', 'Sonstiges']
+    
+    print("\nKategorien:")
+    for i, kat in enumerate(kategorien, 1):
+        print(f"{i}. {kat}")
+    
+    kat_nr = int(input("\nKategorie wählen (1-6): "))
+    kategorie = kategorien[kat_nr - 1]
+    
+    betrag = float(input("Betrag (CHF): "))
+    beschreibung = input("Beschreibung: ")
+    
+    datum = datetime.now().strftime('%Y-%m-%d')
+    
+    # Speichere in Datei
+    with open('ausgaben.txt', 'a', encoding='utf-8') as datei:
+        datei.write(f"{datum}|{kategorie}|{betrag}|{beschreibung}\n")
+    
+    print(f"✓ Ausgabe von CHF {betrag:.2f} gespeichert!")
+
+def zeige_ausgaben():
+    """Zeigt alle Ausgaben an."""
+    try:
+        with open('ausgaben.txt', 'r', encoding='utf-8') as datei:
+            print("\n=== Alle Ausgaben ===")
+            print(f"{'Datum':<12} {'Kategorie':<15} {'Betrag':>10} {'Beschreibung'}")
+            print("-" * 60)
+            
+            gesamt = 0
+            for zeile in datei:
+                datum, kategorie, betrag, beschreibung = zeile.strip().split('|')
+                betrag_float = float(betrag)
+                gesamt += betrag_float
+                print(f"{datum:<12} {kategorie:<15} CHF {betrag_float:>7.2f} {beschreibung}")
+            
+            print("-" * 60)
+            print(f"{'Gesamt:':<27} CHF {gesamt:>7.2f}")
+    
+    except FileNotFoundError:
+        print("Noch keine Ausgaben erfasst.")
+
+# Weitere Funktionen hier...
+----
+
+=== Bewertungskriterien
+
+* ✓ Programm läuft ohne Fehler
+* ✓ Alle Mindestanforderungen erfüllt
+* ✓ Daten werden korrekt gespeichert und geladen
+* ✓ Berechnungen sind korrekt
+* ✓ Übersichtliche Darstellung
+
+== Projekt 3: Quiz-Generator
+
+=== Projektbeschreibung
+
+Erstelle ein Quiz-Programm, das Fragen aus einer Datei lädt, dem Benutzer stellt und die Ergebnisse speichert.
+
+=== Mindestanforderungen (Pflicht)
+
+* Fragen aus Datei laden
+* Quiz durchführen (Multiple Choice)
+* Punktestand anzeigen
+* Ergebnis speichern (mit Datum und Punktzahl)
+* Highscore-Liste anzeigen
+
+=== Erweiterte Funktionen (Optional)
+
+* Verschiedene Quiz-Kategorien
+* Zeitlimit pro Frage
+* Schwierigkeitsgrade
+* Statistik (welche Fragen werden oft falsch beantwortet?)
+* Neue Fragen hinzufügen
+* Zufällige Reihenfolge der Fragen
+* Joker-Funktion (50:50, Frage überspringen)
+
+=== Technische Hinweise
+
+*Format der Fragen-Datei (quiz.txt):*
+
+----
+Was ist die Hauptstadt der Schweiz?
+A) Zürich
+B) Bern
+C) Genf
+D) Basel
+B
+---
+Welche Programmiersprache lernen wir in diesem Kurs?
+A) Java
+B) C++
+C) Python
+D) JavaScript
+C
+---
+----
+
+*Beispiel-Code für den Start:*
+
+[source,python]
+----
+import random
+from datetime import datetime
+
+def lade_fragen(dateiname):
+    """Lädt Fragen aus einer Datei."""
+    fragen = []
+    
+    try:
+        with open(dateiname, 'r', encoding='utf-8') as datei:
+            inhalt = datei.read()
+            fragen_text = inhalt.split('---')
+            
+            for frage_text in fragen_text:
+                frage_text = frage_text.strip()
+                if not frage_text:
+                    continue
+                
+                zeilen = frage_text.split('\n')
+                frage = {
+                    'frage': zeilen[0],
+                    'antworten': zeilen[1:5],
+                    'richtig': zeilen[5]
+                }
+                fragen.append(frage)
+    
+    except FileNotFoundError:
+        print("Fragen-Datei nicht gefunden!")
+        return []
+    
+    return fragen
+
+def stelle_frage(frage, nummer, gesamt):
+    """Stellt eine einzelne Frage."""
+    print(f"\n=== Frage {nummer}/{gesamt} ===")
+    print(frage['frage'])
+    print()
+    for antwort in frage['antworten']:
+        print(antwort)
+    
+    eingabe = input("\nDeine Antwort (A/B/C/D): ").upper()
+    
+    if eingabe == frage['richtig']:
+        print("✓ Richtig!")
+        return True
+    else:
+        print(f"✗ Falsch! Die richtige Antwort war {frage['richtig']}")
+        return False
+
+def spiele_quiz():
+    """Führt das Quiz durch."""
+    fragen = lade_fragen('quiz.txt')
+    
+    if not fragen:
+        return
+    
+    random.shuffle(fragen)  # Zufällige Reihenfolge
+    
+    punkte = 0
+    gesamt = len(fragen)
+    
+    print("\n" + "=" * 50)
+    print("QUIZ START!")
+    print("=" * 50)
+    
+    for i, frage in enumerate(fragen, 1):
+        if stelle_frage(frage, i, gesamt):
+            punkte += 1
+    
+    # Ergebnis
+    prozent = (punkte / gesamt) * 100
+    print("\n" + "=" * 50)
+    print(f"QUIZ BEENDET!")
+    print(f"Punkte: {punkte}/{gesamt} ({prozent:.1f}%)")
+    print("=" * 50)
+    
+    # Speichere Ergebnis
+    speichere_ergebnis(punkte, gesamt)
+
+def speichere_ergebnis(punkte, gesamt):
+    """Speichert das Quiz-Ergebnis."""
+    # Dein Code hier
+    pass
+
+# Weitere Funktionen...
+----
+
+=== Bewertungskriterien
+
+* ✓ Fragen werden korrekt geladen
+* ✓ Quiz funktioniert einwandfrei
+* ✓ Punktestand wird korrekt berechnet
+* ✓ Ergebnisse werden gespeichert
+* ✓ Benutzerfreundliche Oberfläche
+
+== Projekt 4: Passwort-Generator und -Manager
+
+=== Projektbeschreibung
+
+Erstelle ein Programm, das sichere Passwörter generiert und diese optional speichert.
+
+=== Mindestanforderungen (Pflicht)
+
+* Passwort generieren mit wählbarer Länge
+* Verschiedene Zeichentypen (Buchstaben, Zahlen, Sonderzeichen)
+* Passwort-Stärke anzeigen
+* Generierte Passwörter anzeigen
+* Optional: Passwörter mit Beschreibung speichern
+
+=== Erweiterte Funktionen (Optional)
+
+* Passwort-Manager (Passwörter mit Service-Namen speichern)
+* Einfache Verschlüsselung (z.B. Caesar-Chiffre)
+* Passwort-Stärke-Checker für eigene Passwörter
+* Mehrere Passwörter auf einmal generieren
+* Passwort-Historie
+* Passwörter nach Service durchsuchen
+
+=== Technische Hinweise
+
+*Passwort-Stärke-Kriterien:*
+
+* Schwach: < 8 Zeichen, nur Buchstaben
+* Mittel: 8-12 Zeichen, Buchstaben + Zahlen
+* Stark: > 12 Zeichen, Buchstaben + Zahlen + Sonderzeichen
+
+*Beispiel-Code für den Start:*
+
+[source,python]
+----
+import random
+import string
+
+def generiere_passwort(laenge=12, gross=True, klein=True, 
+                       zahlen=True, sonderzeichen=True):
+    """Generiert ein zufälliges Passwort."""
+    zeichen = ''
+    
+    if gross:
+        zeichen += string.ascii_uppercase
+    if klein:
+        zeichen += string.ascii_lowercase
+    if zahlen:
+        zeichen += string.digits
+    if sonderzeichen:
+        zeichen += '!@#$%^&*()_+-=[]{}|;:,.<>?'
+    
+    if not zeichen:
+        return "Fehler: Mindestens eine Zeichenart wählen!"
+    
+    passwort = ''.join(random.choice(zeichen) for _ in range(laenge))
+    return passwort
+
+def pruefe_staerke(passwort):
+    """Prüft die Stärke eines Passworts."""
+    laenge = len(passwort)
+    hat_gross = any(c.isupper() for c in passwort)
+    hat_klein = any(c.islower() for c in passwort)
+    hat_zahl = any(c.isdigit() for c in passwort)
+    hat_sonder = any(c in '!@#$%^&*()_+-=[]{}|;:,.<>?' for c in passwort)
+    
+    punkte = 0
+    if laenge >= 8:
+        punkte += 1
+    if laenge >= 12:
+        punkte += 1
+    if hat_gross:
+        punkte += 1
+    if hat_klein:
+        punkte += 1
+    if hat_zahl:
+        punkte += 1
+    if hat_sonder:
+        punkte += 1
+    
+    if punkte <= 2:
+        return "Schwach ⚠️"
+    elif punkte <= 4:
+        return "Mittel 🔶"
+    else:
+        return "Stark ✅"
+
+def speichere_passwort(service, passwort):
+    """Speichert ein Passwort mit Service-Namen."""
+    with open('passwoerter.txt', 'a', encoding='utf-8') as datei:
+        datei.write(f"{service}|{passwort}\n")
+    print(f"✓ Passwort für '{service}' gespeichert!")
+
+def hauptmenu():
+    """Hauptmenü des Passwort-Generators."""
+    while True:
+        print("\n=== Passwort-Generator ===")
+        print("1. Passwort generieren")
+        print("2. Passwort-Stärke prüfen")
+        print("3. Gespeicherte Passwörter anzeigen")
+        print("4. Beenden")
+        
+        wahl = input("\nWähle eine Option: ")
+        
+        if wahl == '1':
+            laenge = int(input("Länge (empfohlen: 12-16): "))
+            passwort = generiere_passwort(laenge)
+            staerke = pruefe_staerke(passwort)
+            
+            print(f"\nGeneriertes Passwort: {passwort}")
+            print(f"Stärke: {staerke}")
+            
+            speichern = input("\nPasswort speichern? (j/n): ")
+            if speichern.lower() == 'j':
+                service = input("Service-Name: ")
+                speichere_passwort(service, passwort)
+        
+        elif wahl == '2':
+            passwort = input("Passwort eingeben: ")
+            staerke = pruefe_staerke(passwort)
+            print(f"Stärke: {staerke}")
+        
+        elif wahl == '3':
+            # Dein Code hier
+            pass
+        
+        elif wahl == '4':
+            print("Auf Wiedersehen!")
+            break
+
+if __name__ == '__main__':
+    hauptmenu()
+----
+
+[WARNING]
+====
+*Sicherheitshinweis:* Dies ist ein Lernprojekt! Für echte Passwörter sollte man professionelle Passwort-Manager verwenden, die echte Verschlüsselung bieten.
+====
+
+=== Bewertungskriterien
+
+* ✓ Passwörter werden korrekt generiert
+* ✓ Verschiedene Optionen funktionieren
+* ✓ Stärke-Prüfung ist sinnvoll
+* ✓ Speichern funktioniert
+* ✓ Benutzerfreundlich
+
+== Zeitplan für heute
+
+[cols="1,3", options="header"]
+|===
+|Zeit |Aktivität
+
+|Lektion 1 (45 Min)
+|Projekt-Briefing, Auswahl, Planung
+
+|Lektion 2-3 (90 Min)
+|Projekt-Arbeit (selbstständig oder zu zweit)
+
+|Lektion 4 (45 Min)
+|Präsentationen und Abschluss
+|===
+
+== Tipps für die Projekt-Arbeit
+
+[TIP]
+====
+*Erfolgreiche Projekt-Arbeit:*
+
+1. *Plane zuerst:* Schreibe auf, welche Funktionen du umsetzen willst
+2. *Beginne einfach:* Starte mit den Mindestanforderungen
+3. *Teste oft:* Teste nach jeder neuen Funktion
+4. *Kommentiere:* Schreibe Kommentare für dich selbst
+5. *Frage nach Hilfe:* Wenn du stecken bleibst, frage!
+6. *Hab Spaß:* Programmieren soll Freude machen!
+====
+
+== Präsentation
+
+Am Ende zeigt jeder/jedes Team kurz (3-5 Minuten):
+
+* Welches Projekt habt ihr gewählt?
+* Was funktioniert?
+* Was war die größte Herausforderung?
+* Was habt ihr gelernt?
+* (Optional) Live-Demo
+
+[NOTE]
+====
+Die Präsentation ist *keine Prüfung*, sondern eine Gelegenheit, eure Arbeit zu zeigen und voneinander zu lernen!
+====
+
+== Ausblick: Wie geht es weiter?
+
+Nach diesem Kurs könnt ihr:
+
+=== Weiterführende Themen
+
+* *Objektorientierte Programmierung (OOP):* Klassen und Objekte
+* *Web-Entwicklung:* Flask oder Django
+* *Datenanalyse:* pandas, matplotlib
+* *Automatisierung:* Skripte für wiederkehrende Aufgaben
+* *APIs:* Mit externen Diensten kommunizieren
+* *Datenbanken:* SQLite, PostgreSQL
+
+=== Empfohlene Ressourcen
+
+* https://www.python.org/about/gettingstarted/[Python.org - Getting Started]
+* https://realpython.com/[Real Python] - Tutorials und Artikel
+* https://www.codecademy.com/learn/learn-python-3[Codecademy Python Course]
+* https://automatetheboringstuff.com/[Automate the Boring Stuff with Python]
+* https://www.youtube.com/c/Coreyms[Corey Schafer YouTube Channel]
+
+=== Nächste Schritte
+
+1. *Üben, üben, üben:* Programmieren lernt man durch Tun
+2. *Eigene Projekte:* Suche dir ein Problem, das dich interessiert
+3. *Community:* Trete Python-Communities bei (Reddit, Discord)
+4. *Open Source:* Schaue dir Code von anderen an
+5. *Weiterbildung:* Überlege dir einen Fortgeschrittenenkurs
+
+== Abschlusswort
+
+Herzlichen Glückwunsch! 🎉
+
+Ihr habt in diesem Kurs die Grundlagen der Python-Programmierung gelernt:
+
+* ✓ Variablen und Datentypen
+* ✓ Kontrollstrukturen (if, for, while)
+* ✓ Funktionen
+* ✓ Dateiverarbeitung
+* ✓ Fehlerbehandlung
+
+Das ist eine solide Basis für eure weitere Reise in der Programmierung!
+
+[IMPORTANT]
+====
+*Denkt daran:* Jeder Programmierer hat einmal bei Null angefangen. Der Unterschied zwischen Anfängern und Profis ist nicht Talent, sondern *Übung und Durchhaltevermögen*.
+====
+
+Viel Erfolg auf eurem weiteren Weg! 🚀

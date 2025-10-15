@@ -1,0 +1,576 @@
+= Python Cheat Sheet: Kursabende 4 & 5
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: article
+include::locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:source-highlighter: highlight.js
+:icons: font
+
+== Grundlagen
+
+=== Variablen und Datentypen
+
+[source,python]
+----
+# Variablen
+name = "Anna"           # String (Text)
+alter = 25              # Integer (Ganzzahl)
+groesse = 1.75          # Float (Dezimalzahl)
+ist_student = True      # Boolean (Wahrheitswert)
+
+# Listen
+fruechte = ["Apfel", "Banane", "Orange"]
+zahlen = [1, 2, 3, 4, 5]
+
+# Dictionaries
+person = {
+    "name": "Max",
+    "alter": 30,
+    "stadt": "Bern"
+}
+----
+
+=== Ausgabe und Eingabe
+
+[source,python]
+----
+# Ausgabe
+print("Hallo Welt!")
+print(f"Ich bin {alter} Jahre alt")  # f-String
+
+# Eingabe
+name = input("Wie heißt du? ")
+alter = int(input("Wie alt bist du? "))  # Umwandlung in Zahl
+----
+
+== Kontrollstrukturen
+
+=== Bedingungen (if-elif-else)
+
+[source,python]
+----
+if alter < 18:
+    print("Du bist minderjährig")
+elif alter < 65:
+    print("Du bist erwachsen")
+else:
+    print("Du bist im Rentenalter")
+----
+
+=== Schleifen
+
+==== for-Schleife
+
+[source,python]
+----
+# Über Liste iterieren
+for frucht in fruechte:
+    print(frucht)
+
+# Über Zahlenbereich
+for i in range(5):      # 0, 1, 2, 3, 4
+    print(i)
+
+for i in range(1, 6):   # 1, 2, 3, 4, 5
+    print(i)
+----
+
+==== while-Schleife
+
+[source,python]
+----
+zaehler = 0
+while zaehler < 5:
+    print(zaehler)
+    zaehler += 1
+----
+
+== Funktionen
+
+=== Funktionen definieren
+
+[source,python]
+----
+def begruessung(name):
+    """Gibt eine Begrüßung aus."""
+    print(f"Hallo {name}!")
+
+def addiere(a, b):
+    """Addiert zwei Zahlen und gibt das Ergebnis zurück."""
+    return a + b
+
+# Funktionen aufrufen
+begruessung("Anna")
+summe = addiere(5, 3)
+print(summe)  # 8
+----
+
+=== Funktionen mit Standardwerten
+
+[source,python]
+----
+def begruessung(name, sprache="Deutsch"):
+    if sprache == "Deutsch":
+        print(f"Hallo {name}!")
+    elif sprache == "Englisch":
+        print(f"Hello {name}!")
+
+begruessung("Max")                    # Hallo Max!
+begruessung("Anna", "Englisch")       # Hello Anna!
+----
+
+== Dateiverarbeitung
+
+=== Datei lesen
+
+[source,python]
+----
+# Gesamte Datei lesen
+with open('datei.txt', 'r', encoding='utf-8') as datei:
+    inhalt = datei.read()
+    print(inhalt)
+
+# Zeilenweise lesen
+with open('datei.txt', 'r', encoding='utf-8') as datei:
+    for zeile in datei:
+        zeile = zeile.strip()  # Entfernt Leerzeichen/Zeilenumbrüche
+        print(zeile)
+
+# Alle Zeilen in Liste
+with open('datei.txt', 'r', encoding='utf-8') as datei:
+    zeilen = datei.readlines()
+----
+
+=== Datei schreiben
+
+[source,python]
+----
+# Datei neu schreiben (überschreibt!)
+with open('ausgabe.txt', 'w', encoding='utf-8') as datei:
+    datei.write('Erste Zeile\n')
+    datei.write('Zweite Zeile\n')
+
+# An Datei anhängen
+with open('ausgabe.txt', 'a', encoding='utf-8') as datei:
+    datei.write('Neue Zeile\n')
+----
+
+=== Fehlerbehandlung bei Dateien
+
+[source,python]
+----
+try:
+    with open('datei.txt', 'r', encoding='utf-8') as datei:
+        inhalt = datei.read()
+except FileNotFoundError:
+    print("Datei nicht gefunden!")
+----
+
+== Nützliche String-Operationen
+
+[source,python]
+----
+text = "  Hallo Welt  "
+
+# Leerzeichen entfernen
+text.strip()        # "Hallo Welt"
+text.lstrip()       # "Hallo Welt  "
+text.rstrip()       # "  Hallo Welt"
+
+# Groß-/Kleinschreibung
+text.upper()        # "  HALLO WELT  "
+text.lower()        # "  hallo welt  "
+
+# Teilen und Verbinden
+woerter = text.split()              # ["Hallo", "Welt"]
+text = " ".join(woerter)            # "Hallo Welt"
+
+# Ersetzen
+text.replace("Hallo", "Hi")         # "  Hi Welt  "
+
+# Prüfungen
+text.startswith("Hallo")            # False (wegen Leerzeichen)
+text.strip().startswith("Hallo")    # True
+"123".isdigit()                     # True
+----
+
+== Listen-Operationen
+
+[source,python]
+----
+zahlen = [1, 2, 3, 4, 5]
+
+# Hinzufügen
+zahlen.append(6)            # [1, 2, 3, 4, 5, 6]
+zahlen.extend([7, 8])       # [1, 2, 3, 4, 5, 6, 7, 8]
+zahlen.insert(0, 0)         # [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# Entfernen
+zahlen.remove(0)            # Entfernt erste 0
+letztes = zahlen.pop()      # Entfernt und gibt letztes Element zurück
+zahlen.clear()              # Leert die Liste
+
+# Sortieren
+zahlen.sort()               # Sortiert aufsteigend
+zahlen.sort(reverse=True)   # Sortiert absteigend
+zahlen.reverse()            # Kehrt Reihenfolge um
+
+# Suchen
+if 3 in zahlen:
+    print("3 ist in der Liste")
+
+index = zahlen.index(3)     # Gibt Index von 3 zurück
+anzahl = zahlen.count(3)    # Zählt, wie oft 3 vorkommt
+----
+
+== Dictionary-Operationen
+
+[source,python]
+----
+person = {"name": "Max", "alter": 30}
+
+# Zugriff
+name = person["name"]
+alter = person.get("alter")
+alter = person.get("groesse", 0)  # 0 als Standardwert
+
+# Hinzufügen/Ändern
+person["stadt"] = "Bern"
+person["alter"] = 31
+
+# Entfernen
+del person["stadt"]
+alter = person.pop("alter")
+
+# Prüfen
+if "name" in person:
+    print("Name vorhanden")
+
+# Iterieren
+for schluessel in person:
+    print(schluessel, person[schluessel])
+
+for schluessel, wert in person.items():
+    print(f"{schluessel}: {wert}")
+----
+
+== Wichtige Module
+
+=== datetime - Datum und Zeit
+
+[source,python]
+----
+from datetime import datetime
+
+# Aktuelles Datum und Zeit
+jetzt = datetime.now()
+
+# Formatierung
+datum_str = jetzt.strftime('%Y-%m-%d')          # "2025-10-15"
+zeit_str = jetzt.strftime('%H:%M:%S')           # "16:30:45"
+komplett = jetzt.strftime('%Y-%m-%d %H:%M:%S')  # "2025-10-15 16:30:45"
+
+# Parsing
+datum = datetime.strptime('2025-10-15', '%Y-%m-%d')
+----
+
+=== random - Zufallszahlen
+
+[source,python]
+----
+import random
+
+# Zufallszahl
+zahl = random.randint(1, 100)       # Ganzzahl zwischen 1 und 100
+zahl = random.random()              # Float zwischen 0.0 und 1.0
+
+# Zufälliges Element aus Liste
+frucht = random.choice(fruechte)
+
+# Liste mischen
+random.shuffle(zahlen)
+----
+
+=== os - Dateisystem
+
+[source,python]
+----
+import os
+
+# Verzeichnis erstellen
+os.makedirs('mein_ordner', exist_ok=True)
+
+# Prüfen ob Datei/Ordner existiert
+if os.path.exists('datei.txt'):
+    print("Datei existiert")
+
+# Dateien in Verzeichnis auflisten
+dateien = os.listdir('.')
+dateien = os.listdir('mein_ordner')
+
+# Pfade kombinieren
+pfad = os.path.join('ordner', 'datei.txt')
+----
+
+== Häufige Muster
+
+=== Menü-System
+
+[source,python]
+----
+def hauptmenu():
+    while True:
+        print("\n=== HAUPTMENÜ ===")
+        print("1. Option 1")
+        print("2. Option 2")
+        print("3. Beenden")
+        
+        wahl = input("\nWähle eine Option: ")
+        
+        if wahl == '1':
+            # Aktion 1
+            pass
+        elif wahl == '2':
+            # Aktion 2
+            pass
+        elif wahl == '3':
+            print("Auf Wiedersehen!")
+            break
+        else:
+            print("Ungültige Eingabe!")
+----
+
+=== Daten in Datei speichern (einfaches Format)
+
+[source,python]
+----
+# Speichern
+daten = [
+    {"name": "Max", "alter": 30},
+    {"name": "Anna", "alter": 25}
+]
+
+with open('daten.txt', 'w', encoding='utf-8') as datei:
+    for person in daten:
+        datei.write(f"{person['name']}|{person['alter']}\n")
+
+# Laden
+daten = []
+with open('daten.txt', 'r', encoding='utf-8') as datei:
+    for zeile in datei:
+        name, alter = zeile.strip().split('|')
+        person = {"name": name, "alter": int(alter)}
+        daten.append(person)
+----
+
+=== Eingabe validieren
+
+[source,python]
+----
+# Zahl einlesen mit Fehlerbehandlung
+while True:
+    try:
+        alter = int(input("Alter: "))
+        if alter < 0:
+            print("Alter muss positiv sein!")
+            continue
+        break
+    except ValueError:
+        print("Bitte eine gültige Zahl eingeben!")
+
+# Ja/Nein-Abfrage
+while True:
+    antwort = input("Fortfahren? (j/n): ").lower()
+    if antwort in ['j', 'n']:
+        break
+    print("Bitte 'j' oder 'n' eingeben!")
+----
+
+=== Liste filtern
+
+[source,python]
+----
+zahlen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Gerade Zahlen
+gerade = [x for x in zahlen if x % 2 == 0]
+
+# Oder mit Schleife
+gerade = []
+for x in zahlen:
+    if x % 2 == 0:
+        gerade.append(x)
+----
+
+== Debugging-Tipps
+
+=== Print-Debugging
+
+[source,python]
+----
+# Variablenwerte ausgeben
+print(f"DEBUG: variable = {variable}")
+
+# Typ einer Variable prüfen
+print(f"Typ: {type(variable)}")
+
+# Länge prüfen
+print(f"Länge: {len(liste)}")
+----
+
+=== Häufige Fehler
+
+[cols="2,3", options="header"]
+|===
+|Fehler |Lösung
+
+|`FileNotFoundError`
+|Datei existiert nicht → Pfad prüfen, `try-except` verwenden
+
+|`ValueError`
+|Ungültige Umwandlung (z.B. `int("abc")`) → Eingabe validieren
+
+|`IndexError`
+|Index außerhalb der Liste → Länge prüfen mit `len()`
+
+|`KeyError`
+|Schlüssel nicht im Dictionary → `get()` verwenden
+
+|`IndentationError`
+|Falsche Einrückung → Tabs/Leerzeichen konsistent verwenden
+
+|`NameError`
+|Variable nicht definiert → Schreibweise prüfen
+|===
+
+== Formatierung und Stil
+
+=== f-Strings (empfohlen)
+
+[source,python]
+----
+name = "Max"
+alter = 30
+
+# Einfach
+print(f"Ich bin {name}")
+
+# Mit Formatierung
+preis = 19.99
+print(f"Preis: CHF {preis:.2f}")  # CHF 19.99
+
+# Rechts-/Linksbündig
+print(f"{name:<10}")  # Linksbündig, 10 Zeichen
+print(f"{name:>10}")  # Rechtsbündig, 10 Zeichen
+print(f"{alter:>5}")  # Rechtsbündig, 5 Zeichen
+----
+
+=== Kommentare
+
+[source,python]
+----
+# Einzeiliger Kommentar
+
+"""
+Mehrzeiliger Kommentar
+oder Docstring für Funktionen
+"""
+
+def funktion():
+    """
+    Beschreibung der Funktion.
+    
+    Args:
+        parameter: Beschreibung
+        
+    Returns:
+        Beschreibung des Rückgabewerts
+    """
+    pass
+----
+
+== Nützliche Built-in Funktionen
+
+[source,python]
+----
+# Länge
+len([1, 2, 3])              # 3
+len("Hallo")                # 5
+
+# Min/Max/Summe
+min([1, 2, 3])              # 1
+max([1, 2, 3])              # 3
+sum([1, 2, 3])              # 6
+
+# Sortiert (erstellt neue Liste)
+sorted([3, 1, 2])           # [1, 2, 3]
+sorted([3, 1, 2], reverse=True)  # [3, 2, 1]
+
+# Bereich
+range(5)                    # 0, 1, 2, 3, 4
+range(1, 6)                 # 1, 2, 3, 4, 5
+range(0, 10, 2)             # 0, 2, 4, 6, 8
+
+# Enumerate (Index + Wert)
+for i, wert in enumerate(['a', 'b', 'c']):
+    print(f"{i}: {wert}")
+# 0: a
+# 1: b
+# 2: c
+
+# Zip (Listen kombinieren)
+namen = ["Max", "Anna"]
+alter = [30, 25]
+for name, a in zip(namen, alter):
+    print(f"{name} ist {a} Jahre alt")
+----
+
+== Schnellreferenz: Operatoren
+
+[cols="1,2,2", options="header"]
+|===
+|Operator |Bedeutung |Beispiel
+
+|`+` |Addition |`5 + 3` → `8`
+|`-` |Subtraktion |`5 - 3` → `2`
+|`*` |Multiplikation |`5 * 3` → `15`
+|`/` |Division |`5 / 2` → `2.5`
+|`//` |Ganzzahldivision |`5 // 2` → `2`
+|`%` |Modulo (Rest) |`5 % 2` → `1`
+|`**` |Potenz |`2 ** 3` → `8`
+|`==` |Gleich |`5 == 5` → `True`
+|`!=` |Ungleich |`5 != 3` → `True`
+|`<` |Kleiner |`3 < 5` → `True`
+|`>` |Größer |`5 > 3` → `True`
+|`<=` |Kleiner gleich |`3 <= 3` → `True`
+|`>=` |Größer gleich |`5 >= 3` → `True`
+|`and` |Logisches UND |`True and False` → `False`
+|`or` |Logisches ODER |`True or False` → `True`
+|`not` |Logisches NICHT |`not True` → `False`
+|===
+
+== Tipps für die Praxis
+
+[TIP]
+====
+*Gute Programmierpraktiken:*
+
+1. **Sprechende Namen:** Verwende aussagekräftige Variablen- und Funktionsnamen
+2. **Kommentare:** Erkläre *warum*, nicht *was* der Code macht
+3. **Funktionen:** Halte Funktionen klein und fokussiert (eine Aufgabe)
+4. **DRY-Prinzip:** Don't Repeat Yourself - vermeide Code-Duplikate
+5. **Fehlerbehandlung:** Nutze `try-except` für robusteren Code
+6. **Testen:** Teste deinen Code mit verschiedenen Eingaben
+7. **Schritt für Schritt:** Entwickle inkrementell, teste oft
+====
+
+[NOTE]
+====
+Dieses Cheat Sheet deckt die wichtigsten Konzepte für die Kursabende 4 und 5 ab.
+Für weitere Details siehe die offizielle Python-Dokumentation: https://docs.python.org/de/3/
+====
