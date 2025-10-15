@@ -1,0 +1,14 @@
+Willkommen zum Python-Kurs!
+
+Dies ist eine Beispieldatei für die Dateiverarbeitung.
+Wir lernen heute, wie man Dateien liest und schreibt.
+
+Python macht Dateiverarbeitung sehr einfach.
+Mit dem with-Statement müssen wir uns nicht um das Schließen der Datei kümmern.
+
+Wichtige Punkte:
+- Verwende immer encoding='utf-8'
+- Nutze das with-Statement
+- Behandle Fehler mit try-except
+
+Viel Erfolg beim Üben!
