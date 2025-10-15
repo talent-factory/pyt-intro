@@ -4,116 +4,105 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Projektübersicht
 
-Dies ist ein deutschsprachiger Python-Einführungskurs mit interaktiven Jupyter Notebooks und Beispielcode. Das Projekt verwendet **uv** als Package Manager (migriert von Poetry).
+Deutschsprachiger Python-Einführungskurs für Programmieranfänger mit interaktiven Jupyter Notebooks, Beispielcode und Übungen.
 
-**Zielgruppe**: Programmieranfänger
-**Sprache**: Alle Inhalte, Kommentare und Dokumentation sind auf Deutsch
+**Zielgruppe**: Programmieranfänger ohne Vorkenntnisse
+**Sprache**: Alle Inhalte auf Deutsch (Code-Kommentare, Dokumentation, Variablennamen)
+**Package Manager**: uv (migriert von Poetry)
 
-### Projektstruktur
+### Kursstruktur (5 Abende)
 
-- `ipynb/` - Jupyter Notebooks mit Tutorial-Inhalten:
-  - `00-hello.ipynb` - Einstieg
-  - `01-Introduction-to-Python.ipynb` - Grundlagen (Variablen, Datentypen, Kontrollstrukturen)
-  - `02-Functions-and-Modules.ipynb` - Funktionen und Module
-  - `03-Classes-and-Objects.ipynb` - Objektorientierte Programmierung
-- `introcs/` - Beispielcode-Sammlung (100+ Module): Algorithmen, Datenstrukturen, grafische Beispiele
-- `exercise/` - Übungsaufgaben (`.adoc` Format) und Lösungen
-- `docs/` - Zusätzliche Dokumentation und Tutorials (AsciiDoc und HTML)
-- `stdlib/` - Hilfsmodule für Standardfunktionalität
+Der Kurs folgt einer didaktischen Progression:
+
+1. **Kursabend 1-2**: Grundlagen (Variablen, Datentypen, Input/Output, Jupyter Notebooks)
+2. **Kursabend 3**: Kontrollstrukturen (if/elif/else, Schleifen), Funktionen, Module
+3. **Kursabend 4**: Dateiverarbeitung + Praxis-Workshop mit Übungen in 3 Levels
+4. **Kursabend 5**: Mini-Projekte (Tagebuch, Quiz, Ausgaben-Tracker, Passwort-Manager)
 
 ## Befehle
 
-### Package Management (uv)
+### Package Management
 
-- Abhängigkeiten installieren: `uv sync`
-- Python-Skript ausführen: `uv run python <skript_pfad>`
-- Paket hinzufügen: `uv add <paketname>`
+```bash
+uv sync                      # Abhängigkeiten installieren
+uv run python <skript>       # Python-Skript ausführen
+uv add <paketname>           # Paket hinzufügen
+```
 
 ### Entwicklung
 
-- Jupyter Notebook starten: `jupyter notebook` (oder direkt `uv run jupyter notebook`)
-- Python-Skript direkt ausführen: `python <skript_pfad>` (wenn venv aktiviert)
-- Modul als Skript ausführen: `python -m <modulname>`
-- Doctest ausführen: `python -m doctest <datei.py>` oder `python -m doctest -v <datei.py>` für verbose
+```bash
+jupyter notebook             # Jupyter starten
+python -m doctest <datei.py> # Doctest ausführen
+python -m doctest -v <datei.py>  # Doctest verbose
+```
 
-### Formatierung
+### Code-Qualität
 
-- Code formatieren: `black <datei_oder_verzeichnis>`
-- Linting würde normalerweise mit `ruff` erfolgen (nicht in pyproject.toml konfiguriert)
+```bash
+black <datei_oder_verzeichnis>   # Code formatieren (PEP 8)
+```
 
-## Architektur und Besonderheiten
+## Architektur
 
-### Tutorial-Notebooks
+### Verzeichnisstruktur
 
-Die Jupyter Notebooks folgen einer didaktischen Progression:
-
-1. Grundkonzepte (Variablen, Operatoren, Datentypen)
-2. Kontrollstrukturen (Bedingungen, Schleifen)
-3. Funktionen und Module
-4. Objektorientierung
-
-Notebooks enthalten:
-
-- Markdown-Zellen mit deutschen Erklärungen
-- Code-Zellen mit ausführbaren Beispielen
-- Referenzen zur offiziellen Python-Dokumentation
+- **`ipynb/`** - Jupyter Notebooks (00-hello bis 03-Classes-and-Objects)
+- **`docs/`** - AsciiDoc-Dokumentation, Tutorials, Übungsaufgaben
+  - `cheat-sheet.adoc` - Schnellreferenz für Kursabende 4 & 5
+  - `tutorials/` - Umfassende Tutorials (Doctest, Grundlagen, Module)
+  - `exercises/` - Übungsaufgaben (kursabend-4-aufgaben.adoc, kursabend-5-projekte.adoc)
+- **`solutions/`** - Musterlösungen für Kursabend 4 & 5
+- **`testdaten/`** - Testdateien für Übungen (beispieltext.txt, produkte.csv, server.log, vokabeln.txt, quiz.txt)
+- **`introcs/`** - 100+ Beispielmodule (Algorithmen, Datenstrukturen, Grafik)
+- **`stdlib/`** - Hilfsmodule (stdio, stddraw, stdrandom, etc.)
 
 ### introcs-Module
 
-Die `introcs/`-Sammlung enthält klassische CS-Beispiele:
+Klassische CS-Beispiele für Anfänger:
 
-- Grundlegende Programme (`helloworld.py`, `useargument.py`)
-- Algorithmen (Sortierung, Suche, Rekursion)
-- Datenstrukturen (Stack, Queue, BST, Hash Table)
-- Mathematische/wissenschaftliche Beispiele (Fibonacci, Gaussian, Mandelbrot)
-- Grafik/Visualisierung (Turtle Graphics, Plotting)
+- Grundprogramme (helloworld.py, useargument.py)
+- Algorithmen (binarysearch.py, sortierung)
+- Datenstrukturen (arraystack.py, bst.py)
+- Mathematik (fibonacci, gaussian, mandelbrot)
+- Grafik (turtle graphics, plotting)
 
-Viele Module importieren von einem benutzerdefinierten `stdlib`-Paket.
+**Wichtig**: Viele `introcs/`-Module importieren von `stdlib`-Paket (custom I/O-Funktionen).
 
 ### Übungen
 
-Übungsaufgaben sind in AsciiDoc (`.adoc`) geschrieben und behandeln praktische Anwendungen wie Palindrome, Textanalyse, Einkaufswagen-Simulation.
+Drei Schwierigkeitslevel (Kursabend 4):
 
-## Richtlinien zum Codestil
+- **Level 1**: Zahlenraten mit Highscore, Einkaufsliste, Notizen-App
+- **Level 2**: Textanalyse-Tool, CSV-Verarbeitung, Log-File-Analyzer
+- **Level 3**: Vokabeltrainer, Kontaktverwaltung
 
-**Wichtig**: Alle neuen Inhalte müssen auf **Deutsch** verfasst werden - sowohl Code-Kommentare als auch Dokumentation.
+## Codestil-Richtlinien
+
+### Sprache und Benennung
+
+- **Alle Inhalte auf Deutsch**: Kommentare, Docstrings, Variablennamen, Dokumentation
+- Variablen: `kleinbuchstaben_mit_unterstrichen` (z.B. `anzahl_versuche`, `ist_student`)
+- Klassen: `CamelCase`
+- Deutsche Namen bevorzugen (außer etablierte englische Begriffe wie `main`)
 
 ### Code-Konventionen
 
-- **PEP 8** Konventionen strikt befolgen
-- Typhinweise für Funktionsparameter und Rückgabewerte verwenden
-- **Variablenbenennung**: `kleinbuchstaben_mit_unterstrichen` (deutsche Namen bevorzugt)
-- **Klassenbenennung**: `CamelCase`
-- **Umfassende Docstrings** mit deutschen Beschreibungen und doctest-Beispielen
-- Fehlerbehandlung mit angemessenen Ausnahmetypen
-- Properties (`@property`) gegenüber direktem Attributzugriff bevorzugen
-- Funktionen klein halten und auf eine einzelne Verantwortlichkeit konzentrieren
-
-### Pädagogische Anforderungen
-
-- Code muss für Anfänger verständlich sein
-- Schrittweise Komplexität aufbauen
-- Viele Kommentare zur Erklärung hinzufügen
-- Praktische, nachvollziehbare Beispiele verwenden
-- Konsistenz mit bestehenden Notebook-Stilen wahren
-
-### Markdown-Qualität
-
-- Alle Markdown-Dateien (`.md`) müssen **frei von markdownlint-Fehlern** sein
-- Überschriften müssen von Leerzeilen umgeben sein
-- Listen müssen von Leerzeilen umgeben sein
-- Code-Blöcke müssen von Leerzeilen umgeben sein
-- Konsistente Formatierung und Struktur
-- **Bei Markdown-Formatierungsproblemen**: Nutze den `markdown-syntax-formatter` Agent, um automatisch korrekte Markdown-Syntax zu gewährleisten
-
-### Doctest-Beispiele
-
-Funktionen sollten doctest-Beispiele enthalten:
+- **PEP 8** strikt befolgen
+- **Typhinweise** verwenden: `def addiere(a: int, b: int) -> int:`
+- **Docstrings** mit deutscher Beschreibung und doctest-Beispielen:
 
 ```python
 def addiere(a: int, b: int) -> int:
     """
     Addiert zwei Zahlen.
+
+    Args:
+        a: Erste Zahl
+        b: Zweite Zahl
+
+    Returns:
+        Summe von a und b
 
     >>> addiere(2, 3)
     5
@@ -123,4 +112,25 @@ def addiere(a: int, b: int) -> int:
     return a + b
 ```
 
-Beim Hinzufügen von Code die bestehenden Muster in ähnlichen Dateien befolgen und den pädagogischen Charakter der Codebasis beibehalten.
+- Fehlerbehandlung mit `try-except` und spezifischen Exceptions
+- Properties (`@property`) statt direktem Attributzugriff
+- Funktionen klein halten (Single Responsibility)
+
+### Pädagogische Anforderungen
+
+Für Anfänger optimiert:
+
+- Schrittweise Komplexität aufbauen
+- Viele erklärende Kommentare
+- Praktische, nachvollziehbare Beispiele
+- Konsistenz mit bestehenden Notebook-Stilen
+- Vermeidung fortgeschrittener Python-Features (außer in späteren Notebooks)
+
+### Dokumentationsformate
+
+- **Markdown** (`.md`): Frei von markdownlint-Fehlern, Leerzeilen um Überschriften/Listen/Code-Blöcke
+- **AsciiDoc** (`.adoc`): Für umfangreiche Tutorials und Übungsaufgaben
+
+### Formatierungsprobleme
+
+Bei Markdown-Formatierungsproblemen: Nutze `markdown-syntax-formatter` Agent für automatische Korrektur.
