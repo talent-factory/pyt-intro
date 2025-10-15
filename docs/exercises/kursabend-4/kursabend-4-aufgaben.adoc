@@ -334,7 +334,7 @@ Anna Schmidt|078 987 65 43|anna@example.com
 
 == Zusätzliche Ressourcen
 
-* Python-Dokumentation zu Dateiverarbeitung: https://docs.python.org/de/3/tutorial/inputoutput.html#reading-and-writing-files
+* Python-Dokumentation zu Dateiverarbeitung: https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files
 * Tutorial zu `with`-Statement: https://realpython.com/python-with-statement/
 
 == Reflexionsfragen
