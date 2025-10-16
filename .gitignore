@@ -23,3 +23,32 @@
 # Ergebnisse aus den Übungen
 analyse.txt
 highscore.txt
+
+# Environment variables
+.env
+.env.local
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Ruff cache
+.ruff_cache/
+
+# pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

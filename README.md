@@ -1,5 +1,10 @@
 # Python Programmierung Basis
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 Einführungskurs in die Python-Programmierung für Anfänger ohne Vorkenntnisse.
 
 ## Kursinformationen
@@ -171,17 +176,46 @@ python -m doctest <datei.py>
 python -m doctest -v <datei.py>
 ```
 
+## Git-Workflow für Studierende
+
+⚠️ **Wichtig:** Die Branches `main` und `develop` sind geschützt!
+
+**Korrekter Workflow:**
+
+1. Eigenen Feature-Branch erstellen: `git checkout -b feature/ihr-name`
+2. Änderungen committen: `git commit -m "feat: Beschreibung"`
+3. Branch pushen: `git push origin feature/ihr-name`
+4. Pull Request auf GitHub erstellen
+
+Detaillierte Anleitung: `docs/exercises/backup-environments-quickstart.adoc`
+
 ## Ressourcen
 
 - [Offizielle Python-Dokumentation](https://docs.python.org/de/3/)
 - [Python Tutorial (deutsch)](https://pythonbuch.com/index.html)
 - Kurs-Dokumentation: `docs/index.html`
+- Branch Protection Setup: `.github/BRANCH_PROTECTION.md` (für Kursleiter)
+
+## Contributing
+
+Beiträge sind willkommen! Bitte lesen Sie [CONTRIBUTING.md](CONTRIBUTING.md) für Details zum Entwicklungsprozess und wie Sie Pull Requests einreichen können.
+
+### Community-Richtlinien
+
+- [Code of Conduct](CODE_OF_CONDUCT.md) - Verhaltenskodex für die Community
+- [Security Policy](SECURITY.md) - Sicherheitsrichtlinien und Meldeverfahren
+- [Changelog](CHANGELOG.md) - Versionshistorie und Änderungen
 
 ## Lizenz
 
-MIT
+Dieses Projekt ist unter der [MIT License](LICENSE) lizenziert - siehe die LICENSE-Datei für Details.
 
 ## Autor
 
-Daniel Senften  
-<daniel.senften@talent-factory.ch>
+**Daniel Senften**  
+E-Mail: <daniel.senften@talent-factory.ch>  
+Organisation: [Talent Factory](https://www.talent-factory.xyz)
+
+## Danksagungen
+
+Vielen Dank an alle Studierenden und Beitragenden, die dieses Projekt unterstützen!

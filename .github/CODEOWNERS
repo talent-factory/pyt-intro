@@ -1,0 +1,31 @@
+# CODEOWNERS für pyt-intro Repository
+#
+# Diese Datei definiert, wer für Code-Reviews zuständig ist.
+# Alle Pull Requests zu geschützten Branches benötigen ein Review von einem Code Owner.
+#
+# Syntax: <file-pattern> <owner1> <owner2> ...
+# Verwenden Sie GitHub-Benutzernamen mit @-Präfix
+
+# Standardmäßig sind die Kursleiter für alle Dateien zuständig
+* @daniel-senften
+
+# Spezifische Verantwortlichkeiten
+
+# Dokumentation
+/docs/ @daniel-senften
+
+# Übungen und Lösungen
+/exercise/ @daniel-senften
+/solutions/ @daniel-senften
+
+# Konfigurationsdateien
+/.github/ @daniel-senften
+/.devcontainer/ @daniel-senften
+.gitignore @daniel-senften
+.gitpod.yml @daniel-senften
+pyproject.toml @daniel-senften
+
+# Wichtige Projektdateien
+README.md @daniel-senften
+CLAUDE.md @daniel-senften
+KURSPLANUNG.md @daniel-senften
