@@ -1,0 +1,439 @@
+= Python-Tutorial: Externe Module und Dateiverarbeitung
+:author: Daniel Senften
+:email: daniel.senften@gibb.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+:title-page:
+:pdf-page-size: A4
+
+== Einführung
+
+Liebe Studierende,
+
+In diesem Tutorial lernen wir, wie wir in Python externe Module verwenden können, um unsere
+Programme zu erweitern. Wir werden uns ansehen, wie Python Module findet, wie wir neue Module
+installieren können und wie wir mit diesen Modulen arbeiten, um Daten aus Excel-Dateien und
+externen Diensten wie SharePoint zu lesen.
+
+Dieses Tutorial ist für Anfänger konzipiert, die noch wenig oder keine Erfahrung mit Programmierung
+haben. Alle Konzepte werden Schritt für Schritt erklärt.
+
+== 1. Externe Module in Python
+
+=== Was sind Module?
+
+In Python ist ein Modul einfach eine Datei, die Python-Code enthält. Module helfen uns, unseren
+Code zu organisieren und ermöglichen es uns, Code wiederzuverwenden, anstatt alles von Grund auf
+neu zu schreiben.
+
+Es gibt drei Arten von Modulen:
+
+1. *Standardmodule*: Diese sind Teil der Python-Installation und sofort verfügbar
+(z.B. `math`, `random`, `datetime`).
+2. *Externe Module*: Diese werden von anderen Entwicklern geschrieben und müssen separat
+installiert werden (z.B. `pandas`, `requests`, `openpyxl`).
+3. *Eigene Module*: Diese schreiben wir selbst, um unseren Code zu organisieren.
+
+=== Module importieren
+
+Um ein Modul in unserem Programm zu verwenden, müssen wir es zuerst importieren.
+Es gibt verschiedene Möglichkeiten, Module zu importieren:
+
+==== 1. Das gesamte Modul importieren:
+
+[source,python]
+----
+import math
+
+# Wir können nun Funktionen aus dem Modul mit dem Punktoperator aufrufen
+ergebnis = math.sqrt(16)  # Berechnet die Quadratwurzel von 16
+print(ergebnis)  # Gibt 4.0 aus
+----
+
+==== 2. Bestimmte Funktionen aus einem Modul importieren:
+
+[source,python]
+----
+from math import sqrt, pow
+
+# Wir können die importierten Funktionen direkt ohne Modulnamen verwenden
+ergebnis1 = sqrt(16)    # Berechnet die Quadratwurzel von 16
+ergebnis2 = pow(2, 3)   # Berechnet 2 hoch 3
+print(ergebnis1, ergebnis2)  # Gibt 4.0 8.0 aus
+----
+
+==== 3. Alle Funktionen aus einem Modul importieren:
+
+[source,python]
+----
+from math import *
+
+# Wir können alle Funktionen direkt ohne Modulnamen verwenden
+ergebnis = sqrt(16)
+print(ergebnis)  # Gibt 4.0 aus
+----
+
+[CAUTION]
+====
+Der Import aller Funktionen mit `from module import *` kann zu Namenskonflikten führen und
+macht den Code schwerer lesbar, da nicht klar ist, woher die Funktionen stammen.
+Diese Methode sollte in grösseren Projekten vermieden werden.
+====
+
+==== 4. Module mit einem Alias importieren:
+
+[source,python]
+----
+import math as m
+
+ergebnis = m.sqrt(16)
+print(ergebnis)  # Gibt 4.0 aus
+----
+
+=== Übungsaufgaben:
+
+1. Schreiben Sie ein Programm, das das Modul `random` importiert und eine zufällige Zahl
+zwischen 1 und 100 ausgibt.
+2. Importieren Sie nur die Funktion `choice` aus dem Modul `random` und wählen Sie einen
+zufälligen Wochentag aus einer Liste von Wochentagen aus.
+3. Importieren Sie das Modul `datetime` mit dem Alias `dt` und geben Sie das aktuelle Datum
+und die aktuelle Uhrzeit aus.
+
+== 2. Wie Python Module findet
+
+Wenn wir ein Modul importieren, sucht Python an verschiedenen Orten nach diesem Modul.
+Die Suchreihenfolge ist wie folgt:
+
+1. Das aktuelle Verzeichnis, in dem unser Skript ausgeführt wird
+2. Verzeichnisse in der Umgebungsvariable `PYTHONPATH` (falls gesetzt)
+3. Standardverzeichnisse der Python-Installation
+
+Diese Suchpfade sind in der Variablen `sys.path` gespeichert, die wir uns anzeigen lassen können:
+
+[source,python]
+----
+import sys
+print(sys.path)
+----
+
+=== Der Python-Suchpfad (sys.path)
+
+Die Umgebungsvariable `PYTHONPATH` funktioniert ähnlich wie die `PATH`-Variable in Betriebssystemen.
+Sie enthält eine Liste von Verzeichnissen, in denen Python nach Modulen sucht.
+
+Wir können den Suchpfad auch im Code erweitern:
+
+[source,python]
+----
+import sys
+sys.path.append('/pfad/zu/meinen/modulen')
+
+# Jetzt können wir Module aus diesem Verzeichnis importieren
+import mein_eigenes_modul
+----
+
+=== Virtuelle Umgebungen (venv)
+
+Bei der Arbeit mit externen Modulen ist es oft nützlich, virtuelle Umgebungen zu verwenden.
+Eine virtuelle Umgebung ist ein isolierter Python-Bereich, in dem wir Module installieren können,
+ohne die globale Python-Installation zu beeinflussen.
+
+Erstellen einer virtuellen Umgebung:
+
+[source,bash]
+----
+# Unter Windows
+python -m venv meine_umgebung
+
+# Unter macOS/Linux
+python3 -m venv meine_umgebung
+----
+
+Aktivieren der virtuellen Umgebung:
+
+[source,bash]
+----
+# Unter Windows
+meine_umgebung\Scripts\activate
+
+# Unter macOS/Linux
+source meine_umgebung/bin/activate
+----
+
+Nach der Aktivierung können wir Module speziell für diese Umgebung installieren.
+
+=== Übungsaufgaben:
+
+1. Schreiben Sie ein Programm, das den aktuellen Python-Suchpfad ausgibt und zählt,
+wie viele Verzeichnisse enthalten sind.
+2. Erstellen Sie eine virtuelle Umgebung für ein neues Projekt und aktivieren Sie diese.
+Überprüfen Sie mit `pip list`, welche Module bereits installiert sind.
+3. Schreiben Sie ein eigenes kleines Modul `helper.py` mit einer Funktion `gruss()`,
+die einen Begrüssungstext ausgibt.
+Importieren Sie dieses Modul in einem anderen Skript und rufen Sie die Funktion auf.
+
+== 3. Externe Module finden und installieren
+
+=== Python Package Index (PyPI)
+
+PyPI (https://pypi.org/) ist das offizielle Repository für Python-Module.
+Hier finden wir tausende von Modulen, die wir in unseren Projekten verwenden können.
+
+=== Installieren von Modulen mit uv
+
+`uv` ist der moderne Paketmanager für Python, der als Ersatz für `pip` und `Poetry` entwickelt wurde.
+Mit ihm können wir Module aus PyPI installieren:
+
+[source,bash]
+----
+# Ein einzelnes Modul installieren
+uv add requests
+
+# Eine bestimmte Version installieren
+uv add requests==2.25.1
+
+# Eine Minimalversion angeben
+uv add "requests>=2.25.0"
+
+# Mehrere Module gleichzeitig installieren
+uv add requests pandas matplotlib
+----
+
+=== requirements.txt
+
+In grösseren Projekten verwenden wir oft eine `requirements.txt`-Datei, um alle benötigten
+Module aufzulisten:
+
+[source,text]
+----
+# requirements.txt
+requests==2.25.1
+pandas>=1.3.0
+matplotlib>=3.4.2
+----
+
+Installation aller Module aus der requirements.txt:
+
+[source,bash]
+----
+uv pip install -r requirements.txt
+----
+
+=== Module für die Arbeit mit Excel und externen Diensten
+
+Für die Arbeit mit Excel-Dateien und SharePoint benötigen wir spezielle Module:
+
+[source,bash]
+----
+# Module für Excel-Dateien
+uv add pandas openpyxl xlrd
+
+# Module für SharePoint
+uv add Office365-REST-Python-Client
+----
+
+=== Übungsaufgaben:
+
+1. Gehen Sie auf PyPI.org und suchen Sie nach einem Modul, das für die Bildverarbeitung
+verwendet werden kann.
+Notieren Sie den Namen und eine kurze Beschreibung.
+2. Erstellen Sie eine `requirements.txt`-Datei für ein Projekt, das die Module `pandas`,
+`matplotlib` und `requests` benötigt.
+3. Installieren Sie das Modul `tabulate` und recherchieren Sie, wofür es verwendet wird.
+
+== 4. Arbeiten mit Excel-Dateien in Python
+
+Für die Arbeit mit Excel-Dateien verwenden wir in der Regel das Modul `pandas`, das Daten in
+sogenannten DataFrames verarbeitet – tabellenähnlichen Strukturen, die sehr leistungsfähig sind.
+
+=== Excel-Dateien lesen
+
+[source,python]
+----
+import pandas as pd
+
+# Eine Excel-Datei einlesen
+df = pd.read_excel('daten.xlsx', sheet_name='Tabelle1')
+
+# Die ersten Zeilen anzeigen
+print(df.head())
+
+# Informationen über den DataFrame anzeigen
+print(df.info())
+
+# Statistische Zusammenfassung numerischer Spalten
+print(df.describe())
+----
+
+=== In bestimmten Spalten und Zeilen arbeiten
+
+[source,python]
+----
+# Eine einzelne Spalte auswählen
+spalte = df['Spaltenname']
+print(spalte)
+
+# Mehrere Spalten auswählen
+teildf = df[['Spalte1', 'Spalte2']]
+print(teildf)
+
+# Filtern nach Bedingungen
+gefiltert = df[df['Alter'] > 30]
+print(gefiltert)
+
+# Sortieren nach einer Spalte
+sortiert = df.sort_values(by='Name')
+print(sortiert)
+----
+
+=== Daten in Excel schreiben
+
+[source,python]
+----
+# DataFrame in eine Excel-Datei schreiben
+df.to_excel('ergebnis.xlsx', sheet_name='Ergebnisse', index=False)
+
+# Mit mehreren Arbeitsblättern
+with pd.ExcelWriter('ergebnis_multi.xlsx') as writer:
+    df1.to_excel(writer, sheet_name='Daten1', index=False)
+    df2.to_excel(writer, sheet_name='Daten2', index=False)
+----
+
+=== Übungsaufgaben:
+
+1. Erstellen Sie eine einfache Excel-Datei mit Namen und Noten von 5 fiktiven Studierenden.
+Lesen Sie diese Datei mit pandas ein und berechnen Sie den Durchschnitt der Noten.
+2. Filtern Sie aus dem DataFrame nur die Studierenden, die eine Note besser als 2,0 haben,
+und speichern Sie diese in einer neuen Excel-Datei.
+3. Fügen Sie dem DataFrame eine neue Spalte "Bestanden" hinzu, die "Ja" enthält, wenn die
+Note besser oder gleich 4,0 ist, und "Nein", wenn die Note schlechter ist.
+Speichern Sie den aktualisierten DataFrame zurück in die Excel-Datei.
+
+== 5. Daten von SharePoint lesen
+
+Die Anbindung an SharePoint erfordert etwas mehr Code und Konfiguration.
+Hier verwenden wir das Modul `Office365-REST-Python-Client`:
+
+=== Authentifizierung und Verbindung zu SharePoint
+
+[source,python]
+----
+from office365.runtime.auth.authentication_context import AuthenticationContext
+from office365.sharepoint.client_context import ClientContext
+from office365.sharepoint.files.file import File
+
+# SharePoint-Anmeldedaten
+sharepoint_url = "https://ihrfirma.sharepoint.com/sites/IhrSite"
+username = "ihr_benutzername@ihrfirma.com"
+password = "ihr_passwort"  # Besser: aus Umgebungsvariablen oder sicherer Quelle lesen
+
+# Authentifizierung
+auth_context = AuthenticationContext(sharepoint_url)
+auth_context.acquire_token_for_user(username, password)
+ctx = ClientContext(sharepoint_url, auth_context)
+
+# Überprüfen, ob die Verbindung funktioniert
+web = ctx.web
+ctx.load(web)
+ctx.execute_query()
+print(f"Verbunden mit SharePoint-Site: {web.properties['Title']}")
+----
+
+=== Excel-Datei von SharePoint herunterladen
+
+[source,python]
+----
+import io
+import pandas as pd
+from office365.sharepoint.files.file import File
+
+# Pfad zur Datei in SharePoint (relativer Pfad vom Site-Root)
+file_url = "/sites/IhrSite/Freigegebene Dokumente/daten.xlsx"
+
+# Datei als Bytes-Objekt herunterladen
+response = File.open_binary(ctx, file_url)
+
+# Bytes-Objekt in einen BytesIO-Stream umwandeln, den pandas lesen kann
+bytes_file_obj = io.BytesIO(response.content)
+
+# Excel-Datei mit pandas lesen
+df = pd.read_excel(bytes_file_obj)
+print(df.head())
+----
+
+=== Daten zurück in SharePoint speichern
+
+[source,python]
+----
+import io
+from office365.sharepoint.files.file import File
+
+# DataFrame in Excel-Bytes umwandeln
+excel_buffer = io.BytesIO()
+df.to_excel(excel_buffer, index=False)
+excel_buffer.seek(0)  # Zurück zum Anfang des Streams
+
+# Pfad, wohin die Datei hochgeladen werden soll
+upload_url = "/sites/IhrSite/Freigegebene Dokumente/ergebnisse.xlsx"
+
+# Datei hochladen
+File.save_binary(ctx, upload_url, excel_buffer.getvalue())
+print(f"Datei wurde nach {upload_url} hochgeladen")
+----
+
+[IMPORTANT]
+====
+Bei der Arbeit mit Anmeldedaten für externe Dienste sollten Sie immer sichere Methoden zur
+Speicherung verwenden.
+Schreiben Sie Passwörter niemals direkt in Ihren Code!
+Verwenden Sie stattdessen Umgebungsvariablen oder spezielle Konfigurationsdateien, die
+nicht im Versionskontrollsystem gespeichert werden.
+====
+
+=== Übungsaufgaben:
+
+1. Recherchieren Sie, welche anderen Möglichkeiten es gibt, sich bei SharePoint zu authentifizieren
+(z.B. mit Client ID und Secret).
+2. Schreiben Sie ein Programm, das alle Excel-Dateien in einem bestimmten SharePoint-Ordner auflistet.
+3. Entwerfen Sie ein kleines Programm, das täglich automatisch Daten von SharePoint herunterlädt,
+eine Berechnung durchführt und die Ergebnisse zurück nach SharePoint hochlädt.
+
+== Zusammenfassung
+
+In diesem Tutorial haben wir gelernt:
+
+* Wie man externe Module in Python importiert und verwendet
+* Wie Python Module findet und wo sie gespeichert sind
+* Wie man neue Module über PyPI findet und mit pip installiert
+* Wie man mit pandas Excel-Dateien lesen und schreiben kann
+* Wie man mit der Office365-REST-Python-Client-Bibliothek auf SharePoint-Daten zugreift
+
+Diese Grundlagen ermöglichen es Ihnen, viele praktische Anwendungen zu entwickeln, die mit
+externen Datenquellen arbeiten.
+
+== Weiterführende Ressourcen
+
+* Offizielle Python-Dokumentation zu Modulen: https://docs.python.org/3/tutorial/modules.html
+* PyPI (Python Package Index): https://pypi.org/
+* Pandas-Dokumentation: https://pandas.pydata.org/docs/
+* Office365-REST-Python-Client: https://github.com/vgrem/Office365-REST-Python-Client
+
+== Abschlussprojekt
+
+Entwickeln Sie ein kleines Programm, das:
+
+1. Eine Excel-Datei mit Produktdaten (Name, Preis, Kategorie, Bestand) einliest
+2. Die Daten nach verschiedenen Kriterien analysiert (z.B. Durchschnittspreise pro Kategorie,
+Produkte mit niedrigem Bestand)
+3. Einen Bericht erstellt und als neue Excel-Datei speichert
+4. Optional: Den Bericht auf SharePoint hochlädt
+
+Viel Erfolg beim Programmieren!

@@ -2,8 +2,9 @@
 # rangefilter.py
 #-----------------------------------------------------------------------
 
-import stdio
 import sys
+
+import stdio
 
 # Accept integer command-line arguments lo and hi. Read integers from
 # standard input until end-of-file. Write to standard output each of
@@ -13,7 +14,7 @@ lo = int(sys.argv[1])
 hi = int(sys.argv[2])
 while not stdio.is_empty():
     # Process one integer.
-    value = stdio.read_int()
+    value = stdio.read_number()
     if (value >= lo) and (value <= hi):
         stdio.write(str(value) + ' ')
 stdio.writeln()

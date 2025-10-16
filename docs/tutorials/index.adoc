@@ -1,0 +1,37 @@
+= Python Tutorials
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+:toc: left
+:sectnums:
+:imagesdir: ../images
+:source-highlighter: highlightjs
+:icons: font
+
+== Übersicht der Tutorials
+
+Diese Seite bietet einen Überblick über alle verfügbaren Python-Tutorials:
+
+=== Grundlagen
+
+* link:python-grundlagen-tutorial.html[Python Grundlagen: Eine umfassende Einführung]
+* link:python-module-tutorial.html[Python Module und Packages]
+
+=== Fortgeschrittene Themen
+
+* link:oop-tutorial.html[Objektorientierte Programmierung in Python]
+* link:doctest_tutorial.html[Testen mit Python Doctest]
+
+=== Datenvalidierung und -verarbeitung
+
+* link:pydantic-tutorial.html[Datenvalidierung mit Pydantic]
+* link:pydantic-ai-tutorial.html[Pydantic für KI-Anwendungen]
+
+== Lösungen und Beispielcode
+
+Zu den Tutorials gehören folgende Lösungsdateien:
+
+* link:python-grundlagen-loesungen.py[Lösungen zu Python Grundlagen]
+* link:python-module-tutorial-loesungen.ipynb[Lösungen zum Module-Tutorial (Jupyter Notebook)]

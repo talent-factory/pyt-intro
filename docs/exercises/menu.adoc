@@ -1,0 +1,16 @@
+Ein Dictionary in Python ist eine Datenstruktur, die eine Sammlung von Schlüssel-Wert-Paaren enthält.
+Jeder Schlüssel im Dictionary muss eindeutig sein und kann mit einem bestimmten Wert verknüpft werden.
+Im Python-Code wird ein Dictionary mit geschweiften Klammern {} und einem Doppelpunkt : zwischen Schlüssel und Wert erstellt.
+
+[source,python,numbers]
+----
+mein_dictionary = {
+    "Name": "Peter",
+    "Alter": 28,
+    "Stadt": "Bern"
+}
+----
+
+*Aufgabe:*
+Stellen Sie sich vor, wir wollen in einem Programm die Bezeichnungen für ein Datei-Menü internationalisieren, also z. B. in Deutsch, Englisch, Französisch und Italienisch anbieten.
+Das Menu könnte etwa wie folgt aussehen:

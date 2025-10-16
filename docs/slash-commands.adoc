@@ -1,0 +1,415 @@
+= KI-Assistenten im Python-Kurs: Konfiguration und Verwendung
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: article
+include::locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:source-highlighter: highlight.js
+:icons: font
+
+[abstract]
+== Zusammenfassung
+Diese Anleitung erklärt, wie ihr KI-Coding-Assistenten wie GitHub Copilot, Continue und Augment Code in unserem Python-Kurs optimal nutzt. Ihr lernt die Verzeichnisstrukturen kennen und wie ihr eigene Commands konfigurieren könnt.
+
+[NOTE]
+====
+**Für Anfänger**: Keine Sorge, wenn nicht alles sofort klar ist! Beginnt mit Kapitel 1-2 und den Schritt-für-Schritt-Anleitungen. Die fortgeschrittenen Themen könnt ihr später erkunden.
+====
+
+== Grundlagen: Was sind KI-Coding-Assistenten?
+
+=== Definition
+KI-Coding-Assistenten sind Programme, die euch beim Programmieren unterstützen. Sie können:
+
+* Code-Vorschläge machen
+* Fehler erklären
+* Übungsaufgaben generieren
+* Code in einfacher Sprache erklären
+
+=== Slash-Commands
+Slash-Commands sind spezielle Befehle, die mit `/` beginnen:
+
+[source,text]
+----
+/erklaere    # Erklärt den markierten Code
+/fehler      # Hilft bei der Fehlersuche  
+/uebung      # Erstellt eine Übungsaufgabe
+----
+
+== Verzeichnisstrukturen verstehen
+
+=== Home-Verzeichnis vs. Projekt-Verzeichnis
+
+[IMPORTANT]
+====
+Es gibt zwei wichtige Orte für Konfigurationen:
+
+. **Home-Verzeichnis** (`~` oder `$HOME`): Gilt für alle eure Projekte
+. **Projekt-Verzeichnis**: Gilt nur für das aktuelle Projekt
+====
+
+.Verzeichnis-Hierarchie
+[cols="1,3,2", options="header"]
+|===
+|Priorität
+|Ort
+|Gültigkeit
+
+|1 ⭐
+|`./projekt/.continue/`
+|Nur dieses Projekt
+
+|2
+|`~/.continue/`
+|Alle deine Projekte
+
+|3
+|System-Defaults
+|Voreinstellungen
+|===
+
+=== Wichtige Verzeichnisse nach Betriebssystem
+
+.macOS
+[source,bash]
+----
+~/                             # Dein Home-Verzeichnis
+├── .vscode/                   # VS Code Einstellungen
+├── .continue/                 # Continue KI-Assistent
+├── .augment/                  # Augment Code
+└── .cursor/                   # Cursor Editor
+----
+
+.Windows
+[source,powershell]
+----
+C:\Users\DeinName\             # Dein Home-Verzeichnis
+├── .vscode\                   # VS Code Einstellungen
+├── .continue\                 # Continue KI-Assistent
+├── .augment\                  # Augment Code
+└── .cursor\                   # Cursor Editor
+----
+
+[TIP]
+====
+**Versteckte Ordner anzeigen:**
+
+* **macOS**: Finder → kbd:[Cmd+Shift+.]
+* **Windows**: Explorer → Ansicht → ☑ "Ausgeblendete Elemente"
+====
+
+== Projekt-spezifische Konfiguration
+
+=== Struktur unseres Python-Kurses
+
+[source,text]
+----
+pyt-intro/                     # Unser Kurs-Projekt
+├── 📁 .vscode/
+│   ├── settings.json         # <1>
+│   └── extensions.json       # <2>
+├── 📁 .continue/
+│   └── config.json           # <3>
+├── 📁 docs/
+│   ├── exercises/
+│   └── examples/
+└── 📄 README.md
+----
+<1> VS Code Einstellungen für dieses Projekt
+<2> Empfohlene Extensions für den Kurs
+<3> KI-Commands speziell für Python-Anfänger
+
+=== Beispiel: Continue Configuration
+
+.Datei: `.continue/config.json`
+[source,json]
+----
+{
+  "customCommands": [
+    {
+      "name": "/erklaere",
+      "description": "Erklärt Python-Code für Anfänger",
+      "prompt": "Erkläre diesen Python-Code so, als würde die Person zum ersten Mal programmieren. Verwende Alltagsbeispiele und vermeide Fachbegriffe."
+    },
+    {
+      "name": "/fehler",
+      "description": "Hilft bei Fehlermeldungen",
+      "prompt": "Erkläre diese Fehlermeldung anfängerfreundlich und zeige Schritt für Schritt, wie man sie behebt."
+    },
+    {
+      "name": "/uebung",
+      "description": "Erstellt eine Übungsaufgabe",
+      "prompt": "Erstelle eine einfache Übungsaufgabe zu diesem Konzept mit Lösung."
+    }
+  ]
+}
+----
+
+[NOTE]
+====
+**Alternative Konfiguration mit Markdown-Dateien**
+
+Viele KI-Assistenten wie Claude Code verwenden separate `.md`-Dateien für jeden Slash-Command statt einer zentralen JSON-Datei:
+
+[source,text]
+----
+.claude/
+├── commands/
+│   ├── erklaere.md      # Enthält: "Erkläre diesen Python-Code..."
+│   ├── fehler.md        # Enthält: "Erkläre diese Fehlermeldung..."
+│   └── uebung.md        # Enthält: "Erstelle eine Übungsaufgabe..."
+----
+
+Beispiel für `erklaere.md`:
+[source,markdown]
+----
+Erkläre diesen Python-Code so, als würde die Person zum ersten Mal programmieren.
+Verwende Alltagsbeispiele und vermeide Fachbegriffe.
+----
+
+**Vorteile dieser Methode:**
+
+* Übersichtlicher bei vielen Commands
+* Einfacheres Editieren einzelner Commands
+* Bessere Versionskontrolle (Git zeigt Änderungen pro Command)
+* Kein Risiko von JSON-Syntax-Fehlern
+====
+
+== Schritt-für-Schritt Anleitungen
+
+=== Installation von Continue in VS Code
+
+[arabic]
+. Öffnet VS Code
+. Geht zu Extensions (kbd:[Cmd+Shift+X] oder kbd:[Ctrl+Shift+X])
+. Sucht nach "Continue"
+. Klickt auf btn:[Install]
+. Startet VS Code neu
+
+=== Eigene Commands hinzufügen
+
+[arabic]
+. Navigiert zum Projekt-Ordner
+. Erstellt den Ordner `.continue` falls nicht vorhanden:
++
+[source,bash]
+----
+mkdir .continue
+----
+. Erstellt die Datei `config.json`:
++
+.macOS/Linux
+[source,bash]
+----
+touch .continue/config.json
+----
++
+.Windows
+[source,powershell]
+----
+New-Item -Path .continue\config.json -ItemType File
+----
+. Fügt eure Commands ein (siehe Beispiel oben)
+. Speichert und testet mit `/` in VS Code
+
+=== Prioritäten testen
+
+Um zu verstehen, welche Konfiguration gerade aktiv ist:
+
+.macOS/Linux
+[source,bash]
+----
+# Zeigt Home-Konfiguration
+cat ~/.continue/config.json | grep "erklaere"
+
+# Zeigt Projekt-Konfiguration  
+cat ./.continue/config.json | grep "erklaere"
+----
+
+.Windows (PowerShell)
+[source,powershell]
+----
+# Zeigt Home-Konfiguration
+Get-Content $HOME\.continue\config.json | Select-String "erklaere"
+
+# Zeigt Projekt-Konfiguration
+Get-Content .\.continue\config.json | Select-String "erklaere"
+----
+
+== Praktische Beispiele für Python-Anfänger
+
+=== Command für Schleifen-Erklärung
+
+.Als JSON (z.B. Continue)
+[source,json]
+----
+{
+  "name": "/schleife",
+  "prompt": "Erkläre diese Schleife wie ein Kochrezept: Was sind die Zutaten (Variablen)? Was sind die Schritte (Iterationen)? Was kommt am Ende raus (Ergebnis)?"
+}
+----
+
+.Als Markdown-Datei (z.B. Claude Code: `.claude/commands/schleife.md`)
+[source,markdown]
+----
+Erkläre diese Schleife wie ein Kochrezept: Was sind die Zutaten (Variablen)?
+Was sind die Schritte (Iterationen)? Was kommt am Ende raus (Ergebnis)?
+----
+
+=== Command für Funktionen
+
+.Als JSON (z.B. Continue)
+[source,json]
+----
+{
+  "name": "/funktion",
+  "prompt": "Erkläre diese Funktion wie eine Maschine: Was kommt rein (Parameter)? Was passiert drinnen (Funktionskörper)? Was kommt raus (Return)?"
+}
+----
+
+.Als Markdown-Datei (z.B. Claude Code: `.claude/commands/funktion.md`)
+[source,markdown]
+----
+Erkläre diese Funktion wie eine Maschine: Was kommt rein (Parameter)?
+Was passiert drinnen (Funktionskörper)? Was kommt raus (Return)?
+----
+
+== Häufige Probleme und Lösungen
+
+[qanda]
+Meine Commands funktionieren nicht::
+  Prüft, ob die JSON-Syntax korrekt ist. Jedes `{` braucht ein `}`, jedes `[` ein `]`.
+
+Welche Config wird verwendet?::
+  Die Projekt-Config (`./.continue/`) überschreibt immer die Home-Config (`~/.continue/`).
+
+Kann ich Commands teilen?::
+  Ja! Aber fügt `.continue/` zu `.gitignore` hinzu, falls ihr API-Keys dort speichert.
+
+VS Code findet die Commands nicht::
+  Startet VS Code neu oder ladet das Window neu mit kbd:[Cmd+R] bzw. kbd:[Ctrl+R].
+
+== Best Practices
+
+[WARNING]
+====
+**Sicherheit first!**
+
+* Speichert NIEMALS Passwörter oder API-Keys in Konfig-Dateien
+* Fügt `.continue/`, `.augment/` etc. zu `.gitignore` hinzu
+* Teilt keine persönlichen Konfigurationen
+====
+
+[TIP]
+====
+**Tipps für bessere Commands:**
+
+* Verwendet sprechende Namen: `/erklaere_schleife` statt `/es`
+* Schreibt klare Beschreibungen
+* Testet Commands bevor ihr sie teilt
+* Dokumentiert eure Commands in einer README
+====
+
+== Übungsaufgaben
+
+.Aufgabe 1: Erste eigene Commands
+****
+Erstellt drei eigene Commands für euer Lieblings-Python-Thema:
+
+. Einen Erklärungs-Command
+. Einen Debug-Command  
+. Einen Übungs-Command
+****
+
+.Aufgabe 2: Konfigurationshierarchie
+****
+. Erstellt einen Command `/test` in eurer Home-Config
+. Erstellt denselben Command mit anderem Inhalt in der Projekt-Config
+. Testet, welcher verwendet wird
+. Dokumentiert eure Erkenntnisse
+****
+
+== Weiterführende Ressourcen
+
+=== Kurs-Materialien
+
+* icon:graduation-cap[] Unser Kurs-Repository (GitHub): `git clone https://github.com/talent-factory/cs1-pyt.git`
+* icon:gitlab[] Unser Kurs-Repository (GitLab): `git clone git@gitlab.com:talent-factory/education/pyt-intro.git`
+
+=== KI-Assistenten Dokumentation
+
+* icon:github[] link:https://github.com/features/copilot[GitHub Copilot] - Code-Vervollständigung von GitHub
+* icon:link[] link:https://docs.claude.com/en/docs/claude-code/overview[Claude Code] - KI-Assistent von Anthropic
+* icon:link[] link:https://ai.google.dev/gemini-api[Gemini CLI] - Google's KI-Plattform
+* icon:link[] link:https://platform.openai.com/docs/guides/code[Codex CLI] - OpenAI's Code-Modell
+* icon:link[] link:https://codeium.com/windsurf[Windsurf] - Codeium's KI-Editor
+* icon:link[] link:https://www.kilo.ai/[Kilo Code] - KI-gestützter Code-Editor
+* icon:link[] link:https://www.augmentcode.com/[Auggie CLI] - KI-Coding-Assistent
+* icon:link[] link:https://aws.amazon.com/q/developer/[Amazon Q Developer CLI] - AWS KI-Entwickler-Tool
+
+=== Allgemeine Dokumentation
+
+* icon:book[] link:https://code.visualstudio.com/docs[VS Code Dokumentation]
+
+[appendix]
+== Kommando-Referenz
+
+.Alle KI-Tools und ihre Verzeichnisse
+[cols="2,3,3", options="header"]
+|===
+|Tool
+|macOS
+|Windows
+
+|GitHub Copilot
+|`~/.vscode/extensions/github.copilot-*`
+|`%USERPROFILE%\.vscode\extensions\github.copilot-*`
+
+|Claude Code
+|`~/.claude/`
+|`%USERPROFILE%\.claude\`
+
+|Gemini CLI
+|`~/.gemini/`
+|`%USERPROFILE%\.gemini\`
+
+|Codex CLI
+|`~/.codex/`
+|`%USERPROFILE%\.codex\`
+
+|Windsurf
+|`~/.windsurf/`
+|`%USERPROFILE%\.windsurf\`
+
+|Kilo Code
+|`~/.kilocode/`
+|`%USERPROFILE%\.kilocode\`
+
+|Auggie CLI
+|`~/.auggie/`
+|`%USERPROFILE%\.auggie\`
+
+|Amazon Q Developer CLI
+|`~/.q/`
+|`%USERPROFILE%\.q\`
+|===
+
+[glossary]
+== Glossar
+
+Home-Verzeichnis:: Der persönliche Ordner eines Benutzers (`~` oder `$HOME`)
+
+Slash-Command:: Ein Befehl, der mit `/` beginnt und spezielle Aktionen auslöst
+
+JSON:: JavaScript Object Notation - Ein Format für Konfigurationsdateien
+
+Repository:: Ein Projekt-Ordner, der mit Git versioniert wird
+
+Extension:: Eine Erweiterung für VS Code
+
+---
+_Letzte Aktualisierung: {docdate}_

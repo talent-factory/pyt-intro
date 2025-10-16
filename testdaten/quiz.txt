@@ -1,0 +1,70 @@
+Was ist die Hauptstadt der Schweiz?
+A) Zürich
+B) Bern
+C) Genf
+D) Basel
+B
+---
+Welche Programmiersprache lernen wir in diesem Kurs?
+A) Java
+B) C++
+C) Python
+D) JavaScript
+C
+---
+Was bedeutet die Abkürzung "IDE"?
+A) Internet Development Environment
+B) Integrated Development Environment
+C) Interactive Design Editor
+D) Internal Data Exchange
+B
+---
+Welcher Datentyp wird für Ganzzahlen verwendet?
+A) float
+B) string
+C) int
+D) boolean
+C
+---
+Was gibt die Funktion len() zurück?
+A) Die Länge einer Zeichenkette oder Liste
+B) Die Summe aller Zahlen
+C) Den größten Wert
+D) Den kleinsten Wert
+A
+---
+Welches Schlüsselwort wird für eine Schleife verwendet?
+A) loop
+B) repeat
+C) for
+D) iterate
+C
+---
+Was ist der richtige Weg, einen Kommentar in Python zu schreiben?
+A) // Kommentar
+B) /* Kommentar */
+C) # Kommentar
+D) -- Kommentar
+C
+---
+Welche Funktion wird verwendet, um Benutzereingaben zu erhalten?
+A) get()
+B) input()
+C) read()
+D) scan()
+B
+---
+Was ist das Ergebnis von 10 // 3 in Python?
+A) 3.33
+B) 3
+C) 4
+D) 3.0
+B
+---
+Welches Modul muss importiert werden, um mit Zufallszahlen zu arbeiten?
+A) math
+B) random
+C) numbers
+D) chance
+B
+---

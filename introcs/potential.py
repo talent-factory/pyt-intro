@@ -2,12 +2,13 @@
 # potential.py
 #-----------------------------------------------------------------------
 
+import stdarray
 import stddraw
 import stdio
-import stdarray
-from charge import Charge
 from color import Color
 from picture import Picture
+
+from charge import Charge
 
 # Read values from standard input to create an array of charged
 # particles. Set each pixel color in an image to a grayscale value
@@ -17,7 +18,7 @@ from picture import Picture
 MAX_GRAY_SCALE = 255
 
 # Read charges from standard input into an array.
-n = stdio.read_int()
+n = stdio.read_number()
 charges = stdarray.create_1d(n)
 for i in range(n):
     x0 = stdio.read_float()

@@ -1,0 +1,24 @@
+2025-10-15 08:00:00 INFO Server gestartet
+2025-10-15 08:00:15 INFO Datenbank-Verbindung hergestellt
+2025-10-15 08:01:23 INFO Benutzer 'admin' angemeldet
+2025-10-15 08:05:45 INFO API-Anfrage von 192.168.1.100
+2025-10-15 08:07:12 WARNING Langsame Antwortzeit: 2.3s
+2025-10-15 08:10:33 INFO Benutzer 'user123' angemeldet
+2025-10-15 08:12:01 ERROR Verbindung zur Datenbank fehlgeschlagen
+2025-10-15 08:12:05 INFO Neuverbindungsversuch...
+2025-10-15 08:12:10 INFO Datenbank-Verbindung wiederhergestellt
+2025-10-15 08:15:22 WARNING Hohe CPU-Auslastung: 85%
+2025-10-15 08:18:45 INFO API-Anfrage von 192.168.1.101
+2025-10-15 08:20:11 ERROR Ungültige Anfrage: Fehlende Parameter
+2025-10-15 08:22:33 INFO Benutzer 'user456' angemeldet
+2025-10-15 08:25:00 WARNING Speicher fast voll: 90% belegt
+2025-10-15 08:27:15 INFO Backup gestartet
+2025-10-15 08:30:45 INFO Backup erfolgreich abgeschlossen
+2025-10-15 08:32:22 ERROR Timeout bei API-Anfrage
+2025-10-15 08:35:10 INFO Benutzer 'admin' abgemeldet
+2025-10-15 08:40:00 WARNING Ungewöhnlich viele Anfragen von 192.168.1.105
+2025-10-15 08:42:33 ERROR Authentifizierung fehlgeschlagen für Benutzer 'hacker'
+2025-10-15 08:45:15 INFO System-Update verfügbar
+2025-10-15 08:50:00 INFO Täglicher Report generiert
+2025-10-15 08:55:22 WARNING Festplatte wird knapp: 95% belegt
+2025-10-15 09:00:00 INFO Stündlicher Health-Check: OK

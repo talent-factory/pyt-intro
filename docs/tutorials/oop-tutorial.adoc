@@ -1,0 +1,3275 @@
+= Objektorientierte Programmierung in Python: Von Grundlagen bis zu fortgeschrittenen Konzepten
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+:title-page:
+:pdf-page-size: A4
+
+== Einführung in die Objektorientierte Programmierung
+
+=== Was ist Objektorientierte Programmierung?
+
+Objektorientierte Programmierung (OOP) ist ein Programmierparadigma, das auf dem Konzept von "Objekten" basiert.
+Diese Objekte können Daten in Form von Attributen (oder Eigenschaften) und Code in Form von Methoden enthalten.
+OOP wurde entwickelt, um die Struktur von Programmen zu verbessern, indem Code in wiederverwendbare Einheiten organisiert wird.
+
+Die Grundprinzipien der OOP sind:
+
+* **Kapselung**: Daten und die Methoden, die auf diese Daten zugreifen, werden in einer einzigen Einheit (Klasse) zusammengefasst.
+* **Vererbung**: Neue Klassen können auf der Grundlage bestehender Klassen erstellt werden, wodurch Code wiederverwendet werden kann.
+* **Polymorphismus**: Objekte können je nach Kontext unterschiedliche Formen annehmen.
+* **Abstraktion**: Komplexität wird verborgen, indem nur relevante Details offengelegt werden.
+
+=== OOP in Python vs. anderen Sprachen
+
+Python implementiert OOP auf eine flexiblere und dynamischere Weise als viele andere Sprachen:
+
+|===
+|Eigenschaft |Python |Java |C++
+
+|Typsystem
+|Dynamisch typisiert
+|Statisch typisiert
+|Statisch typisiert
+
+|Mehrfachvererbung
+|Vollständig unterstützt
+|Nur durch Interfaces
+|Vollständig unterstützt
+
+|Zugriffsmodifikatoren
+|Konventionen (z.B. `_private`)
+|Explizite Keywords (public, private)
+|Explizite Keywords (public, private, protected)
+
+|Getter/Setter
+|Properties
+|Explizite Methoden
+|Explizite Methoden
+
+|Metaprogrammierung
+|Dynamisch, zur Laufzeit
+|Begrenzt, größtenteils zur Kompilierzeit
+|Templates, zur Kompilierzeit
+
+|Klassen
+|Klassen sind selbst Objekte
+|Klassen sind keine Objekte
+|Klassen sind keine Objekte
+|===
+
+In Python ist "alles ein Objekt" - sogar Klassen selbst.
+Dies führt zu einer bemerkenswerten Flexibilität, erfordert aber auch ein tieferes Verständnis der Sprache.
+
+=== Installation und Voraussetzungen
+
+Für dieses Tutorial benötigen Sie:
+
+* Python 3.6 oder höher
+* Eine Entwicklungsumgebung Ihrer Wahl (z.B. VS Code, PyCharm, Jupyter Notebook)
+* Grundkenntnisse in Python (Variablen, Funktionen, Kontrollstrukturen)
+
+Python enthält bereits alle für OOP notwendigen Funktionen, es sind keine zusätzlichen Bibliotheken erforderlich.
+
+== Grundlagen: Klassen und Objekte
+
+=== Klassen definieren
+
+Eine Klasse ist wie eine Blaupause für Objekte.
+Sie definiert die Attribute und Methoden, die alle Objekte dieser Klasse haben werden.
+
+[source,python]
+----
+class Fahrzeug:
+    """Eine einfache Klasse zur Darstellung eines Fahrzeugs."""
+
+    # Klassenvariable - wird von allen Instanzen geteilt
+    anzahl_räder = 4
+
+    # Konstruktor (Initialisierungsmethode)
+    def __init__(self, marke, modell, baujahr):
+        # Instanzvariablen - jede Instanz hat eigene Kopien
+        self.marke = marke
+        self.modell = modell
+        self.baujahr = baujahr
+        self.kilometerstand = 0
+
+    # Instanzmethode - operiert auf einer spezifischen Instanz
+    def fahren(self, strecke):
+        self.kilometerstand += strecke
+        print(f"{self.marke} {self.modell} ist {strecke} km gefahren.")
+
+    # Eine weitere Instanzmethode
+    def info_anzeigen(self):
+        print(f"Fahrzeug: {self.marke} {self.modell}")
+        print(f"Baujahr: {self.baujahr}")
+        print(f"Kilometerstand: {self.kilometerstand} km")
+----
+
+=== Objekte erstellen und verwenden
+
+Objekte (oder Instanzen) werden aus Klassen erstellt.
+Jedes Objekt hat seinen eigenen Zustand, teilt sich aber die Methoden mit anderen Objekten derselben Klasse.
+
+[source,python]
+----
+# Zwei Fahrzeug-Objekte erstellen
+mein_auto = Fahrzeug("VW", "Golf", 2020)
+anderes_auto = Fahrzeug("BMW", "X3", 2019)
+
+# Methoden aufrufen
+mein_auto.fahren(150)
+mein_auto.info_anzeigen()
+
+anderes_auto.fahren(200)
+anderes_auto.info_anzeigen()
+
+# Auf Klassenattribute zugreifen
+print(f"Alle Fahrzeuge haben standardmäßig {Fahrzeug.anzahl_räder} Räder.")
+
+# Klassenattribute können überschrieben werden
+mein_auto.anzahl_räder = 3
+print(f"Mein Auto hat jetzt {mein_auto.anzahl_räder} Räder.")
+print(f"Andere Autos haben weiterhin {anderes_auto.anzahl_räder} Räder.")
+----
+
+=== Selbstreferenz: `self`
+
+Der erste Parameter jeder Instanzmethode in Python ist per Konvention `self`.
+Dieser Parameter verweist auf die spezifische Instanz, auf der die Methode aufgerufen wird.
+Anders als in Sprachen wie Java oder C# muss `self` explizit als Parameter angegeben werden.
+
+[source,python]
+----
+class Beispiel:
+    def methode_ohne_parameter(self):
+        print("Diese Methode hat keine Parameter außer 'self'")
+
+    def methode_mit_parametern(self, a, b):
+        return self.attribut + a + b
+
+# Bei Aufruf wird 'self' automatisch übergeben
+b = Beispiel()
+b.attribut = 10
+ergebnis = b.methode_mit_parametern(5, 7)  # entspricht: Beispiel.methode_mit_parametern(b, 5, 7)
+----
+
+=== Konstruktoren und Destruktoren
+
+In Python werden Konstruktoren durch die Methode `__init__` und Destruktoren durch die Methode `__del__` implementiert:
+
+[source,python]
+----
+class Resource:
+    def __init__(self, name):
+        self.name = name
+        print(f"Resource {self.name} wurde erstellt.")
+        # Hier können Ressourcen initialisiert werden (z.B. Dateihandles öffnen)
+
+    def __del__(self):
+        print(f"Resource {self.name} wird freigegeben.")
+        # Hier können Ressourcen freigegeben werden (z.B. Dateihandles schließen)
+
+# Ressourcen-Objekt erstellen
+r = Resource("Wichtige Daten")
+
+# Das Objekt wird freigegeben, wenn es nicht mehr referenziert wird
+r = None  # Referenz entfernen
+# oder am Ende des Programms
+----
+
+HINWEIS: Der Destruktor `__del__` wird aufgerufen, wenn das Objekt vom Garbage Collector bereinigt wird.
+Da der Zeitpunkt nicht garantiert ist, sollten kritische Ressourcen explizit freigegeben werden (z.B. mit einem `close()`-Aufruf).
+
+=== Übungen zu Klassen und Objekten
+
+==== Übung 1: Bankkonto
+
+Erstellen Sie eine Klasse `Bankkonto` mit:
+- Attributen für Kontonummer, Inhaber und Kontostand - Methoden zum Einzahlen und Abheben von Geld - Einer Methode zur Anzeige des Kontostands
+
+Erstellen Sie mehrere Konten und führen Sie verschiedene Transaktionen durch.
+
+==== Übung 2: Bibliotheksverwaltung
+
+Implementieren Sie ein einfaches Bibliothekssystem mit:
+- Einer Klasse `Buch` mit Attributen für Titel, Autor, ISBN und Status (ausgeliehen/verfügbar) - Einer Klasse `Bibliothek`, die eine Sammlung von Büchern verwaltet - Methoden zum Hinzufügen von Büchern, Ausleihen und Zurückgeben
+
+==== Übung 3: Mitarbeiterverwaltung
+
+Erstellen Sie ein System zur Mitarbeiterverwaltung mit:
+- Einer Klasse `Mitarbeiter` mit Attributen für Name, ID, Position und Gehalt - Methoden zur Gehaltserhöhung und Positionsänderung - Einer Funktion zur Berechnung der jährlichen Gehaltskosten für alle Mitarbeiter
+
+== Vererbung und Polymorphismus
+
+=== Einfache Vererbung
+
+Vererbung ermöglicht es, eine neue Klasse auf der Grundlage einer bestehenden Klasse zu erstellen.
+Die neue Klasse (Kindklasse) erbt alle Attribute und Methoden der Basisklasse (Elternklasse) und kann zusätzliche Funktionalität hinzufügen.
+
+[source,python]
+----
+class Fahrzeug:
+    def __init__(self, marke, modell, baujahr):
+        self.marke = marke
+        self.modell = modell
+        self.baujahr = baujahr
+        self.kilometerstand = 0
+
+    def fahren(self, strecke):
+        self.kilometerstand += strecke
+        print(f"{self.marke} {self.modell} ist {strecke} km gefahren.")
+
+    def info_anzeigen(self):
+        print(f"Fahrzeug: {self.marke} {self.modell}")
+        print(f"Baujahr: {self.baujahr}")
+        print(f"Kilometerstand: {self.kilometerstand} km")
+
+# Auto erbt von Fahrzeug
+class Auto(Fahrzeug):
+    def __init__(self, marke, modell, baujahr, anzahl_türen):
+        # Konstruktor der Elternklasse aufrufen
+        super().__init__(marke, modell, baujahr)
+        # Zusätzliches Attribut
+        self.anzahl_türen = anzahl_türen
+
+    # Überschreiben der Methode info_anzeigen
+    def info_anzeigen(self):
+        # Methode der Elternklasse aufrufen
+        super().info_anzeigen()
+        # Zusätzliche Information anzeigen
+        print(f"Anzahl Türen: {self.anzahl_türen}")
+
+    # Zusätzliche Methode
+    def hupen(self):
+        print(f"{self.marke} {self.modell} hupt: Huuup!")
+
+# Motorrad erbt von Fahrzeug
+class Motorrad(Fahrzeug):
+    def __init__(self, marke, modell, baujahr, hat_beiwagen):
+        super().__init__(marke, modell, baujahr)
+        self.hat_beiwagen = hat_beiwagen
+
+    def wheelie_machen(self):
+        if not self.hat_beiwagen:
+            print(f"{self.marke} {self.modell} macht einen Wheelie!")
+        else:
+            print(f"{self.marke} {self.modell} kann mit Beiwagen keinen Wheelie machen.")
+----
+
+Verwendung:
+
+[source,python]
+----
+# Objekte der abgeleiteten Klassen erstellen
+mein_auto = Auto("VW", "Golf", 2020, 5)
+mein_motorrad = Motorrad("Harley-Davidson", "Street Glide", 2019, False)
+
+# Geerbte Methoden aufrufen
+mein_auto.fahren(100)
+mein_motorrad.fahren(150)
+
+# Überschriebene Methoden aufrufen
+mein_auto.info_anzeigen()
+
+# Spezifische Methoden aufrufen
+mein_auto.hupen()
+mein_motorrad.wheelie_machen()
+----
+
+=== Mehrfachvererbung
+
+Python unterstützt Mehrfachvererbung, bei der eine Klasse von mehreren Basisklassen erben kann.
+Dies ermöglicht eine größere Flexibilität, kann aber auch zu Komplexität führen.
+
+[source,python]
+----
+class ElektrischesGerät:
+    def __init__(self, leistung):
+        self.leistung = leistung
+        self.ist_eingeschaltet = False
+
+    def einschalten(self):
+        self.ist_eingeschaltet = True
+        print(f"Gerät ist eingeschaltet. Leistung: {self.leistung} Watt")
+
+    def ausschalten(self):
+        self.ist_eingeschaltet = False
+        print("Gerät ist ausgeschaltet.")
+
+class Transportmittel:
+    def __init__(self, geschwindigkeit):
+        self.geschwindigkeit = geschwindigkeit
+
+    def bewegen(self):
+        print(f"Bewegt sich mit {self.geschwindigkeit} km/h")
+
+    def stoppen(self):
+        print("Angehalten")
+
+# Mehrfachvererbung
+class ElektrischesFahrzeug(Transportmittel, ElektrischesGerät):
+    def __init__(self, marke, modell, geschwindigkeit, leistung):
+        # Beide Elternkonstruktoren explizit aufrufen
+        Transportmittel.__init__(self, geschwindigkeit)
+        ElektrischesGerät.__init__(self, leistung)
+
+        # Eigene Attribute
+        self.marke = marke
+        self.modell = modell
+
+    def info(self):
+        status = "eingeschaltet" if self.ist_eingeschaltet else "ausgeschaltet"
+        print(f"{self.marke} {self.modell}, {status}, {self.geschwindigkeit} km/h, {self.leistung} Watt")
+
+# Verwendung
+e_bike = ElektrischesFahrzeug("Bosch", "CityRider", 25, 250)
+e_bike.einschalten()
+e_bike.bewegen()
+e_bike.info()
+e_bike.stoppen()
+e_bike.ausschalten()
+----
+
+=== Die Method Resolution Order (MRO)
+
+Bei Mehrfachvererbung kann es zu Mehrdeutigkeiten kommen, wenn mehrere Elternklassen Methoden mit dem gleichen Namen haben.
+Python verwendet einen Algorithmus namens C3-Linearisierung, um die Reihenfolge zu bestimmen, in der Methoden gesucht werden.
+Diese Reihenfolge wird als Method Resolution Order (MRO) bezeichnet.
+
+[source,python]
+----
+class A:
+    def methode(self):
+        print("Methode von A")
+
+class B(A):
+    def methode(self):
+        print("Methode von B")
+
+class C(A):
+    def methode(self):
+        print("Methode von C")
+
+class D(B, C):
+    pass
+
+# Die MRO von D ist [D, B, C, A, object]
+print(D.__mro__)
+
+# Ruft B.methode() auf, da B vor C in der MRO steht
+d = D()
+d.methode()  # Ausgabe: "Methode von B"
+----
+
+=== Polymorphismus
+
+Polymorphismus ermöglicht es, dass Objekte unterschiedlicher Klassen auf dieselbe Weise behandelt werden können, wenn sie dieselbe Schnittstelle implementieren.
+
+[source,python]
+----
+class Tier:
+    def __init__(self, name):
+        self.name = name
+
+    def sprechen(self):
+        pass  # Abstrakte Methode, wird von Kindklassen implementiert
+
+class Hund(Tier):
+    def sprechen(self):
+        return f"{self.name} sagt: Wau!"
+
+class Katze(Tier):
+    def sprechen(self):
+        return f"{self.name} sagt: Miau!"
+
+class Kuh(Tier):
+    def sprechen(self):
+        return f"{self.name} sagt: Muh!"
+
+# Polymorphismus in Aktion
+tiere = [
+    Hund("Bello"),
+    Katze("Whiskers"),
+    Kuh("Milka")
+]
+
+# Alle Tiere "sprechen" lassen
+for tier in tiere:
+    print(tier.sprechen())
+----
+
+In diesem Beispiel haben wir eine gemeinsame Schnittstelle (`sprechen()`), die von verschiedenen Klassen unterschiedlich implementiert wird.
+Der Code, der diese Methode aufruft, muss nicht wissen, mit welcher konkreten Klasse er es zu tun hat.
+
+=== Übungen zu Vererbung und Polymorphismus
+
+==== Übung 1: Fahrzeughierarchie
+
+Erweitern Sie die Fahrzeugklassen-Hierarchie mit:
+- Einer Basisklasse `Fahrzeug`
+- Kindklassen für `Auto`, `Motorrad`, `LKW`, `Bus`
+- Implementieren Sie gemeinsame Methoden in der Basisklasse und spezifische Methoden in den Kindklassen - Erstellen Sie eine Funktion, die eine Liste von Fahrzeugen akzeptiert und polymorphe Operationen ausführt
+
+==== Übung 2: Geometrische Formen
+
+Erstellen Sie eine Klassenhierarchie für geometrische Formen:
+- Basisklasse `Form` mit Methoden für `fläche()` und `umfang()`
+- Kindklassen für `Kreis`, `Rechteck`, `Dreieck`
+- Implementieren Sie die Methoden in jeder Klasse entsprechend - Schreiben Sie eine Funktion, die eine Liste von Formen akzeptiert und die Gesamtfläche berechnet
+
+==== Übung 3: Medienverwaltung
+
+Implementieren Sie ein System zur Medienverwaltung:
+- Basisklasse `Medium` mit gemeinsamen Eigenschaften - Abgeleitete Klassen für `Buch`, `Film`, `Musik`
+- Jede Klasse sollte spezifische Attribute und Methoden haben - Nutzen Sie Mehrfachvererbung für Kategorien wie `Digital`, `Physisch`, `Ausleihbar`
+
+== Spezielle Methoden und Operatorüberladung
+
+=== Magische Methoden (Dunder-Methoden)
+
+Python bietet spezielle Methoden, die mit doppelten Unterstrichen beginnen und enden (daher "dunder" - double underscore), um das Verhalten von Objekten anzupassen.
+Diese Methoden ermöglichen die Implementierung von Operatorüberladung und anderen speziellen Verhaltensweisen.
+
+[source,python]
+----
+class Vektor:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    # String-Repräsentation für print()
+    def __str__(self):
+        return f"Vektor({self.x}, {self.y})"
+
+    # String-Repräsentation für Debugging
+    def __repr__(self):
+        return f"Vektor(x={self.x}, y={self.y})"
+
+    # Addition: v1 + v2
+    def __add__(self, other):
+        return Vektor(self.x + other.x, self.y + other.y)
+
+    # Subtraktion: v1 - v2
+    def __sub__(self, other):
+        return Vektor(self.x - other.x, self.y - other.y)
+
+    # Skalarmultiplikation: v * skalar
+    def __mul__(self, skalar):
+        return Vektor(self.x * skalar, self.y * skalar)
+
+    # Vergleich: v1 == v2
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    # Länge des Vektors mit len()
+    def __len__(self):
+        return int((self.x**2 + self.y**2)**0.5)
+
+    # Zugriff mit Indexierung: v[0], v[1]
+    def __getitem__(self, key):
+        if key == 0:
+            return self.x
+        elif key == 1:
+            return self.y
+        else:
+            raise IndexError("Vektor-Index out of range")
+
+# Verwendung
+v1 = Vektor(3, 4)
+v2 = Vektor(1, 2)
+
+print(v1)            # Ausgabe: Vektor(3, 4)
+print(v1 + v2)       # Ausgabe: Vektor(4, 6)
+print(v1 - v2)       # Ausgabe: Vektor(2, 2)
+print(v1 * 2)        # Ausgabe: Vektor(6, 8)
+print(v1 == v2)      # Ausgabe: False
+print(len(v1))       # Ausgabe: 5 (Länge des Vektors (3,4))
+print(v1[0], v1[1])  # Ausgabe: 3 4
+----
+
+=== Wichtige magische Methoden
+
+|===
+|Methode |Zweck |Beispiel
+
+|`__init__(self, ...)`
+|Konstruktor
+|`obj = MyClass()`
+
+|`__del__(self)`
+|Destruktor
+|`del obj`
+
+|`__str__(self)`
+|Lesbare String-Darstellung
+|`print(obj)`
+
+|`__repr__(self)`
+|Offizielle String-Darstellung
+|`repr(obj)`
+
+|`__len__(self)`
+|Länge des Objekts
+|`len(obj)`
+
+|`__getitem__(self, key)`
+|Indexierung
+|`obj[key]`
+
+|`__setitem__(self, key, value)`
+|Indexzuweisung
+|`obj[key] = value`
+
+|`__contains__(self, item)`
+|Enthaltensein-Test
+|`item in obj`
+
+|`__call__(self, ...)`
+|Objekt als Funktion aufrufen
+|`obj()`
+
+|`__add__(self, other)`
+|Addition
+|`obj + other`
+
+|`__sub__(self, other)`
+|Subtraktion
+|`obj - other`
+
+|`__eq__(self, other)`
+|Gleichheit
+|`obj == other`
+
+|`__lt__(self, other)`
+|Kleiner als
+|`obj < other`
+
+|`__enter__(self)`, `__exit__(self, ...)`
+|Kontextmanager
+|`with obj: ...`
+|===
+
+=== Kontextmanager mit `__enter__` und `__exit__`
+
+Kontextmanager ermöglichen die Ausführung von Setup- und Teardown-Code um einen Codeblock herum, oft verwendet für Ressourcenmanagement:
+
+[source,python]
+----
+class Datei:
+    def __init__(self, dateiname, modus):
+        self.dateiname = dateiname
+        self.modus = modus
+        self.datei = None
+
+    def __enter__(self):
+        print(f"Öffne Datei {self.dateiname}")
+        self.datei = open(self.dateiname, self.modus)
+        return self.datei
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        print(f"Schließe Datei {self.dateiname}")
+        if self.datei:
+            self.datei.close()
+        # Rückgabewert True bedeutet, dass Ausnahmen unterdrückt werden
+        return False
+
+# Verwendung des Kontextmanagers
+try:
+    with Datei("beispiel.txt", "w") as f:
+        f.write("Hallo, Welt!")
+        # Hier könnte eine Ausnahme auftreten
+    # Die Datei wird automatisch geschlossen, auch bei Ausnahmen
+except Exception as e:
+    print(f"Ein Fehler ist aufgetreten: {e}")
+----
+
+=== Callables: Die `__call__` Methode
+
+Die `__call__` Methode ermöglicht es, Objekte wie Funktionen aufzurufen:
+
+[source,python]
+----
+class Addierer:
+    def __init__(self, n):
+        self.n = n
+
+    def __call__(self, x):
+        return self.n + x
+
+# Objekt erstellen
+plus_fünf = Addierer(5)
+
+# Objekt wie eine Funktion aufrufen
+ergebnis = plus_fünf(10)  # Ergebnis: 15
+print(ergebnis)
+
+# Prüfen, ob ein Objekt aufrufbar ist
+print(callable(plus_fünf))  # True
+----
+
+=== Übungen zu speziellen Methoden
+
+==== Übung 1: Währungsklasse
+
+Implementieren Sie eine `Währung`-Klasse:
+- Mit Attributen für Betrag und Währungscode (EUR, USD, etc.) - Überladet die arithmetischen Operatoren (+, -, *, /) - Implementiert Vergleichsoperatoren (==, <, >, etc.) - Fügt eine geeignete String-Darstellung hinzu
+
+==== Übung 2: Eigene Liste
+
+Erstellen Sie eine benutzerdefinierte Liste-Klasse:
+- Implementiert `__getitem__`, `__setitem__`, `__len__`, `__contains__`
+- Fügt Methoden wie `append`, `remove`, etc. hinzu - Erweitern Sie die Funktionalität gegenüber der Standard-Liste, z.B. mit einer Methode zur Berechnung des Durchschnitts
+
+==== Übung 3: Datenbankverbindung als Kontextmanager
+
+Implementieren Sie einen Kontextmanager für eine (simulierte) Datenbankverbindung:
+- `__enter__` stellt die Verbindung her und gibt ein Verbindungsobjekt zurück - `__exit__` schließt die Verbindung und bereinigt Ressourcen - Fehlerbehandlung für Verbindungsprobleme
+
+== Fortgeschrittene Konzepte: Properties, Deskriptoren und Klassenmethoden
+
+=== Properties: Getter und Setter auf Pythonisch
+
+Properties ermöglichen die Kapselung von Attributen mit Getter- und Setter-Methoden, die bei Zugriff und Zuweisung automatisch aufgerufen werden.
+
+[source,python]
+----
+class Temperatur:
+    def __init__(self, celsius=0):
+        self._celsius = celsius
+
+    # Getter
+    @property
+    def celsius(self):
+        return self._celsius
+
+    # Setter
+    @celsius.setter
+    def celsius(self, wert):
+        if wert < -273.15:
+            raise ValueError("Temperatur unter dem absoluten Nullpunkt!")
+        self._celsius = wert
+
+    # Property mit Berechnung
+    @property
+    def fahrenheit(self):
+        return self._celsius * 9/5 + 32
+
+    # Setter für abgeleitetes Attribut
+    @fahrenheit.setter
+    def fahrenheit(self, wert):
+        self._celsius = (wert - 32) * 5/9
+
+# Verwendung
+t = Temperatur(25)
+print(f"Celsius: {t.celsius}°C")
+print(f"Fahrenheit: {t.fahrenheit}°F")
+
+# Setter verwenden
+t.celsius = 30
+print(f"Neuer Wert - Celsius: {t.celsius}°C, Fahrenheit: {t.fahrenheit}°F")
+
+t.fahrenheit = 68
+print(f"Neuer Wert - Celsius: {t.celsius}°C, Fahrenheit: {t.fahrenheit}°F")
+
+try:
+    t.celsius = -300  # Unter dem absoluten Nullpunkt
+except ValueError as e:
+    print(f"Fehler: {e}")
+----
+
+=== Klassenmethoden und statische Methoden
+
+Python bietet zwei spezielle Arten von Methoden: Klassenmethoden und statische Methoden.
+
+[source,python]
+----
+class MathUtils:
+    pi = 3.14159
+
+    def __init__(self, wert):
+        self.wert = wert
+
+    # Instanzmethode - hat Zugriff auf self
+    def verdoppeln(self):
+        return self.wert * 2
+
+    # Klassenmethode - hat Zugriff auf cls (die Klasse)
+    @classmethod
+    def kreis_umfang(cls, radius):
+        return 2 * cls.pi * radius
+
+    # Statische Methode - hat weder Zugriff auf self noch cls
+    @staticmethod
+    def ist_positiv(zahl):
+        return zahl > 0
+
+# Direkter Aufruf von Klassenmethoden und statischen Methoden
+print(MathUtils.kreis_umfang(5))      # 31.4159
+print(MathUtils.ist_positiv(-10))     # False
+
+# Auch über Instanzen aufrufbar
+utils = MathUtils(10)
+print(utils.verdoppeln())             # 20
+print(utils.kreis_umfang(7))          # 43.98226
+print(utils.ist_positiv(42))          # True
+----
+
+Klassenmethoden werden oft für alternative Konstruktoren verwendet:
+
+[source,python]
+----
+class Datum:
+    def __init__(self, tag, monat, jahr):
+        self.tag = tag
+        self.monat = monat
+        self.jahr = jahr
+    
+    @classmethod
+    def von_string(cls, datumstring):
+        """Erstellt ein Datum-Objekt aus einem String im Format 'TT.MM.JJJJ'."""
+        tag, monat, jahr = map(int, datumstring.split('.'))
+        return cls(tag, monat, jahr)
+    
+    @classmethod
+    def heute(cls):
+        """Erstellt ein Datum-Objekt mit dem heutigen Datum."""
+        import datetime
+        heute = datetime.date.today()
+        return cls(heute.day, heute.month, heute.year)
+    
+    def __str__(self):
+        return f"{self.tag:02d}.{self.monat:02d}.{self.jahr}"
+
+# Verwendung der alternativen Konstruktoren
+d1 = Datum(15, 3, 2023)
+d2 = Datum.von_string("27.04.2023")
+d3 = Datum.heute()
+
+print(d1)  # 15.03.2023
+print(d2)  # 27.04.2023
+print(d3)  # Heutiges Datum
+----
+
+=== Deskriptoren: Wiederverwendbare Properties
+
+Deskriptoren sind Objekte, die das Verhalten beim Zugriff auf Attribute definieren.
+Sie ermöglichen die Wiederverwendung von Getter-, Setter- und Deleter-Logik über mehrere Attribute und Klassen hinweg.
+
+[source,python]
+----
+class Validierter:
+    """Ein Deskriptor für validierte Attribute."""
+    
+    def __init__(self, name, validierungsfunktion, fehlermeldung):
+        self.name = name  # Name für das private Attribut
+        self.validierung = validierungsfunktion
+        self.fehlermeldung = fehlermeldung
+    
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self  # Zugriff über Klasse, nicht Instanz
+        return getattr(instance, self.name, None)
+    
+    def __set__(self, instance, value):
+        if not self.validierung(value):
+            raise ValueError(self.fehlermeldung)
+        setattr(instance, self.name, value)
+
+# Validierungsfunktionen
+def ist_positiv(x):
+    return x > 0
+
+def ist_im_bereich(minimum, maximum):
+    return lambda x: minimum <= x <= maximum
+
+class Person:
+    # Deskriptoren definieren
+    alter = Validierter('_alter', ist_positiv, "Alter muss positiv sein")
+    gewicht = Validierter('_gewicht', ist_positiv, "Gewicht muss positiv sein")
+    note = Validierter('_note', ist_im_bereich(1, 6), "Note muss zwischen 1 und 6 liegen")
+    
+    def __init__(self, name, alter, gewicht, note):
+        self.name = name
+        self.alter = alter
+        self.gewicht = gewicht
+        self.note = note
+
+# Verwendung
+try:
+    p = Person("Max", 30, 75, 2)
+    print(f"Person: {p.name}, Alter: {p.alter}, Gewicht: {p.gewicht}, Note: {p.note}")
+    
+    # Ändere Werte
+    p.alter = 35
+    p.note = 6  # Gültige Note
+    print(f"Neues Alter: {p.alter}, Neue Note: {p.note}")
+    
+    # Ungültigen Wert setzen
+    p.alter = -5  # Dies wirft eine ValueError
+except ValueError as e:
+    print(f"Fehler: {e}")
+----
+
+=== Übungen zu Properties und Methoden
+
+==== Übung 1: Bank mit Zinsberechnung
+
+Implementieren Sie eine `Bank`-Klasse:
+- Mit Klassenmethoden für verschiedene Zinsberechnungen - Mit statischen Methoden für Hilfsberechnungen - Mit Properties für abgesicherte Attribute - Erstellen Sie verschiedene `Konto`-Typen mit unterschiedlichen Zinsregeln
+
+==== Übung 2: Validierte Modellklasse
+
+Erstellen Sie eine Basisklasse für Datenmodelle, die automatisch Validierung unterstützt:
+- Verwenden Sie Deskriptoren für verschiedene Attributtypen (Integer, String, E-Mail, etc.) - Implementieren Sie eine `validiere()` Methode, die alle Attribute überprüft - Testen Sie mit einigen abgeleiteten Klassen (z.B. `Benutzer`, `Produkt`)
+
+==== Übung 3: Unit-Konverter
+
+Entwickeln Sie einen Einheitenkonverter:
+- Mit Properties für verschiedene Einheiten (Meter, Fuß, Meilen, etc.) - Mit Klassenmethoden für Factory-Methoden wie `von_meter()`, `von_fuß()`
+- Mit statischen Methoden für allgemeine Konvertierungen
+
+== Metaklassen und Klassenfabriken
+
+=== Was sind Metaklassen?
+
+In Python sind Klassen selbst Objekte, die von Metaklassen erstellt werden.
+Die Standardmetaklasse ist `type`.
+Metaklassen ermöglichen es, die Erstellung von Klassen anzupassen.
+
+[source,python]
+----
+# Direktes Erstellen einer Klasse mit type
+Person = type('Person', (), {
+    'name': '',
+    'alter': 0,
+    'info': lambda self: f"{self.name}, {self.alter} Jahre alt"
+})
+
+# Dies ist äquivalent zu:
+class Person:
+    name = ''
+    alter = 0
+    
+    def info(self):
+        return f"{self.name}, {self.alter} Jahre alt"
+
+# Instanz erstellen
+p = Person()
+p.name = "Anna"
+p.alter = 30
+print(p.info())  # Anna, 30 Jahre alt
+----
+
+=== Eigene Metaklassen definieren
+
+Eine Metaklasse wird definiert, indem von `type` abgeleitet wird und die Methode `__new__` oder `__init__` überschrieben wird:
+
+[source,python]
+----
+class LoggingMetaclass(type):
+    def __new__(mcs, name, bases, namespace):
+        print(f"Erstelle Klasse: {name}")
+        print(f"Basisklassen: {bases}")
+        print(f"Attribute und Methoden: {list(namespace.keys())}")
+        
+        # Alle Methoden protokollieren
+        for key, value in namespace.items():
+            if callable(value) and not key.startswith('__'):
+                namespace[key] = LoggingMetaclass.log_method(value)
+        
+        # Klasse erstellen
+        cls = super().__new__(mcs, name, bases, namespace)
+        return cls
+    
+    @staticmethod
+    def log_method(method):
+        def wrapped(*args, **kwargs):
+            print(f"Aufruf von {method.__name__} mit {args}, {kwargs}")
+            result = method(*args, **kwargs)
+            print(f"{method.__name__} gibt {result} zurück")
+            return result
+        return wrapped
+
+# Klasse mit der Metaklasse erstellen
+class Rechner(metaclass=LoggingMetaclass):
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+    
+    def addieren(self):
+        return self.a + self.b
+    
+    def multiplizieren(self):
+        return self.a * self.b
+
+# Instanz erstellen und Methoden aufrufen
+r = Rechner(5, 7)
+ergebnis = r.addieren()
+produkt = r.multiplizieren()
+----
+
+=== Anwendungsfälle für Metaklassen
+
+Metaklassen sind nützlich für:
+
+1. Automatische Registrierung von Klassen
+2. API-Erstellung
+3. Attributvalidierung
+4. Aspektorientierte Programmierung
+5. ORM-Frameworks (Object-Relational Mapping)
+
+Beispiel für automatische Registrierung:
+
+[source,python]
+----
+# Ein Registry für alle Plugin-Klassen
+class PluginRegistry(type):
+    plugins = {}
+    
+    def __new__(mcs, name, bases, namespace):
+        cls = super().__new__(mcs, name, bases, namespace)
+        # Basisklasse selbst nicht registrieren
+        if name != 'Plugin':
+            mcs.plugins[name] = cls
+        return cls
+
+class Plugin(metaclass=PluginRegistry):
+    """Basisklasse für alle Plugins."""
+    
+    def ausführen(self):
+        raise NotImplementedError("Plugins müssen die ausführen-Methode implementieren")
+
+# Konkrete Plugins implementieren
+class TextPlugin(Plugin):
+    def ausführen(self):
+        return "Text verarbeitet"
+
+class BildPlugin(Plugin):
+    def ausführen(self):
+        return "Bild verarbeitet"
+
+class AudioPlugin(Plugin):
+    def ausführen(self):
+        return "Audio verarbeitet"
+
+# Alle verfügbaren Plugins anzeigen
+print("Verfügbare Plugins:")
+for name, plugin_class in PluginRegistry.plugins.items():
+    print(f"- {name}")
+
+# Plugin dynamisch instanziieren und ausführen
+plugin_name = "BildPlugin"
+if plugin_name in PluginRegistry.plugins:
+    plugin = PluginRegistry.plugins[plugin_name]()
+    ergebnis = plugin.ausführen()
+    print(f"Ergebnis: {ergebnis}")
+else:
+    print(f"Plugin {plugin_name} nicht gefunden")
+----
+
+=== Klassenfabriken
+
+Klassenfabriken sind Funktionen, die dynamisch Klassen erzeugen.
+Sie sind einfacher als Metaklassen und oft ausreichend.
+
+[source,python]
+----
+def erstelle_modellklasse(name, felder):
+    """Erstellt eine einfache Modellklasse mit den angegebenen Feldern."""
+    def __init__(self, **kwargs):
+        for feld in felder:
+            setattr(self, feld, kwargs.get(feld))
+    
+    def __str__(self):
+        feldwerte = [f"{feld}={getattr(self, feld)}" for feld in felder]
+        return f"{name}({', '.join(feldwerte)})"
+    
+    # Klassennamespace erstellen
+    namespace = {
+        '__init__': __init__,
+        '__str__': __str__
+    }
+    
+    # Klasse mit type erstellen
+    return type(name, (), namespace)
+
+# Klassen dynamisch erstellen
+Person = erstelle_modellklasse('Person', ['name', 'alter', 'beruf'])
+Adresse = erstelle_modellklasse('Adresse', ['straße', 'hausnummer', 'plz', 'stadt'])
+
+# Instanzen erstellen
+p = Person(name="Max Mustermann", alter=42, beruf="Entwickler")
+a = Adresse(straße="Hauptstraße", hausnummer="1a", plz="12345", stadt="Berlin")
+
+print(p)
+print(a)
+----
+
+=== Dekoratoren für Klassen
+
+Klassendekoratoren bieten eine einfachere Alternative zu Metaklassen für viele Anwendungsfälle:
+
+[source,python]
+----
+def singleton(cls):
+    """Dekorator, der eine Klasse zu einem Singleton macht."""
+    instanzen = {}
+    
+    def get_instance(*args, **kwargs):
+        if cls not in instanzen:
+            instanzen[cls] = cls(*args, **kwargs)
+        return instanzen[cls]
+    
+    return get_instance
+
+@singleton
+class Konfiguration:
+    def __init__(self):
+        self.einstellungen = {}
+    
+    def set(self, key, value):
+        self.einstellungen[key] = value
+    
+    def get(self, key, default=None):
+        return self.einstellungen.get(key, default)
+
+# Verwendung
+config1 = Konfiguration()
+config1.set('debug', True)
+config1.set('log_level', 'INFO')
+
+# Eine zweite "Instanz" erstellen - erhält die gleiche wie config1
+config2 = Konfiguration()
+print(f"Debug-Modus: {config2.get('debug')}")  # True
+print(f"Log-Level: {config2.get('log_level')}")  # INFO
+
+# Identität überprüfen
+print(f"Gleiche Instanz? {config1 is config2}")  # True
+----
+
+=== Übungen zu Metaklassen und Klassenfabriken
+
+==== Übung 1: Validierungs-Metaklasse
+
+Erstellen Sie eine Metaklasse, die automatisch Validatoren für Attribute basierend auf Typannotationen hinzufügt:
+- Unterstützen Sie grundlegende Typen wie `int`, `str`, `float`
+- Implementieren Sie komplexere Validierungen für `List[T]`, `Optional[T]`
+- Testen Sie mit verschiedenen Modellklassen
+
+==== Übung 2: Serialisierungs-Framework
+
+Implementieren Sie ein einfaches Serialisierungs-Framework:
+- Eine Metaklasse, die Klassen serialisierbar macht - Methoden für `to_dict()`, `to_json()`, `from_dict()`, `from_json()`
+- Unterstützung für verschachtelte Objekte
+
+==== Übung 3: Komponentensystem
+
+Entwickeln Sie ein Plugin- oder Komponentensystem:
+- Eine Metaklasse zur Registrierung von Komponenten - Eine Factory-Methode zum Erstellen von Komponenten - Ein System zum Auflösen von Abhängigkeiten zwischen Komponenten
+
+== Objektorientiertes Design in Python
+
+=== Designprinzipien
+
+==== SOLID-Prinzipien in Python
+
+Die SOLID-Prinzipien sind wichtige Richtlinien für objektorientiertes Design:
+
+1. **S**ingle Responsibility Principle (SRP)
+2. **O**pen/Closed Principle (OCP)
+3. **L**iskov Substitution Principle (LSP)
+4. **I**nterface Segregation Principle (ISP)
+5. **D**ependency Inversion Principle (DIP)
+
+Hier ist ein Beispiel für das Single Responsibility Principle:
+
+[source,python]
+----
+# Schlechtes Design: Eine Klasse mit zu vielen Verantwortlichkeiten
+class Benutzer:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+    
+    def speichern_in_datenbank(self):
+        # Datenbanklogik
+        print(f"Speichere Benutzer {self.name} in der Datenbank")
+    
+    def sende_email(self, betreff, inhalt):
+        # E-Mail-Logik
+        print(f"Sende E-Mail an {self.email}: {betreff}")
+    
+    def generiere_bericht(self):
+        # Berichtslogik
+        print(f"Generiere Bericht für {self.name}")
+
+# Besseres Design: Aufteilung der Verantwortlichkeiten
+class Benutzer:
+    def __init__(self, name, email):
+        self.name = name
+        self.email = email
+
+class BenutzerRepository:
+    def speichern(self, benutzer):
+        print(f"Speichere Benutzer {benutzer.name} in der Datenbank")
+    
+    def laden(self, benutzer_id):
+        print(f"Lade Benutzer mit ID {benutzer_id}")
+        return Benutzer("Geladener Benutzer", "geladen@example.com")
+
+class EmailService:
+    def sende_email(self, empfänger_email, betreff, inhalt):
+        print(f"Sende E-Mail an {empfänger_email}: {betreff}")
+
+class BerichtsGenerator:
+    def generiere_bericht(self, benutzer):
+        print(f"Generiere Bericht für {benutzer.name}")
+----
+
+==== Composition over Inheritance
+
+Bevorzugen Sie Komposition gegenüber Vererbung, um Wiederverwendbarkeit und Flexibilität zu verbessern:
+
+[source,python]
+----
+# Vererbungsansatz
+class Fahrzeug:
+    def fahren(self):
+        print("Fahrzeug fährt")
+
+class Auto(Fahrzeug):
+    def hupen(self):
+        print("Auto hupt")
+
+class Boot(Fahrzeug):
+    def segeln(self):
+        print("Boot segelt")
+
+# Problem: Was ist mit einem Amphibienfahrzeug?
+# Mehrfachvererbung könnte komplex werden
+
+# Kompositionsansatz
+class Motor:
+    def starten(self):
+        print("Motor gestartet")
+    
+    def stoppen(self):
+        print("Motor gestoppt")
+
+class Rad:
+    def drehen(self):
+        print("Rad dreht sich")
+
+class Rumpf:
+    def schwimmen(self):
+        print("Rumpf schwimmt")
+
+class Auto:
+    def __init__(self):
+        self.motor = Motor()
+        self.räder = [Rad() for _ in range(4)]
+    
+    def fahren(self):
+        self.motor.starten()
+        for rad in self.räder:
+            rad.drehen()
+        print("Auto fährt")
+
+class Boot:
+    def __init__(self):
+        self.motor = Motor()
+        self.rumpf = Rumpf()
+    
+    def fahren(self):
+        self.motor.starten()
+        self.rumpf.schwimmen()
+        print("Boot fährt")
+
+# Amphibienfahrzeug mit Komposition
+class Amphibienfahrzeug:
+    def __init__(self):
+        self.motor = Motor()
+        self.räder = [Rad() for _ in range(4)]
+        self.rumpf = Rumpf()
+    
+    def auf_land_fahren(self):
+        self.motor.starten()
+        for rad in self.räder:
+            rad.drehen()
+        print("Amphibienfahrzeug fährt auf Land")
+    
+    def im_wasser_fahren(self):
+        self.motor.starten()
+        self.rumpf.schwimmen()
+        print("Amphibienfahrzeug fährt im Wasser")
+----
+
+=== Entwurfsmuster in Python
+
+==== Singleton-Muster
+
+Das Singleton-Muster stellt sicher, dass eine Klasse nur eine Instanz hat:
+
+[source,python]
+----
+class Singleton:
+    _instance = None
+    
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+class Logger(Singleton):
+    def __init__(self, dateiname=None):
+        # __init__ wird bei jedem Aufruf ausgeführt, auch wenn die Instanz wiederverwendet wird
+        # Daher prüfen wir, ob die Initialisierung bereits stattgefunden hat
+        if not hasattr(self, 'initialisiert'):
+            self.dateiname = dateiname or "anwendung.log"
+            self.initialisiert = True
+            print(f"Logger initialisiert mit Datei: {self.dateiname}")
+    
+    def log(self, nachricht):
+        print(f"LOG: {nachricht} (in {self.dateiname})")
+
+# Test des Singletons
+logger1 = Logger("test.log")
+logger2 = Logger()  # Die Dateiname-Angabe wird ignoriert, da die Instanz bereits existiert
+
+logger1.log("Nachricht 1")
+logger2.log("Nachricht 2")
+
+print(f"Gleiche Instanz? {logger1 is logger2}")  # True
+----
+
+==== Factory-Muster
+
+Das Factory-Muster kapselt die Objekterstellung und erlaubt flexible Erstellung:
+
+[source,python]
+----
+from abc import ABC, abstractmethod
+
+# Abstrakte Produktklasse
+class Dokument(ABC):
+    @abstractmethod
+    def öffnen(self):
+        pass
+    
+    @abstractmethod
+    def speichern(self):
+        pass
+
+# Konkrete Produkte
+class TextDokument(Dokument):
+    def öffnen(self):
+        return "TextDokument geöffnet"
+    
+    def speichern(self):
+        return "TextDokument gespeichert"
+
+class BildDokument(Dokument):
+    def öffnen(self):
+        return "BildDokument geöffnet"
+    
+    def speichern(self):
+        return "BildDokument gespeichert"
+
+class TabellenDokument(Dokument):
+    def öffnen(self):
+        return "TabellenDokument geöffnet"
+    
+    def speichern(self):
+        return "TabellenDokument gespeichert"
+
+# Dokumentfactory
+class DokumentFactory:
+    @staticmethod
+    def erstelle_dokument(typ):
+        if typ == "text":
+            return TextDokument()
+        elif typ == "bild":
+            return BildDokument()
+        elif typ == "tabelle":
+            return TabellenDokument()
+        else:
+            raise ValueError(f"Unbekannter Dokumenttyp: {typ}")
+
+# Verwendung
+def dokument_bearbeiten(dokument_typ):
+    try:
+        dokument = DokumentFactory.erstelle_dokument(dokument_typ)
+        print(dokument.öffnen())
+        # Dokument bearbeiten...
+        print(dokument.speichern())
+    except ValueError as e:
+        print(f"Fehler: {e}")
+
+dokument_bearbeiten("text")
+dokument_bearbeiten("bild")
+dokument_bearbeiten("tabelle")
+dokument_bearbeiten("video")  # Fehler
+----
+
+==== Observer-Muster
+
+Das Observer-Muster ermöglicht, dass ein Objekt seine Abhängigen über Zustandsänderungen informiert:
+
+[source,python]
+----
+class Beobachter:
+    def update(self, nachricht):
+        pass
+
+class KonkretBeobachter(Beobachter):
+    def __init__(self, name):
+        self.name = name
+    
+    def update(self, nachricht):
+        print(f"Beobachter {self.name} erhalten: {nachricht}")
+
+class Subjekt:
+    def __init__(self):
+        self._beobachter = []
+    
+    def anmelden(self, beobachter):
+        if beobachter not in self._beobachter:
+            self._beobachter.append(beobachter)
+    
+    def abmelden(self, beobachter):
+        if beobachter in self._beobachter:
+            self._beobachter.remove(beobachter)
+    
+    def benachrichtigen(self, nachricht):
+        for beobachter in self._beobachter:
+            beobachter.update(nachricht)
+
+class Nachrichtenverteiler(Subjekt):
+    def __init__(self):
+        super().__init__()
+        self._letzte_nachricht = None
+    
+    @property
+    def nachricht(self):
+        return self._letzte_nachricht
+    
+    @nachricht.setter
+    def nachricht(self, wert):
+        self._letzte_nachricht = wert
+        self.benachrichtigen(wert)
+
+# Verwendung
+verteiler = Nachrichtenverteiler()
+
+beobachter1 = KonkretBeobachter("Alex")
+beobachter2 = KonkretBeobachter("Barbara")
+beobachter3 = KonkretBeobachter("Chris")
+
+verteiler.anmelden(beobachter1)
+verteiler.anmelden(beobachter2)
+verteiler.anmelden(beobachter3)
+
+verteiler.nachricht = "Erste Nachricht"
+
+verteiler.abmelden(beobachter2)
+
+verteiler.nachricht = "Zweite Nachricht"
+----
+
+=== Übungen zum objektorientierten Design
+
+==== Übung 1: Dokumentverarbeitungssystem
+
+Entwerfen Sie ein Dokumentverarbeitungssystem:
+- Wenden Sie das Single Responsibility Principle an - Implementieren Sie verschiedene Dokumenttypen - Verwenden Sie Komposition für Dokumentfunktionen (Drucken, Formatieren, Speichern)
+
+==== Übung 2: Nachrichtensystem mit Observer
+
+Erstellen Sie ein Nachrichtensystem:
+- Eine Nachrichtenquelle, die verschiedene Typen von Nachrichten veröffentlichen kann - Verschiedene Beobachter, die nur bestimmte Nachrichtentypen erhalten wollen - Implementieren Sie FilterBeobachter und FilterNachrichtenquelle
+
+==== Übung 3: Configurable Factory
+
+Entwickeln Sie eine konfigurierbare Factory:
+- Die Factory kann verschiedene Produkte erzeugen - Die Konfiguration erfolgt über eine externe Konfigurationsdatei - Verwenden Sie Plugins, um die Factory um neue Produkttypen zu erweitern
+
+== Typannotationen und Dataclasses
+
+=== Typannotationen
+
+Python unterstützt seit Version 3.5 statische Typannotationen, die die Lesbarkeit verbessern und Fehler frühzeitig erkennen können:
+
+[source,python]
+----
+from typing import List, Dict, Tuple, Optional, Union, Callable
+
+def grüßen(name: str) -> str:
+    return f"Hallo, {name}!"
+
+def summe(zahlen: List[int]) -> int:
+    return sum(zahlen)
+
+def verarbeite_benutzer(benutzer: Dict[str, Union[str, int]]) -> None:
+    for key, value in benutzer.items():
+        print(f"{key}: {value}")
+
+def erstelle_person(name: str, alter: Optional[int] = None) -> Dict[str, Union[str, Optional[int]]]:
+    return {"name": name, "alter": alter}
+
+# Funktion als Parameter
+def führe_aus(funktion: Callable[[int], int], wert: int) -> int:
+    return funktion(wert)
+
+def quadriere(x: int) -> int:
+    return x * x
+
+# Verwendung
+ergebnis: str = grüßen("Welt")
+print(ergebnis)
+
+summe_ergebnis: int = summe([1, 2, 3, 4, 5])
+print(f"Summe: {summe_ergebnis}")
+
+benutzer: Dict[str, Union[str, int]] = {
+    "name": "Anna",
+    "alter": 30,
+    "stadt": "Berlin"
+}
+verarbeite_benutzer(benutzer)
+
+person: Dict[str, Union[str, Optional[int]]] = erstelle_person("Max")
+print(person)
+
+quadrat: int = führe_aus(quadriere, 5)
+print(f"5² = {quadrat}")
+----
+
+=== Dataclasses
+
+Python 3.7 führte Dataclasses ein, die boilerplate-Code für Klassen reduzieren, die hauptsächlich Daten speichern:
+
+[source,python]
+----
+from dataclasses import dataclass, field
+from typing import List, Optional
+from datetime import date
+
+@dataclass
+class Person:
+    name: str
+    alter: int
+    email: Optional[str] = None
+    
+    def ist_volljährig(self) -> bool:
+        return self.alter >= 18
+
+@dataclass
+class Mitarbeiter(Person):
+    personalnummer: str
+    abteilung: str
+    einstellungsdatum: date
+    gehalt: float = field(default=0.0, repr=False)  # repr=False verhindert Anzeige im __repr__
+    aufgaben: List[str] = field(default_factory=list)
+    
+    def einstellungsdauer(self) -> int:
+        """Berechnet die Dauer der Anstellung in Tagen."""
+        return (date.today() - self.einstellungsdatum).days
+
+# Verwendung
+p = Person(name="Anna Schmidt", alter=25, email="anna@example.com")
+print(p)  # Person(name='Anna Schmidt', alter=25, email='anna@example.com')
+print(f"Volljährig: {p.ist_volljährig()}")
+
+m = Mitarbeiter(
+    name="Max Mustermann",
+    alter=30,
+    email="max@example.com",
+    personalnummer="M123456",
+    abteilung="Entwicklung",
+    einstellungsdatum=date(2020, 3, 15),
+    gehalt=65000.0,
+    aufgaben=["Programmieren", "Testen", "Dokumentieren"]
+)
+print(m)  # Gehalt wird nicht angezeigt wegen repr=False
+print(f"Angestellt seit {m.einstellungsdauer()} Tagen")
+print(f"Aktuelle Aufgaben: {', '.join(m.aufgaben)}")
+----
+
+=== Erweiterte Dataclass-Funktionen
+
+Dataclasses bieten viele nützliche Funktionen:
+
+[source,python]
+----
+from dataclasses import dataclass, field, asdict, astuple, replace
+from typing import List, ClassVar, InitVar
+import json
+
+@dataclass(frozen=True)  # frozen=True macht die Instanz unveränderlich
+class Punkt:
+    x: float
+    y: float
+    
+    def entfernung(self, anderer: 'Punkt') -> float:
+        return ((self.x - anderer.x) ** 2 + (self.y - anderer.y) ** 2) ** 0.5
+
+@dataclass
+class Rechteck:
+    # Klassenvariablen werden nicht Teil der Instanzfelder
+    form_name: ClassVar[str] = "Rechteck"
+    
+    # InitVar wird als Parameter an __init__ übergeben, aber nicht als Feld gespeichert
+    farbe_code: InitVar[str] = None
+    
+    breite: float
+    höhe: float
+    farbe: str = "weiß"
+    tags: List[str] = field(default_factory=list)
+    
+    def __post_init__(self, farbe_code: str) -> None:
+        """Wird nach __init__ aufgerufen und erhält InitVars als Parameter."""
+        if farbe_code:
+            farben = {
+                "r": "rot",
+                "g": "grün",
+                "b": "blau",
+                "y": "gelb"
+            }
+            self.farbe = farben.get(farbe_code.lower(), self.farbe)
+    
+    @property
+    def fläche(self) -> float:
+        return self.breite * self.höhe
+    
+    def to_json(self) -> str:
+        return json.dumps(asdict(self))
+    
+    @classmethod
+    def from_json(cls, json_str: str) -> 'Rechteck':
+        return cls(**json.loads(json_str))
+
+# Verwendung
+p1 = Punkt(3, 4)
+p2 = Punkt(6, 8)
+print(f"Entfernung: {p1.entfernung(p2)}")
+
+try:
+    p1.x = 10  # Fehler, da die Klasse mit frozen=True definiert wurde
+except Exception as e:
+    print(f"Fehler beim Ändern von x: {e}")
+
+r1 = Rechteck(breite=10, höhe=5, farbe_code="r", tags=["groß", "wichtig"])
+print(r1)
+print(f"Fläche: {r1.fläche} Quadrateinheiten")
+
+# Konvertierung zu dict/tuple
+r1_dict = asdict(r1)
+print(f"Als Dictionary: {r1_dict}")
+r1_tuple = astuple(r1)
+print(f"Als Tuple: {r1_tuple}")
+
+# Unveränderliche Kopie mit geänderten Werten erstellen
+r2 = replace(r1, breite=20, höhe=10)
+print(f"Neues Rechteck: {r2}")
+
+# Serialisierung
+json_str = r1.to_json()
+print(f"JSON: {json_str}")
+r3 = Rechteck.from_json(json_str)
+print(f"Aus JSON erstellt: {r3}")
+----
+
+=== Übungen zu Typannotationen und Dataclasses
+
+==== Übung 1: Inventarsystem
+
+Erstellen Sie ein Inventarsystem mit Dataclasses:
+- `Produkt` mit ID, Name, Preis, Menge, Kategorie - `Inventar` mit Liste von Produkten und Methoden zum Hinzufügen/Entfernen - Implementieren Sie Serialisierung zu/von JSON - Nutzen Sie Typannotationen für alle Methoden
+
+==== Übung 2: Erweiterte Personenverwaltung
+
+Entwickeln Sie ein System zur Personenverwaltung:
+- `Person` als Basisklasse - Abgeleitete Klassen für `Student`, `Dozent`, `Mitarbeiter`
+- Verwenden Sie ClassVar für klassenweite Konstanten - Implementieren Sie __post_init__ für zusätzliche Initialisierungslogik
+
+==== Übung 3: Immutable Records
+
+Erstellen Sie unveränderliche Datensätze für ein Finanzsystem:
+- `Transaktion` (frozen) mit Betrag, Datum, Beschreibung, etc.
+- `Konto` mit Transaktionsliste und Methoden für neue Transaktionen - Implementieren Sie Berechnungen für Kontostand, Einnahmen, Ausgaben
+
+== Interaktion zwischen Objekten
+
+=== Grundlagen der Objektinteraktion
+
+In objektorientierten Systemen interagieren Objekte miteinander, um komplexe Verhaltensweisen zu realisieren.
+Die Interaktion kann auf verschiedene Arten erfolgen:
+
+1. **Objektreferenzen**: Ein Objekt hält eine Referenz auf ein anderes Objekt.
+2. **Nachrichten senden**: Ein Objekt ruft Methoden eines anderen Objekts auf.
+3. **Ereignisse/Callbacks**: Ein Objekt benachrichtigt andere Objekte über Zustandsänderungen.
+4. **Gemeinsame Daten**: Objekte teilen sich Daten, auf die sie gemeinsam zugreifen.
+
+[source,python]
+----
+class Auto:
+    def __init__(self, marke, modell):
+        self.marke = marke
+        self.modell = modell
+        self.motor = None  # Referenz auf ein Motor-Objekt
+        self.fahrer = None  # Referenz auf ein Fahrer-Objekt
+    
+    def motor_einbauen(self, motor):
+        self.motor = motor
+        print(f"Motor wurde in {self.marke} {self.modell} eingebaut.")
+    
+    def fahrer_zuweisen(self, fahrer):
+        self.fahrer = fahrer
+        print(f"{fahrer.name} steigt in {self.marke} {self.modell} ein.")
+    
+    def starten(self):
+        if not self.motor:
+            print("Auto hat keinen Motor!")
+            return False
+        
+        if not self.fahrer:
+            print("Auto hat keinen Fahrer!")
+            return False
+        
+        # Interaktion mit dem Motor-Objekt
+        status = self.motor.starten()
+        if status:
+            print(f"{self.fahrer.name} startet {self.marke} {self.modell}.")
+        return status
+    
+    def fahren(self, strecke):
+        if not self.motor or not self.motor.läuft:
+            print("Der Motor läuft nicht!")
+            return False
+        
+        if not self.fahrer:
+            print("Auto hat keinen Fahrer!")
+            return False
+        
+        # Interaktion mit dem Fahrer-Objekt
+        self.fahrer.fahre(self, strecke)
+        
+        # Interaktion mit dem Motor-Objekt
+        self.motor.verbraucht_treibstoff(strecke * 0.1)
+        
+        return True
+
+class Motor:
+    def __init__(self, typ, leistung):
+        self.typ = typ
+        self.leistung = leistung
+        self.läuft = False
+        self.treibstoff = 100  # Prozent
+    
+    def starten(self):
+        if self.treibstoff <= 0:
+            print("Nicht genug Treibstoff!")
+            return False
+        
+        self.läuft = True
+        print(f"{self.typ}-Motor mit {self.leistung} PS gestartet.")
+        return True
+    
+    def stoppen(self):
+        self.läuft = False
+        print(f"{self.typ}-Motor gestoppt.")
+    
+    def verbraucht_treibstoff(self, menge):
+        self.treibstoff = max(0, self.treibstoff - menge)
+        print(f"Treibstoff verbraucht. Verbleibend: {self.treibstoff:.1f}%")
+        
+        if self.treibstoff <= 0:
+            self.stoppen()
+            print("Motor ist aufgrund von Treibstoffmangel ausgegangen!")
+
+class Fahrer:
+    def __init__(self, name, führerschein=True):
+        self.name = name
+        self.führerschein = führerschein
+        self.gefahrene_strecke = 0
+    
+    def fahre(self, auto, strecke):
+        if not self.führerschein:
+            print(f"{self.name} hat keinen Führerschein!")
+            return False
+        
+        self.gefahrene_strecke += strecke
+        print(f"{self.name} fährt {auto.marke} {auto.modell} für {strecke} km.")
+        return True
+    
+    def statistik(self):
+        return f"{self.name} ist insgesamt {self.gefahrene_strecke} km gefahren."
+
+# Objekte erstellen und interagieren lassen
+auto = Auto("VW", "Golf")
+motor = Motor("Benzin", 110)
+fahrer = Fahrer("Max Mustermann")
+
+# Interaktion durch Objektreferenzen
+auto.motor_einbauen(motor)
+auto.fahrer_zuweisen(fahrer)
+
+# Interaktion durch Methodenaufrufe
+auto.starten()
+auto.fahren(50)
+auto.fahren(30)
+auto.fahren(40)
+
+print(fahrer.statistik())
+----
+
+=== Lose Kopplung vs. Enge Kopplung
+
+Ein wichtiges Prinzip bei der Objektinteraktion ist die **Kopplung**, die angibt, wie stark Objekte voneinander abhängig sind.
+
+**Enge Kopplung** bedeutet, dass Objekte viel über die interne Struktur anderer Objekte wissen und direkt darauf zugreifen.
+Dies führt zu weniger flexiblem und schwerer wartbarem Code.
+
+**Lose Kopplung** bedeutet, dass Objekte wenig über die internen Details anderer Objekte wissen und nur über klar definierte Schnittstellen kommunizieren.
+Dies führt zu flexiblerem und besser wartbarem Code.
+
+Beispiel für enge Kopplung:
+
+[source,python]
+----
+class EngeKopplungBeispiel:
+    def __init__(self):
+        # Direkte Kenntnis der internen Implementierung
+        self.daten_liste = [1, 2, 3, 4, 5]
+    
+    def verarbeiten(self, andere_klasse):
+        # Direkter Zugriff auf interne Attribute
+        for i in range(len(andere_klasse.daten_liste)):
+            andere_klasse.daten_liste[i] *= 2
+----
+
+Beispiel für lose Kopplung:
+
+[source,python]
+----
+class LoseKopplungBeispiel:
+    def __init__(self):
+        self._daten = [1, 2, 3, 4, 5]
+    
+    # Öffentliche Schnittstelle
+    def get_daten(self):
+        return self._daten.copy()  # Kopie zurückgeben, um Kapselung zu wahren
+    
+    def update_daten(self, neue_daten):
+        self._daten = neue_daten
+    
+    def transformiere_daten(self, transformation_funktion):
+        self._daten = [transformation_funktion(x) for x in self._daten]
+
+# Verwendung
+objekt = LoseKopplungBeispiel()
+daten = objekt.get_daten()
+neue_daten = [x * 2 for x in daten]
+objekt.update_daten(neue_daten)
+
+# Oder noch besser
+objekt.transformiere_daten(lambda x: x * 2)
+----
+
+=== Dependency Injection
+
+**Dependency Injection** ist ein Entwurfsmuster, bei dem Abhängigkeiten von außen in eine Klasse "injiziert" werden, anstatt sie intern zu erstellen.
+Dies fördert lose Kopplung und erleichtert das Testen.
+
+[source,python]
+----
+# Ohne Dependency Injection
+class SchlechtesDatenverarbeitungssystem:
+    def __init__(self):
+        # Harte Abhängigkeit - schwer zu testen oder auszutauschen
+        self.datenbank = MySQLDatenbank()
+        self.logger = StandardLogger()
+    
+    def verarbeite_daten(self, daten):
+        self.logger.log("Starte Datenverarbeitung")
+        ergebnis = self.datenbank.speichern(daten)
+        self.logger.log("Datenverarbeitung abgeschlossen")
+        return ergebnis
+
+# Mit Dependency Injection
+class GutesDatenverarbeitungssystem:
+    def __init__(self, datenbank, logger):
+        # Abhängigkeiten werden injiziert
+        self.datenbank = datenbank
+        self.logger = logger
+    
+    def verarbeite_daten(self, daten):
+        self.logger.log("Starte Datenverarbeitung")
+        ergebnis = self.datenbank.speichern(daten)
+        self.logger.log("Datenverarbeitung abgeschlossen")
+        return ergebnis
+
+# Verwendung
+mysql_db = MySQLDatenbank()
+file_logger = FileLogger("app.log")
+
+# Leicht auszutauschende Komponenten
+system = GutesDatenverarbeitungssystem(mysql_db, file_logger)
+
+# Für Tests können wir Mock-Objekte verwenden
+test_db = MockDatenbank()
+test_logger = MockLogger()
+test_system = GutesDatenverarbeitungssystem(test_db, test_logger)
+----
+
+=== Ereignisbasierte Programmierung
+
+Bei der ereignisbasierten Programmierung reagieren Objekte auf Ereignisse, die von anderen Objekten ausgelöst werden.
+Dies ermöglicht eine noch losere Kopplung, da die Objekte nichts voneinander wissen müssen außer den Ereignissen, auf die sie reagieren.
+
+[source,python]
+----
+class EventBroker:
+    """Zentraler Event-Broker zum Verwalten von Publisher-Subscriber-Beziehungen."""
+    
+    def __init__(self):
+        self.subscribers = {}
+    
+    def subscribe(self, event_type, callback):
+        """Abonniert ein Ereignis."""
+        if event_type not in self.subscribers:
+            self.subscribers[event_type] = []
+        self.subscribers[event_type].append(callback)
+    
+    def unsubscribe(self, event_type, callback):
+        """Kündigt ein Ereignisabonnement."""
+        if event_type in self.subscribers and callback in self.subscribers[event_type]:
+            self.subscribers[event_type].remove(callback)
+    
+    def publish(self, event_type, data=None):
+        """Veröffentlicht ein Ereignis an alle Abonnenten."""
+        if event_type in self.subscribers:
+            for callback in self.subscribers[event_type]:
+                callback(data)
+
+# Globaler Event-Broker
+event_broker = EventBroker()
+
+class Temperatursensor:
+    """Temperatursensor, der Ereignisse auslöst, wenn sich die Temperatur ändert."""
+    
+    def __init__(self, name):
+        self.name = name
+        self._temperatur = 20.0  # Standardtemperatur
+    
+    @property
+    def temperatur(self):
+        return self._temperatur
+    
+    @temperatur.setter
+    def temperatur(self, value):
+        alte_temp = self._temperatur
+        self._temperatur = value
+        
+        # Ereignis nur auslösen, wenn sich die Temperatur wesentlich ändert
+        if abs(alte_temp - value) >= 0.5:
+            event_broker.publish("temperatur_geändert", {
+                "sensor": self.name,
+                "alt": alte_temp,
+                "neu": value,
+                "differenz": value - alte_temp
+            })
+        
+        # Warnungsereignis, wenn die Temperatur zu hoch ist
+        if value > 30:
+            event_broker.publish("temperatur_warnung", {
+                "sensor": self.name,
+                "temperatur": value,
+                "nachricht": "Temperatur zu hoch!"
+            })
+
+class Thermostat:
+    """Thermostat, das auf Temperaturänderungen reagiert."""
+    
+    def __init__(self, name):
+        self.name = name
+        self.ziel_temperatur = 22.0
+        self.heizung_an = False
+        self.kühlung_an = False
+        
+        # Ereignisabonnements einrichten
+        event_broker.subscribe("temperatur_geändert", self.auf_temperatur_änderung_reagieren)
+    
+    def auf_temperatur_änderung_reagieren(self, daten):
+        print(f"Thermostat {self.name} reagiert auf Temperaturänderung von Sensor {daten['sensor']}")
+        
+        aktuelle_temp = daten["neu"]
+        
+        # Heizung ein-/ausschalten
+        if aktuelle_temp < self.ziel_temperatur - 1:
+            if not self.heizung_an:
+                self.heizung_einschalten()
+        elif aktuelle_temp > self.ziel_temperatur + 1:
+            if self.heizung_an:
+                self.heizung_ausschalten()
+            if not self.kühlung_an:
+                self.kühlung_einschalten()
+        else:
+            if self.heizung_an:
+                self.heizung_ausschalten()
+            if self.kühlung_an:
+                self.kühlung_ausschalten()
+    
+    def heizung_einschalten(self):
+        self.heizung_an = True
+        print(f"Thermostat {self.name}: Heizung eingeschaltet")
+        
+        # Neues Ereignis auslösen
+        event_broker.publish("heizung_status_geändert", {
+            "thermostat": self.name,
+            "status": "ein"
+        })
+    
+    def heizung_ausschalten(self):
+        self.heizung_an = False
+        print(f"Thermostat {self.name}: Heizung ausgeschaltet")
+        
+        # Neues Ereignis auslösen
+        event_broker.publish("heizung_status_geändert", {
+            "thermostat": self.name,
+            "status": "aus"
+        })
+    
+    def kühlung_einschalten(self):
+        self.kühlung_an = True
+        print(f"Thermostat {self.name}: Kühlung eingeschaltet")
+    
+    def kühlung_ausschalten(self):
+        self.kühlung_an = False
+        print(f"Thermostat {self.name}: Kühlung ausgeschaltet")
+
+class SmartphoneApp:
+    """Smartphone-App, die Benachrichtigungen zu Temperaturwarnungen anzeigt."""
+    
+    def __init__(self, benutzername):
+        self.benutzername = benutzername
+        
+        # Ereignisabonnements einrichten
+        event_broker.subscribe("temperatur_warnung", self.zeige_warnung)
+        event_broker.subscribe("heizung_status_geändert", self.aktualisiere_heizungsstatus)
+    
+    def zeige_warnung(self, daten):
+        print(f"SMARTPHONE-BENACHRICHTIGUNG für {self.benutzername}:")
+        print(f"Warnung vom Sensor {daten['sensor']}: {daten['nachricht']}")
+        print(f"Aktuelle Temperatur: {daten['temperatur']}°C")
+    
+    def aktualisiere_heizungsstatus(self, daten):
+        print(f"SMARTPHONE-UPDATE für {self.benutzername}:")
+        print(f"Thermostat {daten['thermostat']}: Heizung ist jetzt {daten['status']}")
+
+# Demo
+sensor = Temperatursensor("Wohnzimmer")
+thermostat = Thermostat("Hauptthermostat")
+app = SmartphoneApp("Max Mustermann")
+
+print("Temperatur wird aktualisiert...")
+sensor.temperatur = 18.0  # Löst temperatur_geändert aus, Heizung wird eingeschaltet
+
+print("\nTemperatur steigt...")
+sensor.temperatur = 23.0  # Löst temperatur_geändert aus, Heizung wird ausgeschaltet
+
+print("\nTemperatur steigt weiter...")
+sensor.temperatur = 32.0  # Löst temperatur_geändert und temperatur_warnung aus
+----
+
+=== Übungen zur Objektinteraktion
+
+==== Übung 1: Einfaches Nachrichtensystem
+
+Implementieren Sie ein einfaches Nachrichtensystem mit folgenden Klassen:
+- `Benutzer` mit Name und Posteingang - `Nachricht` mit Absender, Empfänger, Betreff und Inhalt - `Postfach` zum Senden und Empfangen von Nachrichten Stellen Sie sicher, dass Benutzer Nachrichten senden und empfangen können.
+
+==== Übung 2: Ereignisgesteuertes GUI-System
+
+Entwerfen Sie ein einfaches ereignisgesteuertes GUI-System mit:
+- Einer Basisklasse `UIElement`
+- Abgeleiteten Klassen wie `Button`, `Textfeld`, `CheckBox`
+- Einer `Anwendung` Klasse, die UI-Elemente enthält - Einer `EventManager` Klasse für die Ereignisverarbeitung Implementieren Sie Ereignisse wie Klicken, Doppelklicken und Textänderungen.
+
+==== Übung 3: Workflow-System
+
+Entwickeln Sie ein Workflow-System mit:
+- `Aufgabe` Klasse mit Status, Beschreibung und Zuweisungen
+- `Benutzer` Klasse mit zugewiesenen Aufgaben
+- `Workflow` Klasse mit einer Abfolge von Aufgaben
+- Statusübergängen, die Ereignisse auslösen
+
+Implementieren Sie Benachrichtigungen, wenn Aufgaben abgeschlossen werden oder überfällig sind.
+
+
+== Entwurfsmuster für Objektinteraktionen
+
+=== Observer-Muster (Beobachter)
+
+Das Observer-Muster ermöglicht, dass ein Objekt (das Subjekt) seine Abhängigen (die Beobachter) automatisch benachrichtigt, wenn sich sein Zustand ändert.
+
+[source,python]
+----
+from abc import ABC, abstractmethod
+from typing import List
+
+# Abstrakte Beobachter-Klasse
+class Observer(ABC):
+    @abstractmethod
+    def update(self, subject):
+        pass
+
+# Abstrakte Subjekt-Klasse
+class Subject(ABC):
+    def __init__(self):
+        self._observers: List[Observer] = []
+    
+    def attach(self, observer: Observer):
+        if observer not in self._observers:
+            self._observers.append(observer)
+    
+    def detach(self, observer: Observer):
+        if observer in self._observers:
+            self._observers.remove(observer)
+    
+    def notify(self):
+        for observer in self._observers:
+            observer.update(self)
+
+# Konkretes Subjekt
+class Wetterstation(Subject):
+    def __init__(self):
+        super().__init__()
+        self._temperatur = 0
+        self._luftfeuchtigkeit = 0
+        self._luftdruck = 0
+    
+    @property
+    def temperatur(self):
+        return self._temperatur
+    
+    @temperatur.setter
+    def temperatur(self, value):
+        self._temperatur = value
+        self.notify()  # Benachrichtigung bei Änderung
+    
+    @property
+    def luftfeuchtigkeit(self):
+        return self._luftfeuchtigkeit
+    
+    @luftfeuchtigkeit.setter
+    def luftfeuchtigkeit(self, value):
+        self._luftfeuchtigkeit = value
+        self.notify()  # Benachrichtigung bei Änderung
+    
+    @property
+    def luftdruck(self):
+        return self._luftdruck
+    
+    @luftdruck.setter
+    def luftdruck(self, value):
+        self._luftdruck = value
+        self.notify()  # Benachrichtigung bei Änderung
+    
+    def aktuelle_messwerte(self):
+        return {
+            "temperatur": self._temperatur,
+            "luftfeuchtigkeit": self._luftfeuchtigkeit,
+            "luftdruck": self._luftdruck
+        }
+
+# Konkreter Beobachter
+class AnzeigeElement(Observer):
+    def __init__(self, name):
+        self.name = name
+    
+    def update(self, subject):
+        if isinstance(subject, Wetterstation):
+            messwerte = subject.aktuelle_messwerte()
+            print(f"{self.name} - Neue Wetterdaten:")
+            print(f"  Temperatur: {messwerte['temperatur']}°C")
+            print(f"  Luftfeuchtigkeit: {messwerte['luftfeuchtigkeit']}%")
+            print(f"  Luftdruck: {messwerte['luftdruck']} hPa")
+
+# Verwendung des Observer-Musters
+wetterstation = Wetterstation()
+
+display1 = AnzeigeElement("Hauptanzeige")
+display2 = AnzeigeElement("Mobilgerät")
+
+wetterstation.attach(display1)
+wetterstation.attach(display2)
+
+# Änderung am Subjekt löst Benachrichtigungen aus
+wetterstation.temperatur = 22.5
+wetterstation.luftfeuchtigkeit = 65
+wetterstation.luftdruck = 1013.2
+
+# Beobachter abmelden
+wetterstation.detach(display2)
+
+# Weitere Änderung - nur noch display1 wird benachrichtigt
+wetterstation.temperatur = 23.8
+----
+
+=== Command-Muster (Befehl)
+
+Das Command-Muster kapselt eine Anfrage als Objekt, wodurch Anforderungen parametrisiert und in eine Warteschlange gestellt werden können, sowie Operationen rückgängig gemacht werden können.
+
+[source,python]
+----
+from abc import ABC, abstractmethod
+from typing import List, Optional
+
+# Abstrakte Befehlsklasse
+class Command(ABC):
+    @abstractmethod
+    def execute(self) -> None:
+        pass
+    
+    @abstractmethod
+    def undo(self) -> None:
+        pass
+
+# Empfänger des Befehls
+class Dokument:
+    def __init__(self):
+        self.inhalt = ""
+        self.cursor_position = 0
+    
+    def einfügen(self, text: str) -> None:
+        # Text an der Cursorposition einfügen
+        self.inhalt = (self.inhalt[:self.cursor_position] + 
+                       text + 
+                       self.inhalt[self.cursor_position:])
+        self.cursor_position += len(text)
+        print(f"Text eingefügt: '{text}'")
+        print(f"Dokument: '{self.inhalt}'")
+    
+    def löschen(self, länge: int) -> str:
+        # Text von der Cursorposition aus löschen
+        if self.cursor_position + länge > len(self.inhalt):
+            länge = len(self.inhalt) - self.cursor_position
+        
+        gelöschter_text = self.inhalt[self.cursor_position:self.cursor_position + länge]
+        self.inhalt = (self.inhalt[:self.cursor_position] + 
+                      self.inhalt[self.cursor_position + länge:])
+        
+        print(f"Text gelöscht: '{gelöschter_text}'")
+        print(f"Dokument: '{self.inhalt}'")
+        return gelöschter_text
+    
+    def cursor_bewegen(self, position: int) -> None:
+        if position < 0:
+            position = 0
+        elif position > len(self.inhalt):
+            position = len(self.inhalt)
+        
+        alte_position = self.cursor_position
+        self.cursor_position = position
+        print(f"Cursor verschoben: {alte_position} -> {self.cursor_position}")
+
+# Konkrete Befehlsklassen
+class EinfügenBefehl(Command):
+    def __init__(self, dokument: Dokument, text: str):
+        self.dokument = dokument
+        self.text = text
+        self.position = dokument.cursor_position  # Position speichern
+    
+    def execute(self) -> None:
+        self.dokument.cursor_bewegen(self.position)  # Sicherstellen, dass der Cursor an der richtigen Position ist
+        self.dokument.einfügen(self.text)
+    
+    def undo(self) -> None:
+        self.dokument.cursor_bewegen(self.position)
+        self.dokument.löschen(len(self.text))
+
+class LöschenBefehl(Command):
+    def __init__(self, dokument: Dokument, länge: int):
+        self.dokument = dokument
+        self.länge = länge
+        self.position = dokument.cursor_position
+        self.gelöschter_text = ""  # Wird bei execute gespeichert
+    
+    def execute(self) -> None:
+        self.dokument.cursor_bewegen(self.position)
+        self.gelöschter_text = self.dokument.löschen(self.länge)
+    
+    def undo(self) -> None:
+        self.dokument.cursor_bewegen(self.position)
+        self.dokument.einfügen(self.gelöschter_text)
+
+class CursorBefehl(Command):
+    def __init__(self, dokument: Dokument, position: int):
+        self.dokument = dokument
+        self.neue_position = position
+        self.alte_position = dokument.cursor_position
+    
+    def execute(self) -> None:
+        self.dokument.cursor_bewegen(self.neue_position)
+    
+    def undo(self) -> None:
+        self.dokument.cursor_bewegen(self.alte_position)
+
+# Invoker-Klasse
+class TextEditor:
+    def __init__(self):
+        self.dokument = Dokument()
+        self.history: List[Command] = []
+        self.redo_stack: List[Command] = []
+    
+    def execute_command(self, command: Command) -> None:
+        command.execute()
+        self.history.append(command)
+        self.redo_stack.clear()  # Redo-Stack leeren nach neuer Aktion
+    
+    def undo(self) -> None:
+        if not self.history:
+            print("Nichts zum Rückgängig machen")
+            return
+        
+        command = self.history.pop()
+        command.undo()
+        self.redo_stack.append(command)
+    
+    def redo(self) -> None:
+        if not self.redo_stack:
+            print("Nichts zum Wiederherstellen")
+            return
+        
+        command = self.redo_stack.pop()
+        command.execute()
+        self.history.append(command)
+
+# Verwendung des Command-Musters
+editor = TextEditor()
+
+# Befehle ausführen
+editor.execute_command(EinfügenBefehl(editor.dokument, "Hallo, "))
+editor.execute_command(EinfügenBefehl(editor.dokument, "Welt!"))
+editor.execute_command(CursorBefehl(editor.dokument, 7))
+editor.execute_command(EinfügenBefehl(editor.dokument, "schöne "))
+
+print("\nRückgängig machen:")
+editor.undo()  # "schöne " entfernen
+editor.undo()  # Cursor zurücksetzen
+
+print("\nWiederherstellen:")
+editor.redo()  # Cursor wieder nach vorne
+editor.redo()  # "schöne " wieder einfügen
+
+print("\nWeitere Aktionen:")
+editor.execute_command(LöschenBefehl(editor.dokument, 6))  # "schöne" löschen
+----
+
+=== Mediator-Muster (Vermittler)
+
+Das Mediator-Muster definiert ein Objekt, das die Interaktion zwischen einer Menge von Objekten kapselt. Es fördert lose Kopplung, indem es verhindert, dass Objekte sich explizit aufeinander beziehen.
+
+[source,python]
+----
+from abc import ABC, abstractmethod
+from typing import Dict, List
+
+# Mediator-Schnittstelle
+class ChatMediator(ABC):
+    @abstractmethod
+    def sende_nachricht(self, nachricht: str, absender: 'Benutzer') -> None:
+        pass
+    
+    @abstractmethod
+    def benutzer_hinzufügen(self, benutzer: 'Benutzer') -> None:
+        pass
+
+# Abstrakte Benutzer-Klasse
+class Benutzer(ABC):
+    def __init__(self, name: str, mediator: ChatMediator):
+        self.name = name
+        self.mediator = mediator
+        self.mediator.benutzer_hinzufügen(self)
+    
+    def senden(self, nachricht: str) -> None:
+        print(f"{self.name} sendet: {nachricht}")
+        self.mediator.sende_nachricht(nachricht, self)
+    
+    @abstractmethod
+    def empfangen(self, nachricht: str, absender: 'Benutzer') -> None:
+        pass
+
+# Konkreter Mediator
+class ChatRaum(ChatMediator):
+    def __init__(self, name: str):
+        self.name = name
+        self.benutzer: List[Benutzer] = []
+        print(f"Chatraum '{name}' erstellt")
+    
+    def benutzer_hinzufügen(self, benutzer: Benutzer) -> None:
+        self.benutzer.append(benutzer)
+        print(f"{benutzer.name} ist dem Chatraum '{self.name}' beigetreten")
+    
+    def sende_nachricht(self, nachricht: str, absender: Benutzer) -> None:
+        # Nachricht an alle anderen Benutzer senden
+        for benutzer in self.benutzer:
+            if benutzer != absender:  # Nicht an den Absender senden
+                benutzer.empfangen(nachricht, absender)
+
+# Konkrete Benutzer
+class NormalerBenutzer(Benutzer):
+    def empfangen(self, nachricht: str, absender: 'Benutzer') -> None:
+        print(f"{self.name} empfängt von {absender.name}: {nachricht}")
+
+class AdminBenutzer(Benutzer):
+    def empfangen(self, nachricht: str, absender: 'Benutzer') -> None:
+        print(f"ADMIN {self.name} empfängt von {absender.name}: {nachricht}")
+    
+    def kick_benutzer(self, benutzer: Benutzer) -> None:
+        if benutzer in self.mediator.benutzer:
+            self.mediator.benutzer.remove(benutzer)
+            print(f"ADMIN {self.name} hat {benutzer.name} aus dem Chatraum entfernt")
+
+# Verwendung des Mediator-Musters
+chat = ChatRaum("Python Diskussion")
+
+alice = NormalerBenutzer("Alice", chat)
+bob = NormalerBenutzer("Bob", chat)
+charlie = NormalerBenutzer("Charlie", chat)
+admin = AdminBenutzer("ModeratorMax", chat)
+
+# Nachrichten senden
+alice.senden("Hallo zusammen!")
+bob.senden("Hi Alice, wie geht's?")
+charlie.senden("Hey, kann mir jemand mit Vererbung helfen?")
+admin.senden("Natürlich Charlie, was ist dein Problem?")
+
+# Admin-Aktion
+admin.kick_benutzer(bob)  # Bob wird entfernt
+
+# Weitere Nachricht
+alice.senden("Was ist mit Bob passiert?")
+----
+
+=== Strategy-Muster (Strategie)
+
+Das Strategy-Muster definiert eine Familie von Algorithmen, kapselt jeden einzelnen und macht sie austauschbar. Es erlaubt, den Algorithmus unabhängig von den Clients zu variieren, die ihn verwenden.
+
+[source,python]
+----
+from abc import ABC, abstractmethod
+from typing import List
+
+# Strategie-Schnittstelle
+class SortierStrategie(ABC):
+    @abstractmethod
+    def sortieren(self, daten: List) -> List:
+        pass
+
+# Konkrete Strategien
+class AufsteigendSortieren(SortierStrategie):
+    def sortieren(self, daten: List) -> List:
+        print("Sortiere aufsteigend")
+        return sorted(daten)
+
+class AbsteigendSortieren(SortierStrategie):
+    def sortieren(self, daten: List) -> List:
+        print("Sortiere absteigend")
+        return sorted(daten, reverse=True)
+
+class DurchLängeSortieren(SortierStrategie):
+    def sortieren(self, daten: List) -> List:
+        print("Sortiere nach Länge (falls möglich)")
+        try:
+            return sorted(daten, key=len)
+        except TypeError:
+            print("Die Elemente haben keine Länge, verwende Standardsortierung")
+            return sorted(daten)
+
+# Kontext, der die Strategie verwendet
+class Sortierer:
+    def __init__(self, strategie: SortierStrategie = None):
+        self._strategie = strategie or AufsteigendSortieren()
+    
+    @property
+    def strategie(self) -> SortierStrategie:
+        return self._strategie
+    
+    @strategie.setter
+    def strategie(self, strategie: SortierStrategie) -> None:
+        self._strategie = strategie
+    
+    def sortieren(self, daten: List) -> List:
+        return self._strategie.sortieren(daten)
+
+# Verwendung des Strategy-Musters
+zahlen = [5, 3, 9, 1, 7, 2, 8, 4, 6]
+wörter = ["Apfel", "Banane", "Kirsche", "Dattel", "Erdbeere"]
+
+sortierer = Sortierer()
+
+# Standardstrategie (aufsteigend)
+print("Zahlen:", sortierer.sortieren(zahlen))
+print("Wörter:", sortierer.sortieren(wörter))
+
+# Strategie ändern
+sortierer.strategie = AbsteigendSortieren()
+print("\nZahlen:", sortierer.sortieren(zahlen))
+print("Wörter:", sortierer.sortieren(wörter))
+
+# Weitere Strategie
+sortierer.strategie = DurchLängeSortieren()
+print("\nZahlen:", sortierer.sortieren(zahlen))  # Nicht nach Länge sortierbar
+print("Wörter:", sortierer.sortieren(wörter))  # Nach Länge sortiert
+----
+
+=== Adapter-Muster (Adapter)
+
+Das Adapter-Muster konvertiert die Schnittstelle einer Klasse in eine andere Schnittstelle, die ein Client erwartet. Es ermöglicht Klassen, zusammenzuarbeiten, die sonst nicht kompatibel wären.
+
+[source,python]
+----
+from abc import ABC, abstractmethod
+
+# Zielschnittstelle
+class ZielSchnittstelle(ABC):
+    @abstractmethod
+    def operation(self) -> str:
+        pass
+
+# Existierende Klasse mit inkompatiblem Interface
+class AlteKlasse:
+    def spezifische_anfrage(self) -> str:
+        return "AlteKlasse: Spezifische Anfrage bearbeitet"
+
+# Klassenadapter (durch Vererbung)
+class KlassenAdapter(ZielSchnittstelle, AlteKlasse):
+    def operation(self) -> str:
+        # Die Zielschnittstelle durch Aufruf der spezifischen Anfrage implementieren
+        return f"KlassenAdapter: {self.spezifische_anfrage()}"
+
+# Objektadapter (durch Komposition)
+class ObjektAdapter(ZielSchnittstelle):
+    def __init__(self, alte_klasse: AlteKlasse):
+        self.alte_klasse = alte_klasse
+    
+    def operation(self) -> str:
+        # Die Zielschnittstelle durch Delegieren an die alte Klasse implementieren
+        return f"ObjektAdapter: {self.alte_klasse.spezifische_anfrage()}"
+
+# Client-Code, der die Zielschnittstelle verwendet
+def client_code(ziel: ZielSchnittstelle) -> None:
+    print(ziel.operation())
+
+# Verwendung des Adapter-Musters
+print("Client arbeitet mit Zielschnittstelle:")
+ziel = KlassenAdapter()
+client_code(ziel)
+
+print("\nClient arbeitet mit Zielschnittstelle über ObjektAdapter:")
+alte_klasse = AlteKlasse()
+adapter = ObjektAdapter(alte_klasse)
+client_code(adapter)
+----
+
+=== Übungen zu Entwurfsmustern
+
+==== Übung 1: Observer-Muster für eine Aktienüberwachung
+Implementieren Sie ein Aktienkurs-Überwachungssystem:
+- Eine `Aktie` Klasse, die Kursänderungen als Observable veröffentlicht
+- `Anleger` und `Broker` Klassen, die als Observer auf Kursänderungen reagieren
+- Verschiedene Reaktionen je nach Beobachtertyp (Kauf, Verkauf, Benachrichtigung)
+
+==== Übung 2: Command-Muster für eine Fernbedienung
+Erstellen Sie eine universelle Fernbedienung:
+- Definieren Sie eine `Command`-Schnittstelle
+- Implementieren Sie verschiedene Befehle für Geräte (`Fernseher`, `Stereoanlage`, `Licht`)
+- Erstellen Sie eine `Fernbedienung` mit programmierbaren Tasten
+- Fügen Sie eine Undo-Funktion hinzu
+
+==== Übung 3: Strategie-Muster für Zahlungssysteme
+Entwickeln Sie ein flexibles Zahlungssystem:
+- Eine `Zahlung`-Klasse, die eine Zahlungsstrategie verwendet
+- Verschiedene Strategien (`Kreditkarte`, `PayPal`, `Überweisung`)
+- Einen `Warenkorb`, der eine Zahlungsstrategie akzeptiert
+- Testen Sie mit verschiedenen Zahlungsmethoden
+
+== Fehlerbehandlung in der objektorientierten Programmierung
+
+=== Grundlagen der Fehlerbehandlung in Python
+
+Python verwendet Ausnahmen (Exceptions) für die Fehlerbehandlung. In der OOP können Sie eigene Ausnahmeklassen definieren und Fehler kontextspezifisch behandeln.
+
+[source,python]
+----
+class BankException(Exception):
+    """Basisklasse für alle bankspezifischen Ausnahmen."""
+    pass
+
+class KontoNichtGefundenException(BankException):
+    """Wird ausgelöst, wenn ein Konto nicht gefunden wird."""
+    pass
+
+class UnzureichendesGuthabenException(BankException):
+    """Wird ausgelöst, wenn nicht genug Guthaben für eine Operation vorhanden ist."""
+    def __init__(self, konto_nr, benötigt, verfügbar):
+        self.konto_nr = konto_nr
+        self.benötigt = benötigt
+        self.verfügbar = verfügbar
+        self.fehlbetrag = benötigt - verfügbar
+        super().__init__(
+            f"Unzureichendes Guthaben auf Konto {konto_nr}: "
+            f"Benötigt {benötigt}€, verfügbar {verfügbar}€, "
+            f"Fehlbetrag {self.fehlbetrag}€"
+        )
+
+class Bank:
+    def __init__(self, name):
+        self.name = name
+        self.konten = {}
+    
+    def konto_erstellen(self, konto_nr, inhaber, anfangsguthaben=0):
+        if konto_nr in self.konten:
+            raise ValueError(f"Konto mit Nummer {konto_nr} existiert bereits")
+        self.konten[konto_nr] = {
+            "inhaber": inhaber,
+            "guthaben": anfangsguthaben
+        }
+        return konto_nr
+    
+    def guthaben_abfragen(self, konto_nr):
+        if konto_nr not in self.konten:
+            raise KontoNichtGefundenException(f"Konto {konto_nr} nicht gefunden")
+        return self.konten[konto_nr]["guthaben"]
+    
+    def einzahlen(self, konto_nr, betrag):
+        if konto_nr not in self.konten:
+            raise KontoNichtGefundenException(f"Konto {konto_nr} nicht gefunden")
+        if betrag <= 0:
+            raise ValueError("Einzahlungsbetrag muss positiv sein")
+        
+        self.konten[konto_nr]["guthaben"] += betrag
+        return self.konten[konto_nr]["guthaben"]
+    
+    def abheben(self, konto_nr, betrag):
+        if konto_nr not in self.konten:
+            raise KontoNichtGefundenException(f"Konto {konto_nr} nicht gefunden")
+        if betrag <= 0:
+            raise ValueError("Abhebungsbetrag muss positiv sein")
+        
+        verfügbar = self.konten[konto_nr]["guthaben"]
+        if verfügbar < betrag:
+            raise UnzureichendesGuthabenException(konto_nr, betrag, verfügbar)
+        
+        self.konten[konto_nr]["guthaben"] -= betrag
+        return self.konten[konto_nr]["guthaben"]
+    
+    def überweisung(self, von_konto, zu_konto, betrag):
+        try:
+            self.abheben(von_konto, betrag)
+            self.einzahlen(zu_konto, betrag)
+            return True
+        except KontoNichtGefundenException as e:
+            print(f"Überweisung fehlgeschlagen: {e}")
+            return False
+        except UnzureichendesGuthabenException as e:
+            print(f"Überweisung fehlgeschlagen: {e}")
+            # Möglichkeit für erweiterte Fehlerbehandlung (z.B. Dispokredit)
+            return False
+
+# Verwendung mit Fehlerbehandlung
+bank = Bank("Meine Bank")
+
+try:
+    # Konten erstellen
+    bank.konto_erstellen("K001", "Max Mustermann", 1000)
+    bank.konto_erstellen("K002", "Anna Schmidt", 500)
+    
+    # Guthaben abfragen
+    print(f"Guthaben K001: {bank.guthaben_abfragen('K001')}€")
+    print(f"Guthaben K002: {bank.guthaben_abfragen('K002')}€")
+    
+    # Geld einzahlen
+    bank.einzahlen("K001", 200)
+    print(f"Neues Guthaben K001: {bank.guthaben_abfragen('K001')}€")
+    
+    # Geld abheben
+    bank.abheben("K002", 100)
+    print(f"Neues Guthaben K002: {bank.guthaben_abfragen('K002')}€")
+    
+    # Überweisung
+    bank.überweisung("K001", "K002", 300)
+    print(f"Nach Überweisung - Guthaben K001: {bank.guthaben_abfragen('K001')}€")
+    print(f"Nach Überweisung - Guthaben K002: {bank.guthaben_abfragen('K002')}€")
+    
+    # Fehlerszenarien
+    print("\nFehlerszenarien:")
+    
+    # Nicht existierendes Konto
+    try:
+        bank.guthaben_abfragen("K999")
+    except KontoNichtGefundenException as e:
+        print(f"Fehler: {e}")
+    
+    # Unzureichendes Guthaben
+    try:
+        bank.abheben("K001", 2000)
+    except UnzureichendesGuthabenException as e:
+        print(f"Fehler: {e}")
+        print(f"Fehlbetrag: {e.fehlbetrag}€")
+    
+    # Ungültiger Betrag
+    try:
+        bank.einzahlen("K001", -100)
+    except ValueError as e:
+        print(f"Fehler: {e}")
+    
+except Exception as e:
+    print(f"Unerwarteter Fehler: {e}")
+----
+
+
+=== Fehlerbehandlungsstrategien in der OOP
+
+1. **Ausnahmen hochreichen** vs. **vor Ort behandeln**:
+   - Behandeln Sie Ausnahmen auf der Ebene, auf der Sie genug Kontext haben, um angemessen zu reagieren.
+   - Reichen Sie Ausnahmen hoch, wenn die aktuelle Methode nicht damit umgehen kann.
+
+2. **Spezifische** vs. **allgemeine Ausnahmen**:
+   - Verwenden Sie spezifische Ausnahmen für unterschiedliche Fehlerszenarien.
+   - Fangen Sie allgemeine Ausnahmen nur als letzte Absicherung.
+
+3. **Wiederherstellung** vs. **Abbruch**:
+   - Entscheiden Sie, ob die Anwendung sich von einem Fehler erholen soll oder ob ein Abbruch angemessener ist.
+   - Stellen Sie einen konsistenten Zustand sicher, egal welche Strategie Sie wählen.
+
+4. **Kontextualisierung von Ausnahmen**:
+   - Fügen Sie relevante Informationen zu Ausnahmen hinzu, um Diagnose und Behebung zu erleichtern.
+   - Verwenden Sie geschachtelte Ausnahmen für die Fehlerursachenverfolgung.
+
+[source,python]
+----
+class DatenbankFehler(Exception):
+    """Basisklasse für alle Datenbankfehler."""
+    pass
+
+class VerbindungsFehler(DatenbankFehler):
+    """Fehler bei der Datenbankverbindung."""
+    pass
+
+class AbfrageFehler(DatenbankFehler):
+    """Fehler bei der Datenbankabfrage."""
+    pass
+
+class Datenbank:
+    def __init__(self, verbindungsparameter):
+        self.verbindungsparameter = verbindungsparameter
+        self.verbindung = None
+    
+    def verbinden(self):
+        try:
+            # Simuliere Datenbankverbindung
+            print(f"Verbinde mit Datenbank {self.verbindungsparameter['host']}...")
+            # Simuliere einen möglichen Fehler
+            if self.verbindungsparameter['host'] == 'fehlerserver':
+                raise ConnectionError("Verbindung zum Server fehlgeschlagen")
+            self.verbindung = {"status": "verbunden"}
+            return True
+        except ConnectionError as e:
+            # Spezifische Ausnahme mit mehr Kontext
+            raise VerbindungsFehler(f"Konnte keine Verbindung herstellen: {e}")
+    
+    def abfrage_ausführen(self, sql):
+        if not self.verbindung:
+            try:
+                self.verbinden()
+            except VerbindungsFehler as e:
+                # Ausnahme neu verpacken mit zusätzlichem Kontext
+                raise AbfrageFehler(f"Abfrage konnte nicht ausgeführt werden: {e}")
+        
+        try:
+            # Simuliere Datenbankabfrage
+            print(f"Führe SQL aus: {sql}")
+            # Simuliere einen möglichen Fehler
+            if "ungültig" in sql.lower():
+                raise ValueError("Ungültige SQL-Syntax")
+            return ["Ergebnis1", "Ergebnis2"]
+        except ValueError as e:
+            raise AbfrageFehler(f"Fehler bei der Abfrage: {e}")
+    
+    def schließen(self):
+        if self.verbindung:
+            print("Datenbankverbindung wird geschlossen")
+            self.verbindung = None
+
+class BenutzerRepository:
+    def __init__(self, datenbank):
+        self.datenbank = datenbank
+    
+    def benutzer_suchen(self, benutzer_id):
+        try:
+            sql = f"SELECT * FROM benutzer WHERE id = {benutzer_id}"
+            ergebnis = self.datenbank.abfrage_ausführen(sql)
+            if not ergebnis:
+                return None
+            return {"id": benutzer_id, "daten": ergebnis[0]}
+        except AbfrageFehler as e:
+            # Lokale Fehlerbehandlung mit Protokollierung
+            print(f"Fehler bei der Benutzersuche für ID {benutzer_id}: {e}")
+            # Fehler weiterleiten mit spezifischerem Kontext
+            raise ValueError(f"Benutzer mit ID {benutzer_id} konnte nicht abgerufen werden") from e
+        finally:
+            # Aufräumen, unabhängig vom Ergebnis
+            self.datenbank.schließen()
+
+# Verwendung
+try:
+    db = Datenbank({"host": "localhost", "benutzer": "admin"})
+    repo = BenutzerRepository(db)
+    
+    # Erfolgreicher Fall
+    benutzer = repo.benutzer_suchen(123)
+    if benutzer:
+        print(f"Benutzer gefunden: {benutzer}")
+    else:
+        print("Benutzer nicht gefunden")
+    
+    # Fehlerfall: Ungültige SQL-Abfrage
+    benutzer = repo.benutzer_suchen("ungültig; DROP TABLE benutzer;")
+except ValueError as e:
+    print(f"Anwendungsfehler: {e}")
+    # Ursprüngliche Ursache anzeigen
+    if e.__cause__:
+        print(f"Ursprüngliche Ursache: {e.__cause__}")
+except Exception as e:
+    print(f"Unerwarteter Fehler: {e}")
+----
+
+=== Automatisierte Tests für objektorientierte Systeme
+
+Tests sind entscheidend für robuste objektorientierte Systeme. Python bietet integrierte Unterstützung für automatisierte Tests.
+
+[source,python]
+----
+import unittest
+from unittest.mock import Mock, patch
+
+# Zu testende Klasse
+class Rechner:
+    def addiere(self, a, b):
+        return a + b
+    
+    def multipliziere(self, a, b):
+        return a * b
+    
+    def dividiere(self, a, b):
+        if b == 0:
+            raise ValueError("Division durch Null ist nicht erlaubt")
+        return a / b
+    
+    def hole_externe_daten(self, url):
+        # Diese Methode würde normalerweise externe Daten abrufen
+        # Im Test wollen wir dies jedoch mocken
+        import requests
+        response = requests.get(url)
+        return response.json()
+
+# Testklasse
+class RechnerTest(unittest.TestCase):
+    def setUp(self):
+        # Wird vor jedem Test ausgeführt
+        self.rechner = Rechner()
+    
+    def test_addiere(self):
+        # Arrange (Vorbereiten)
+        a, b = 3, 5
+        erwartetes_ergebnis = 8
+        
+        # Act (Ausführen)
+        ergebnis = self.rechner.addiere(a, b)
+        
+        # Assert (Überprüfen)
+        self.assertEqual(ergebnis, erwartetes_ergebnis)
+    
+    def test_multipliziere(self):
+        self.assertEqual(self.rechner.multipliziere(4, 7), 28)
+        self.assertEqual(self.rechner.multipliziere(-2, 3), -6)
+        self.assertEqual(self.rechner.multipliziere(0, 5), 0)
+    
+    def test_dividiere_normal(self):
+        self.assertEqual(self.rechner.dividiere(10, 2), 5)
+        self.assertAlmostEqual(self.rechner.dividiere(1, 3), 0.3333333333333333)
+    
+    def test_dividiere_fehler(self):
+        # Testen, dass eine Ausnahme ausgelöst wird
+        with self.assertRaises(ValueError):
+            self.rechner.dividiere(5, 0)
+    
+    @patch('requests.get')
+    def test_hole_externe_daten(self, mock_get):
+        # Mock-Response erstellen
+        mock_response = Mock()
+        mock_response.json.return_value = {"daten": [1, 2, 3]}
+        
+        # Mock-Methode konfigurieren
+        mock_get.return_value = mock_response
+        
+        # Methode mit externem Aufruf testen
+        ergebnis = self.rechner.hole_externe_daten("https://api.example.com/data")
+        
+        # Überprüfen, ob requests.get mit der richtigen URL aufgerufen wurde
+        mock_get.assert_called_once_with("https://api.example.com/data")
+        
+        # Überprüfen des Ergebnisses
+        self.assertEqual(ergebnis, {"daten": [1, 2, 3]})
+
+# Tests ausführen
+if __name__ == '__main__':
+    unittest.main()
+----
+
+=== Übungen zur Fehlerbehandlung
+
+==== Übung 1: Ausnahmehierarchie
+Entwerfen Sie eine Ausnahmehierarchie für ein E-Commerce-System:
+- Eine Basisklasse `ECommerceException`
+- Spezialisierte Ausnahmen für verschiedene Subsysteme (Bestellung, Zahlung, Lager)
+- Implementieren Sie passende Ausnahme-Handler in den entsprechenden Klassen
+
+==== Übung 2: Robust gegen externe Fehler
+Verbessern Sie die Fehlerbehandlung in einem System, das mit externen Diensten interagiert:
+- Implementieren Sie Retries mit exponentiellen Backoff
+- Fügen Sie Fallback-Mechanismen für fehlende externe Dienste hinzu
+- Stellen Sie sicher, dass das System in einem konsistenten Zustand bleibt
+
+==== Übung 3: Testsuite entwickeln
+Entwickeln Sie eine umfassende Testsuite für die Klassen eines Bibliotheksverwaltungssystems:
+- Unit-Tests für individuelle Klassen
+- Integrationstests für die Zusammenarbeit der Klassen
+- Verwenden Sie Mocks für externe Abhängigkeiten
+- Testen Sie Rand- und Fehlerfälle
+
+== Leistungsoptimierung in OOP
+
+=== Identifizierung von Leistungsproblemen
+
+Bevor Sie optimieren, sollten Sie die tatsächlichen Leistungsprobleme identifizieren:
+
+1. **Profiling**: Verwenden Sie Profiler, um zu sehen, wo die meiste Zeit verbracht wird
+2. **Benchmarking**: Vergleichen Sie verschiedene Implementierungen
+3. **Speicherverbrauch**: Überwachen Sie den Speicherverbrauch Ihrer Objekte
+
+[source,python]
+----
+import cProfile
+import time
+import sys
+from memory_profiler import profile
+
+# Einfache Klasse für Profiling-Demo
+class DatenContainer:
+    def __init__(self, größe):
+        self.daten = [i for i in range(größe)]
+    
+    def verarbeiten(self):
+        ergebnis = 0
+        for i in self.daten:
+            ergebnis += i
+        return ergebnis
+    
+    def filtern(self, schwellwert):
+        return [x for x in self.daten if x > schwellwert]
+
+# Zeitmessung
+def zeitmessung(func, *args, **kwargs):
+    start = time.time()
+    ergebnis = func(*args, **kwargs)
+    ende = time.time()
+    print(f"{func.__name__} dauerte: {ende - start:.6f} Sekunden")
+    return ergebnis
+
+# Speicherprofil
+@profile
+def speichertest():
+    # Verschiedene Datenstrukturen im Vergleich
+    liste = [i for i in range(1000000)]
+    tupel = tuple(liste)  # Tupel sind speichereffizienter
+    set_daten = set(liste)  # Sets sind gut für Lookup, brauchen aber mehr Speicher
+    dict_daten = {i: i for i in range(1000000)}  # Dictionaries brauchen am meisten Speicher
+    
+    # Objekte
+    container1 = DatenContainer(1000000)
+    container2 = DatenContainer(500000)
+    
+    # Speicher freigeben
+    del liste
+    del tupel
+    del set_daten
+    del dict_daten
+    del container1
+    del container2
+
+# Mit cProfile profilen
+def profiling_demo():
+    container = DatenContainer(1000000)
+    
+    # Verschiedene Operationen profilen
+    cProfile.run('container.verarbeiten()')
+    cProfile.run('container.filtern(500000)')
+    
+    # Eigene Zeitmessung
+    zeitmessung(container.verarbeiten)
+    zeitmessung(container.filtern, 500000)
+    
+    # Objektgröße
+    print(f"Größe des Containers: {sys.getsizeof(container)} Bytes")
+    print(f"Größe der Daten: {sys.getsizeof(container.daten)} Bytes")
+    
+    # Speicherprofil ausführen
+    speichertest()
+
+if __name__ == "__main__":
+    profiling_demo()
+----
+
+=== Optimierungsstrategien
+
+1. **Algorithmen optimieren**: Verwenden Sie effizientere Algorithmen und Datenstrukturen
+2. **Caching**: Speichern Sie teure Berechnungsergebnisse für die Wiederverwendung
+3. **Lazy Evaluation**: Berechnen Sie Werte erst, wenn sie benötigt werden
+4. **Objekt-Pooling**: Wiederverwenden Sie Objekte, anstatt neue zu erstellen
+5. **Slots**: Reduzieren Sie den Speicherverbrauch mit `__slots__`
+
+[source,python]
+----
+from functools import lru_cache
+import time
+import sys
+
+# Optimierung mit Lazy Evaluation
+class LazyProperty:
+    def __init__(self, func):
+        self.func = func
+        self.name = func.__name__
+    
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        
+        # Wert berechnen und im Instanz-Dictionary speichern
+        value = self.func(instance)
+        setattr(instance, self.name, value)  # Überschreibt die Property mit dem berechneten Wert
+        return value
+
+# Klasse mit optimiertem Speicherverbrauch
+class OptimierterContainer:
+    __slots__ = ['daten']  # Reduziert den Speicherverbrauch
+    
+    def __init__(self, größe):
+        self.daten = list(range(größe))
+    
+    @LazyProperty
+    def summe(self):
+        print("Berechne Summe...")
+        time.sleep(1)  # Simuliere teure Berechnung
+        return sum(self.daten)
+    
+    @lru_cache(maxsize=128)
+    def gefiltert(self, schwellwert):
+        print(f"Filtere mit Schwellwert {schwellwert}...")
+        time.sleep(0.5)  # Simuliere teure Berechnung
+        return [x for x in self.daten if x > schwellwert]
+
+# Objekt-Pool für Wiederverwendung
+class ObjektPool:
+    def __init__(self, klasse, *args, **kwargs):
+        self.klasse = klasse
+        self.args = args
+        self.kwargs = kwargs
+        self.pool = []
+        self.in_use = set()
+    
+    def get(self):
+        if self.pool:
+            obj = self.pool.pop()
+        else:
+            obj = self.klasse(*self.args, **self.kwargs)
+        
+        self.in_use.add(obj)
+        return obj
+    
+    def release(self, obj):
+        if obj in self.in_use:
+            self.in_use.remove(obj)
+            self.pool.append(obj)
+            return True
+        return False
+    
+    def status(self):
+        return {
+            "verfügbar": len(self.pool),
+            "in_benutzung": len(self.in_use)
+        }
+
+# Demo der Optimierungen
+def optimierungen_demo():
+    # Standard vs. __slots__
+    normal_container = DatenContainer(1000)
+    opt_container = OptimierterContainer(1000)
+    
+    print("Speicherverbrauch vergleichen:")
+    print(f"Standard Container: {sys.getsizeof(normal_container)} Bytes")
+    print(f"Optimierter Container: {sys.getsizeof(opt_container)} Bytes")
+    
+    # Lazy Evaluation
+    print("\nLazy Evaluation:")
+    container = OptimierterContainer(10000)
+    print("Container erstellt. Summe noch nicht berechnet.")
+    
+    # Erster Zugriff berechnet den Wert
+    start = time.time()
+    print(f"Summe: {container.summe}")
+    print(f"Erster Zugriff dauerte: {time.time() - start:.6f} Sekunden")
+    
+    # Zweiter Zugriff verwendet den gespeicherten Wert
+    start = time.time()
+    print(f"Summe (nochmal): {container.summe}")
+    print(f"Zweiter Zugriff dauerte: {time.time() - start:.6f} Sekunden")
+    
+    # LRU Cache
+    print("\nLRU Cache:")
+    
+    # Erster Aufruf mit Schwellwert 5000
+    start = time.time()
+    ergebnis1 = container.gefiltert(5000)
+    print(f"Erste Filterung dauerte: {time.time() - start:.6f} Sekunden")
+    
+    # Zweiter Aufruf mit gleichem Schwellwert (sollte gecacht sein)
+    start = time.time()
+    ergebnis2 = container.gefiltert(5000)
+    print(f"Zweite Filterung (gleicher Wert) dauerte: {time.time() - start:.6f} Sekunden")
+    
+    # Dritter Aufruf mit anderem Schwellwert (nicht gecacht)
+    start = time.time()
+    ergebnis3 = container.gefiltert(7000)
+    print(f"Dritte Filterung (anderer Wert) dauerte: {time.time() - start:.6f} Sekunden")
+    
+    # Objekt-Pool
+    print("\nObjekt-Pool:")
+    pool = ObjektPool(OptimierterContainer, 10000)
+    
+    print("Objekte aus dem Pool holen:")
+    obj1 = pool.get()
+    obj2 = pool.get()
+    obj3 = pool.get()
+    
+    print(f"Pool-Status: {pool.status()}")
+    
+    print("Objekte an den Pool zurückgeben:")
+    pool.release(obj1)
+    pool.release(obj3)
+    
+    print(f"Pool-Status: {pool.status()}")
+    
+    print("Weitere Objekte aus dem Pool holen:")
+    obj4 = pool.get()  # Sollte obj1 oder obj3 wiederverwenden
+    obj5 = pool.get()  # Sollte obj1 oder obj3 wiederverwenden
+    obj6 = pool.get()  # Neues Objekt erstellen
+    
+    print(f"Pool-Status: {pool.status()}")
+
+if __name__ == "__main__":
+    optimierungen_demo()
+----
+
+=== Übungen zur Leistungsoptimierung
+
+==== Übung 1: Speicheroptimierung
+Optimieren Sie eine Klasse, die viele kleine Objekte verwaltet:
+- Implementieren Sie `__slots__`
+- Verwenden Sie ein Flyweight-Muster für gemeinsame Daten
+- Messen Sie die Speichereinsparungen
+
+==== Übung 2: Caching-Strategien
+Implementieren Sie verschiedene Caching-Strategien:
+- LRU-Cache (am längsten nicht verwendet)
+- TTL-Cache (Zeitbasierte Ablaufsteuerung)
+- Zwei-Ebenen-Cache (Speicher und Festplatte)
+Testen Sie die Performance jeder Strategie.
+
+==== Übung 3: Lazy Collection
+Entwickeln Sie eine lazy-loading Sammlung:
+- Implementieren Sie Iteratoren für verzögerte Verarbeitung
+- Unterstützen Sie Filterung und Mapping ohne sofortige Ausführung
+- Vergleichen Sie die Performance mit sofortiger Verarbeitung
+
+== Objektorientierte Designmuster in der realen Welt
+
+=== Werkzeuge und Bibliotheken
+
+Viele Python-Bibliotheken nutzen objektorientierte Muster, die Sie als Beispiele studieren können:
+
+1. **Django**: Ein Webframework mit umfassender Klassenstruktur
+2. **SQLAlchemy**: Ein ORM mit fortgeschrittenen Designmustern
+3. **Pandas**: Eine Datenanalysebibliothek mit objektorientierten Strukturen
+4. **PyQt/PySide**: GUI-Frameworks mit umfassender Verwendung von OOP
+5. **Werkzeug/Flask**: Schlanke Webframeworks mit modularen Komponenten
+
+[source,python]
+----
+# Beispiel: Django-Modell
+from django.db import models
+
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    
+    def __str__(self):
+        return self.name
+
+class Book(models.Model):
+    title = models.CharField(max_length=200)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    published_date = models.DateField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        ordering = ['-published_date']
+
+# Beispiel: SQLAlchemy ORM
+from sqlalchemy import Column, Integer, String, ForeignKey, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    email = Column(String)
+    posts = relationship("Post", back_populates="author")
+
+class Post(Base):
+    __tablename__ = 'posts'
+    
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    content = Column(String)
+    author_id = Column(Integer, ForeignKey('users.id'))
+    author = relationship("User", back_populates="posts")
+
+# Beispiel: Pandas Objekte
+import pandas as pd
+
+# DataFrame-Objekt erstellen
+df = pd.DataFrame({
+    'Name': ['Alice', 'Bob', 'Charlie'],
+    'Age': [25, 30, 35],
+    'City': ['New York', 'Paris', 'London']
+})
+
+# Methoden auf dem DataFrame-Objekt aufrufen
+filtered_df = df[df['Age'] > 27]
+sorted_df = df.sort_values(by='Name')
+grouped = df.groupby('City').mean()
+----
+
+=== Übungen zu realen Anwendungen
+
+==== Übung 1: Mini-Framework
+Entwickeln Sie ein einfaches Framework für einen bestimmten Zweck:
+- Ein kleines Web-Framework
+- Ein Framework für die Verarbeitung von Kommandozeilenoptionen
+- Ein Plugin-System für eine Anwendung
+
+==== Übung 2: ORM-Implementierung
+Erstellen Sie ein einfaches ORM (Object-Relational Mapping):
+- Eine Basisklasse für Modelle
+- Unterstützung für verschiedene Feldtypen
+- Automatische Tabellengeneration
+- Einfache Query-API
+
+==== Übung 3: GUI-Komponenten
+Entwickeln Sie ein System wiederverwendbarer GUI-Komponenten:
+- Eine Komponentenhierarchie mit Basis-Widgets
+- Layoutmanagement
+- Event-Handling
+- Theming-Unterstützung
+
+== Abschlussprojekte
+
+=== Projekt 1: Blog-System
+Erstellen Sie ein einfaches Blog-System:
+- Modelle für Benutzer, Beiträge, Kommentare und Kategorien
+- Unterstützung für Authentifizierung und Autorisierung
+- Verschiedene Ansichten (Listen, Details, Archive)
+- Templating-System für die Ausgabe
+
+=== Projekt 2: Bibliotheksverwaltung
+Entwickeln Sie ein System zur Verwaltung einer Bibliothek:
+- Modelle für Bücher, Autoren, Ausleihen und Benutzer
+- Funktionen zum Suchen, Ausleihen und Zurückgeben
+- Benutzerschnittstelle (Kommandozeile oder einfaches GUI)
+- Persistenz mit einer Datenbank
+
+=== Projekt 3: E-Commerce-Plattform
+Implementieren Sie eine einfache E-Commerce-Plattform:
+- Modelle für Produkte, Kategorien, Benutzer und Bestellungen
+- Warenkorb-Funktionalität
+- Checkout-Prozess
+- Einfache Admin-Oberfläche
+
+== Schlussfolgerung und nächste Schritte
+
+=== Zusammenfassung
+
+Objektorientierte Programmierung ist ein mächtiges Paradigma in Python, das uns ermöglicht, komplexe Systeme mit wiederverwendbarem und wartbarem Code zu erstellen. In diesem Tutorial haben wir folgende Konzepte behandelt:
+
+1. **Grundlagen**: Klassen, Objekte, Attribute und Methoden
+2. **Vererbung und Polymorphismus**: Einfache und Mehrfachvererbung, Method Resolution Order
+3. **Spezielle Methoden**: Operatorüberladung und Kontextmanager
+4. **Fortgeschrittene Konzepte**: Properties, Deskriptoren, Klassenmethoden
+5. **Metaklassen und Klassenfabriken**: Dynamische Klassenmanipulation und Erstellung
+6. **Objektorientiertes Design**: SOLID-Prinzipien und Entwurfsmuster
+7. **Objektinteraktion**: Lose vs. enge Kopplung, Dependency Injection, ereignisbasierte Programmierung
+8. **Fehlerbehandlung**: Eigene Ausnahmen und Fehlerbehandlungsstrategien
+9. **Leistungsoptimierung**: Profiling, Caching, Lazy Evaluation
+
+=== Nächste Schritte
+
+Um Ihre Kenntnisse in objektorientierter Programmierung mit Python weiter zu vertiefen, könnten Sie folgende Themen erkunden:
+
+1. **Design Patterns**: Weitere Entwurfsmuster und ihre Implementierung in Python
+2. **Clean Code**: Prinzipien für sauberen, wartbaren Code
+3. **Test-Driven Development (TDD)**: Entwicklung mit Tests zuerst
+4. **Domain-Driven Design (DDD)**: Softwareentwicklung mit Fokus auf das Domänenmodell
+5. **Frameworks und Bibliotheken**: Studium von Python-Frameworks, die OOP nutzen (Django, Flask, etc.)
+6. **Fortgeschrittene Metaprogrammierung**: Dynamische Klassenerzeugung und -modifikation
+
+Durch die Anwendung der in diesem Tutorial vorgestellten Konzepte sind Sie gut gerüstet, robuste und flexible Python-Anwendungen zu entwickeln, die komplexe Anforderungen erfüllen können.
+
+=== Ressourcen
+
+* [Python-Dokumentation zu OOP](https://docs.python.org/3/tutorial/classes.html)
+* [Python Design Patterns](https://python-patterns.guide/)
+* [Fluent Python](https://www.oreilly.com/library/view/fluent-python-2nd/9781492056348/) von Luciano Ramalho
+* [Effective Python](https://effectivepython.com/) von Brett Slatkin
+* [Clean Code](https://www.oreilly.com/library/view/clean-code-a/9780136083238/) von Robert C. Martin
+* [Design Patterns](https://www.oreilly.com/library/view/head-first-design/9781492077992/) (Head First Design Patterns)

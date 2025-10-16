@@ -1,0 +1,944 @@
+= PydanticAI Tutorial: Integration von KI in Python-Anwendungen
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: book
+include::../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+:title-page:
+:pdf-page-size: A4
+
+== Einführung
+
+=== Was ist KI-Integration mit Pydantic?
+
+Dieses Tutorial zeigt, wie die Datenvalidierung und -strukturierung von Pydantic mit KI-Fähigkeiten verbunden werden kann. Diese Integration ermöglicht es Entwicklern, auf einfache Weise KI-gestützte Funktionen in ihre Python-Anwendungen einzubinden, während sie weiterhin die Vorteile von Pydantics Typsicherheit und Datenvalidierungsmechanismen nutzen können.
+
+[NOTE]
+====
+Dieses Tutorial baut auf dem Hauptteil des Pydantic-Tutorials auf. Wenn Sie mit den Grundlagen von Pydantic noch nicht vertraut sind, empfehlen wir Ihnen, zuerst das Haupttutorial zu Pydantic zu bearbeiten.
+
+Siehe: <<../tutorials/pydantic-tutorial.adoc#,Pydantic Tutorial: Moderne Datenvalidierung in Python>>  
+====
+
+=== Voraussetzungen
+
+Für dieses Tutorial benötigen Sie:
+
+* Python 3.8 oder höher
+* Grundkenntnisse in Python
+* Vertrautheit mit objektorientierter Programmierung
+* Grundverständnis von Pydantic (wir wiederholen die Grundlagen!)
+* Eine Entwicklungsumgebung Ihrer Wahl
+
+=== Installation
+
+[IMPORTANT]
+====
+Dieses Tutorial verwendet `PydanticAI` als konzeptionelles Beispiel für die Integration von KI-Funktionalitäten mit Pydantic. Es handelt sich um ein hypothetisches Paket für Bildungszwecke, das die Möglichkeiten der KI-Integration demonstriert.
+
+Für reale Anwendungen können Sie ähnliche Funktionalität mit folgenden Paketen erreichen:
+
+* `langchain` - Framework für KI-Anwendungen mit Pydantic-Integration
+* `pydantic-openai` - Pydantic-Integration für OpenAI
+* `semantic-kernel` - Microsoft's SDK für KI-Integration
+====
+
+Für die Beispiele in diesem Tutorial benötigen Sie:
+
+[source,bash]
+----
+uv add pydantic openai langchain
+----
+
+== Grundlagen: Pydantic im Überblick
+
+Bevor wir in die KI-Funktionen einsteigen, wiederholen wir kurz die Grundlagen von Pydantic, da PydanticAI auf diesen aufbaut.
+
+=== Datenmodelle mit Pydantic
+
+Pydantic ist eine Bibliothek zur Datenvalidierung und -einschränkung, die auf Python-Typannotationen basiert. Mit Pydantic können Sie Datenmodelle definieren, die automatisch validiert werden.
+
+[source,python]
+----
+from pydantic import BaseModel, Field, validator
+from typing import List, Optional
+from datetime import date
+
+class User(BaseModel):
+    id: int
+    name: str = Field(..., min_length=2)
+    email: str
+    birthdate: Optional[date] = None
+    interests: List[str] = []
+    
+    @validator('email')
+    def email_must_be_valid(cls, v):
+        if '@' not in v:
+            raise ValueError('Email muss ein @-Zeichen enthalten')
+        return v.lower()
+
+# Beispielnutzung
+user = User(id=1, name="Anna", email="anna@example.com")
+print(user.json())
+----
+
+=== Vorteile von Pydantic
+
+* **Typsicherheit**: Automatische Validierung und Konvertierung von Daten basierend auf Typannotationen
+* **Fehlermeldungen**: Klare und aussagekräftige Fehlermeldungen bei Validierungsfehlern
+* **Serialisierung/Deserialisierung**: Einfache Konvertierung zwischen Python-Objekten und JSON
+* **IDE-Integration**: Bessere Code-Vervollständigung und Typüberprüfung in IDEs
+* **Erweiterbarkeit**: Einfach durch benutzerdefinierte Validatoren und Field-Typen zu erweitern
+
+=== Übungen zu Pydantic-Grundlagen
+
+==== Übung 1: Einfaches Datenmodell
+Erstellen Sie ein Pydantic-Modell `Product` mit den Feldern:
+- `id` (Ganzzahl)
+- `name` (String, mindestens 3 Zeichen)
+- `price` (Float, muss positiv sein)
+- `in_stock` (Boolean, Standardwert `True`)
+- `tags` (Liste von Strings, optional)
+
+==== Übung 2: Validatoren
+Fügen Sie dem Modell `Product` einen Validator hinzu, der sicherstellt, dass der Produktname keine Sonderzeichen enthält.
+
+==== Übung 3: Verschachtelte Modelle
+Erstellen Sie ein Modell `Order` mit:
+- `order_id` (String)
+- `customer` (ein Modell vom Typ `User`)
+- `products` (Liste von `Product`-Objekten)
+- `total` (Float, berechnet aus den Produktpreisen)
+
+== PydanticAI: Grundlagen
+
+PydanticAI erweitert Pydantic um KI-Funktionen, die nahtlos in Ihre Datenmodelle integriert werden können.
+
+=== Kernkonzepte von PydanticAI
+
+==== KI-Felder und -Methoden
+
+PydanticAI führt spezielle Feldtypen und Dekoratoren ein, die KI-Modelle in Ihre Pydantic-Modelle integrieren.
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from pydanticai import AIField, ai_method
+
+class ContentAnalyzer(BaseModel):
+    text: str
+    sentiment: str = AIField(description="Die Stimmung des Textes (positiv, neutral, negativ)")
+    
+    @ai_method
+    def summarize(self) -> str:
+        """Erstellt eine kurze Zusammenfassung des Textes."""
+        pass  # Die eigentliche Implementierung wird von PydanticAI übernommen
+----
+
+==== Konfiguration von KI-Providern
+
+In realen Anwendungen müssen Sie einen KI-Provider konfigurieren. Hier ist ein Beispiel mit OpenAI und LangChain:
+
+[source,python]
+----
+import os
+from langchain.llms import OpenAI
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+from pydantic import BaseModel, Field
+from typing import List, Optional
+
+# Konfiguration für OpenAI über Umgebungsvariable (sicherer als Hardcoding)
+os.environ["OPENAI_API_KEY"] = "Ihr-API-Schlüssel"  # In Produktion: Aus sicherer Quelle laden
+
+# LangChain LLM initialisieren
+llm = OpenAI(temperature=0.7, model_name="gpt-3.5-turbo")
+
+# Alternativ: Azure OpenAI
+# from langchain.llms import AzureOpenAI
+# llm = AzureOpenAI(
+#     deployment_name="Ihr-Deployment-Name",
+#     model_name="gpt-3.5-turbo",
+#     openai_api_version="2023-05-15"
+# )
+----
+
+[IMPORTANT]
+====
+Sicherheitshinweis: Speichern Sie API-Schlüssel niemals direkt im Code oder in Versionskontrollsystemen. Verwenden Sie stattdessen:
+
+* Umgebungsvariablen
+* Sichere Schlüsselverwaltungsdienste (z.B. AWS Secrets Manager, Azure Key Vault)
+* Lokale .env-Dateien mit python-dotenv (nicht in Git committen)
+====
+
+=== Übungen zu PydanticAI-Grundlagen
+
+==== Übung 1: KI-Feld einrichten
+Erstellen Sie ein Pydantic-Modell `TextAnalysis` mit:
+- `content` (String, der zu analysierende Text)
+- `language` (KI-Feld, das automatisch die Sprache des Textes erkennt)
+- `word_count` (Integer, Anzahl der Wörter, berechnet)
+
+==== Übung 2: KI-Methode implementieren
+Fügen Sie dem Modell `TextAnalysis` eine KI-Methode `extract_keywords` hinzu, die wichtige Schlüsselwörter aus dem Text extrahiert und als Liste zurückgibt.
+
+==== Übung 3: Provider-Konfiguration
+Konfigurieren Sie PydanticAI mit einem Provider Ihrer Wahl und testen Sie Ihr `TextAnalysis`-Modell mit verschiedenen Texten.
+
+== Anwendungsfall 1: Textanalyse und Verarbeitung
+
+In diesem Abschnitt erstellen wir eine Anwendung zur Analyse von Texten mit PydanticAI.
+
+=== Sentimentanalyse
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from pydanticai import AIField, ai_method
+from typing import List, Dict
+
+# Reale Implementierung mit LangChain und Pydantic
+class SentimentAnalyzer(BaseModel):
+    text: str
+    sentiment: Optional[str] = Field(None, description="Die allgemeine Stimmung des Textes (positiv, neutral, negativ)")
+    confidence: Optional[float] = Field(None, description="Konfidenzwert der Sentimentanalyse zwischen 0 und 1")
+    aspects: Optional[dict] = Field(None, description="Aspekte des Textes und deren Stimmung")
+    
+    def analyze(self):
+        """Führt die Sentimentanalyse mit LangChain durch"""
+        prompt = PromptTemplate(
+            input_variables=["text"],
+            template="""Analysiere den folgenden Text und gib das Ergebnis im JSON-Format zurück:
+            Text: {text}
+            
+            Format:
+            {{
+                "sentiment": "positiv|neutral|negativ",
+                "confidence": <float zwischen 0 und 1>,
+                "aspects": {{
+                    "<aspekt1>": "positiv|neutral|negativ",
+                    "<aspekt2>": "positiv|neutral|negativ"
+                }}
+            }}
+            """
+        )
+        
+        chain = LLMChain(llm=llm, prompt=prompt)
+        result = chain.run(text=self.text)
+        
+        # In einer realen Anwendung würden Sie hier die JSON-Antwort parsen
+        # und die Attribute des Modells aktualisieren
+        import json
+        try:
+            analysis = json.loads(result)
+            self.sentiment = analysis.get("sentiment")
+            self.confidence = analysis.get("confidence")
+            self.aspects = analysis.get("aspects")
+        except json.JSONDecodeError:
+            # Fallback für den Fall, dass die Antwort kein gültiges JSON ist
+            self.sentiment = "unbekannt"
+            self.confidence = 0.0
+            self.aspects = {}
+        
+        return self
+    
+    def get_emotional_tone(self) -> List[str]:
+        """Identifiziert die emotionalen Töne im Text"""
+        prompt = PromptTemplate(
+            input_variables=["text"],
+            template="""Identifiziere die emotionalen Töne im folgenden Text und gib sie als Liste zurück:
+            Text: {text}
+            
+            Emotionale Töne:"""
+        )
+        
+        chain = LLMChain(llm=llm, prompt=prompt)
+        result = chain.run(text=self.text)
+        
+        # Einfache Verarbeitung des Ergebnisses
+        tones = [tone.strip() for tone in result.split(',')]
+        return tones
+    
+    def suggest_response(self, tone: str = "neutral") -> str:
+        """Generiert eine Antwort im gewünschten Ton"""
+        prompt = PromptTemplate(
+            input_variables=["text", "tone"],
+            template="""Generiere eine Antwort auf den folgenden Text im {tone}n Ton:
+            Text: {text}
+            
+            Antwort:"""
+        )
+        
+        chain = LLMChain(llm=llm, prompt=prompt)
+        return chain.run(text=self.text, tone=tone)
+
+# Beispiel für die Verwendung
+# analyzer = SentimentAnalyzer(text="Ich bin sehr zufrieden mit dem Produkt, aber der Kundenservice könnte besser sein.")
+# analyzer.analyze()
+# print(f"Sentiment: {analyzer.sentiment}")
+# print(f"Confidence: {analyzer.confidence}")
+# print(f"Aspects: {analyzer.aspects}")
+# print(f"Emotional tones: {analyzer.get_emotional_tone()}")
+# print(f"Suggested response: {analyzer.suggest_response(tone='empathisch')}")
+
+# Hinweis: In einer echten Anwendung würden Sie die API-Aufrufe cachen und Fehlerbehandlung implementieren
+----
+
+=== Inhaltsklassifizierung
+
+[source,python]
+----
+class ContentClassifier(BaseModel):
+    text: str
+    categories: List[str] = AIField(description="Kategorien, zu denen der Text gehört")
+    age_rating: str = AIField(description="Altersfreigabe des Inhalts (alle, 12+, 16+, 18+)")
+    contains_sensitive_content: bool = AIField(description="Gibt an, ob der Inhalt sensibel ist")
+    
+    @ai_method
+    def is_appropriate_for_audience(self, audience_age: int) -> bool:
+        """Prüft, ob der Inhalt für eine bestimmte Altersgruppe geeignet ist."""
+        pass
+----
+
+=== Übungen zur Textanalyse
+
+==== Übung 1: Erweiterung des SentimentAnalyzers
+Erweitern Sie die `SentimentAnalyzer`-Klasse um eine Methode `get_summary`, die eine kurze Zusammenfassung des Textes generiert. Die Methode sollte einen optionalen Parameter `max_words` akzeptieren.
+
+==== Übung 2: Mehrsprachige Analyse
+Implementieren Sie einen `MultilingualAnalyzer`, der:
+- Die Sprache eines Textes erkennt
+- Eine Übersetzung ins Deutsche anbietet
+- Die Stimmung sowohl im Original als auch in der Übersetzung analysiert
+
+==== Übung 3: Content-Moderation
+Implementieren Sie ein Modell `ContentModerator`, das:
+- Prüft, ob ein Text beleidigend ist
+- Den Text in verschiedene Kategorien einstuft (z.B. politisch, werblich, informativ)
+- Vorschläge zur Umformulierung problematischer Passagen macht
+
+== Anwendungsfall 2: Datenextraktion und -strukturierung
+
+In diesem Abschnitt verwenden wir PydanticAI, um unstrukturierte Daten zu extrahieren und zu strukturieren.
+
+=== Extraktion strukturierter Daten aus Text
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from pydanticai import ai_extract, AIModel
+from typing import List, Optional
+from datetime import datetime
+
+class Person(BaseModel):
+    name: str
+    email: Optional[str] = None
+    phone: Optional[str] = None
+
+class Event(BaseModel):
+    title: str
+    date: datetime
+    location: str
+    organizer: Optional[Person] = None
+    attendees: List[Person] = []
+
+class EmailParser(AIModel):
+    @ai_extract
+    def extract_events(self, email_text: str) -> List[Event]:
+        """Extrahiert Ereignisinformationen aus einer E-Mail."""
+        pass
+
+# Beispiel
+parser = EmailParser()
+email = """
+Hallo Team,
+
+ich möchte Sie zum Projektmeeting am 15.05.2025 um 14:00 Uhr einladen.
+Das Meeting findet im Konferenzraum B statt.
+
+Mit freundlichen Grüßen,
+Anna Schmidt
+Tel: 0123-4567890
+"""
+
+events = parser.extract_events(email)
+for event in events:
+    print(f"Event: {event.title}")
+    print(f"Datum: {event.date}")
+    print(f"Ort: {event.location}")
+    if event.organizer:
+        print(f"Organisator: {event.organizer.name}")
+----
+
+=== Konvertierung zwischen Datenformaten
+
+[source,python]
+----
+class ResumeParser(AIModel):
+    @ai_extract
+    def parse_resume(self, resume_text: str) -> dict:
+        """Extrahiert strukturierte Informationen aus einem Lebenslauf."""
+        pass
+    
+    @ai_method
+    def generate_linkedin_profile(self, resume_data: dict) -> str:
+        """Generiert einen LinkedIn-Profil-Text aus den Lebenslaufdaten."""
+        pass
+----
+
+=== Übungen zur Datenextraktion
+
+==== Übung 1: Adresserkennung
+Erstellen Sie ein Modell `AddressExtractor`, das:
+- Eine deutsche Adresse aus unformatiertem Text extrahiert
+- Die Adresse in strukturierte Komponenten aufteilt (Straße, Hausnummer, PLZ, Ort)
+- Die extrahierte Adresse auf Gültigkeit prüft
+
+==== Übung 2: Produktinformationen extrahieren
+Implementieren Sie einen `ProductExtractor`, der aus Produktbeschreibungen:
+- Den Produktnamen
+- Den Preis
+- Technische Spezifikationen als Dictionary
+- Bewertungsinformationen
+extrahiert.
+
+==== Übung 3: PDF-Parser
+Erstellen Sie einen `DocumentParser`, der Text aus (simulierten) PDF-Dokumenten verarbeitet und:
+- Den Dokumenttyp erkennt (Rechnung, Vertrag, Bericht)
+- Schlüsselinformationen extrahiert
+- Eine strukturierte JSON-Darstellung zurückgibt
+
+== Anwendungsfall 3: Inhaltsgeneration und -transformation
+
+In diesem Abschnitt nutzen wir PydanticAI, um Inhalte zu generieren und zu transformieren.
+
+=== Automatische Texterstellung
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from pydanticai import ai_method, AIModel
+from typing import List, Optional
+
+class ContentGenerator(AIModel):
+    @ai_method
+    def generate_blog_post(self, 
+                           topic: str, 
+                           target_audience: str,
+                           tone: str = "informativ",
+                           word_count: int = 500) -> str:
+        """Generiert einen Blogbeitrag zum angegebenen Thema."""
+        pass
+    
+    @ai_method
+    def create_social_media_posts(self, 
+                                 article: str, 
+                                 platforms: List[str] = ["Twitter", "LinkedIn", "Instagram"],
+                                 count_per_platform: int = 2) -> Dict[str, List[str]]:
+        """Erstellt Social-Media-Posts basierend auf einem Artikel."""
+        pass
+
+# Beispiel
+generator = ContentGenerator()
+blog_post = generator.generate_blog_post(
+    topic="Künstliche Intelligenz in der Bildung",
+    target_audience="Lehrkräfte",
+    tone="enthusiastisch",
+    word_count=800
+)
+
+social_posts = generator.create_social_media_posts(blog_post)
+----
+
+=== Inhaltliche Transformation
+
+[source,python]
+----
+class ContentTransformer(AIModel):
+    @ai_method
+    def simplify_text(self, 
+                     text: str, 
+                     target_reading_level: str = "8. Klasse") -> str:
+        """Vereinfacht einen Text für bessere Verständlichkeit."""
+        pass
+    
+    @ai_method
+    def change_tone(self,
+                   text: str,
+                   target_tone: str) -> str:
+        """Ändert den Ton eines Textes."""
+        pass
+    
+    @ai_method
+    def format_as_bullet_points(self, text: str) -> List[str]:
+        """Wandelt einen Text in eine Liste von Aufzählungspunkten um."""
+        pass
+----
+
+=== Übungen zur Inhaltsgeneration
+
+==== Übung 1: E-Mail-Generator
+Erstellen Sie einen `EmailGenerator`, der:
+- Professionelle E-Mails für verschiedene Anlässe erstellt
+- Parameter für Formalität, Länge und Tonfall akzeptiert
+- Eine Betreffzeile und einen Hauptteil generiert
+
+==== Übung 2: Code-Dokumentation
+Implementieren Sie einen `CodeDocumenter`, der:
+- Python-Code analysiert
+- Docstrings und Kommentare generiert
+- Die Funktionalität in natürlicher Sprache erklärt
+
+==== Übung 3: Mehrsprachiger Übersetzer
+Erstellen Sie einen `ContentTranslator`, der:
+- Texte in verschiedene Sprachen übersetzt
+- Kulturelle Nuancen und Idiome berücksichtigt
+- Eine Konfidenzwertung für die Übersetzungsqualität liefert
+
+== Anwendungsfall 4: Kontextbewusste KI-Assistenten
+
+In diesem Abschnitt erstellen wir kontextbewusste KI-Assistenten mit PydanticAI.
+
+=== Persönlicher Assistent
+
+[source,python]
+----
+from pydantic import BaseModel, Field
+from pydanticai import AIModel, ai_method, AIState
+from typing import List, Dict, Optional
+from datetime import datetime, date
+import uuid
+import langchain
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import ConversationChain
+from langchain.prompts import PromptTemplate
+
+# Verweis auf den Hauptteil des Pydantic-Tutorials für Grundlagen der Modellierung
+# Siehe: Abschnitt "Grundlegende Konzepte" im Pydantic-Tutorial
+
+class Task(BaseModel):
+    """Repräsentiert eine Aufgabe im persönlichen Assistenten.
+    Verwendet Pydantic für Typsicherheit und Validierung."""
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    description: str
+    due_date: Optional[date] = None
+    priority: int = Field(1, ge=1, le=5)  # 1-5, mit Validierung
+    completed: bool = False
+    
+    class Config:
+        validate_assignment = True  # Validiert auch nach der Erstellung
+
+class PersonalAssistant(BaseModel):
+    """Ein KI-gestützter persönlicher Assistent mit Konversationsgedächtnis."""
+    user_name: str
+    conversation_history: List[Dict[str, str]] = []
+    tasks: List[Task] = []
+    preferences: Dict[str, str] = {}
+    
+    # LangChain-Komponenten für KI-Funktionalität
+    _memory: Optional[ConversationBufferMemory] = None
+    _conversation: Optional[ConversationChain] = None
+    
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Initialisierung des Konversationsgedächtnisses
+        self._memory = ConversationBufferMemory()
+        self._conversation = ConversationChain(
+            llm=llm,
+            memory=self._memory,
+            prompt=PromptTemplate(
+                input_variables=["history", "input"],
+                template="""Du bist ein hilfreicher persönlicher Assistent für {user_name}.
+                
+Gesprächsverlauf:
+{history}
+
+Benutzer: {input}
+Assistent:""".format(user_name=self.user_name, history="{history}", input="{input}")
+            )
+        )
+    
+    def respond_to_query(self, query: str) -> str:
+        """Antwortet auf eine Benutzeranfrage basierend auf dem Konversationsverlauf."""
+        # Fügt die Anfrage zum Verlauf hinzu
+        self.conversation_history.append({"user": query, "timestamp": datetime.now().isoformat()})
+        
+        # Verwendet LangChain für die Antwortgenerierung
+        response = self._conversation.predict(input=query)
+        
+        # Speichert die Antwort im Verlauf
+        self.conversation_history.append({"assistant": response, "timestamp": datetime.now().isoformat()})
+        
+        return response
+    
+    def add_task_from_description(self, description: str) -> Task:
+        """Erstellt eine neue Aufgabe aus einer Beschreibung und extrahiert Fälligkeitsdatum und Priorität."""
+        prompt = PromptTemplate(
+            input_variables=["description"],
+            template="""Extrahiere aus der folgenden Aufgabenbeschreibung das Fälligkeitsdatum (falls vorhanden) und die Priorität (1-5).
+            
+Beschreibung: {description}
+
+Antworte im JSON-Format:
+{{
+    "description": "bereinigte Beschreibung ohne Datum/Priorität",
+    "due_date": "YYYY-MM-DD oder null",
+    "priority": Zahl zwischen 1 und 5
+}}"""
+        )
+        
+        chain = LLMChain(llm=llm, prompt=prompt)
+        result = chain.run(description=description)
+        
+        # In einer realen Anwendung würden Sie hier die JSON-Antwort parsen
+        # und die Attribute des Modells aktualisieren
+        import json
+        try:
+            task_data = json.loads(result)
+            task = Task(
+                description=task_data.get("description", description),
+                priority=task_data.get("priority", 1)
+            )
+            
+            # Datum konvertieren, falls vorhanden
+            due_date_str = task_data.get("due_date")
+            if due_date_str and due_date_str.lower() != "null":
+                task.due_date = date.fromisoformat(due_date_str)
+                
+            self.tasks.append(task)
+            return task
+        except (json.JSONDecodeError, ValueError):
+            # Fallback bei Fehlern
+            task = Task(description=description)
+            self.tasks.append(task)
+            return task
+    
+    def suggest_daily_plan(self) -> List[Dict[str, str]]:
+        """Schlägt einen Tagesplan basierend auf den anstehenden Aufgaben vor."""
+        # Aufgaben in ein Format konvertieren, das für den Prompt geeignet ist
+        tasks_str = "\n".join([f"- {task.description} (Priorität: {task.priority})" 
+                              for task in self.tasks if not task.completed])
+        
+        prompt = PromptTemplate(
+            input_variables=["user_name", "tasks", "preferences"],
+            template="""Erstelle einen Tagesplan für {user_name} basierend auf den folgenden Aufgaben und Vorlieben.
+            
+Aufgaben:
+{tasks}
+
+Vorlieben:
+{preferences}
+
+Gib den Plan als Liste von Zeitslots mit Aktivitäten zurück."""
+        )
+        
+        chain = LLMChain(llm=llm, prompt=prompt)
+        preferences_str = "\n".join([f"- {k}: {v}" for k, v in self.preferences.items()])
+        result = chain.run(user_name=self.user_name, tasks=tasks_str, preferences=preferences_str)
+        
+        # Einfache Verarbeitung des Ergebnisses für dieses Beispiel
+        plan_items = []
+        for line in result.split("\n"):
+            if line.strip():
+                plan_items.append({"activity": line.strip()})
+        
+        return plan_items
+    
+    def summarize_conversation(self) -> str:
+        """Fasst die aktuelle Konversation zusammen."""
+        # Konversation in ein Format konvertieren, das für den Prompt geeignet ist
+        conversation_str = "\n".join([f"{entry.get('user', entry.get('assistant', ''))}" 
+                                    for entry in self.conversation_history])
+        
+        prompt = PromptTemplate(
+            input_variables=["conversation"],
+            template="""Fasse die folgende Konversation zusammen:
+            
+{conversation}
+
+Zusammenfassung:"""
+        )
+        
+        chain = LLMChain(llm=llm, prompt=prompt)
+        return chain.run(conversation=conversation_str)
+
+# Beispiel für die Verwendung
+# assistant = PersonalAssistant(user_name="Maria")
+# assistant.preferences = {"Arbeitszeit": "9:00 - 17:00", "Pausen": "Alle 90 Minuten"}
+# 
+# response = assistant.respond_to_query("Erinnere mich daran, morgen um 14 Uhr den Arzt anzurufen.")
+# print(response)
+# 
+# task = assistant.add_task_from_description("Präsentation für das Meeting am Freitag vorbereiten, hohe Priorität")
+# print(f"Neue Aufgabe: {task.description}, Priorität: {task.priority}, Fällig am: {task.due_date}")
+# 
+# plan = assistant.suggest_daily_plan()
+# print("Tagesplan:")
+# for item in plan:
+#     print(item["activity"])
+# 
+# summary = assistant.summarize_conversation()
+# print(f"Zusammenfassung: {summary}")
+----
+
+[TIP]
+====
+Diese Implementierung nutzt Konzepte aus dem Hauptteil des Pydantic-Tutorials:
+
+* Modellvalidierung (siehe Abschnitt "Grundlegende Konzepte")
+* Verschachtelte Modelle (siehe Abschnitt "Fortgeschrittene Validierung")
+* Benutzerdefinierte Validatoren (für Aufgabenpriorität)
+====
+
+=== Fachbereichsspezifischer Assistent
+
+[source,python]
+----
+class TechnicalSupportAssistant(AIModel):
+    knowledge_base: Dict[str, str] = {}
+    error_patterns: Dict[str, List[str]] = {}
+    current_issue: Optional[Dict] = AIState(None)
+    
+    @ai_method
+    def diagnose_problem(self, error_description: str) -> Dict:
+        """Analysiert eine Fehlerbeschreibung und diagnostiziert das Problem."""
+        pass
+    
+    @ai_method
+    def suggest_solutions(self, problem_diagnosis: Dict) -> List[Dict]:
+        """Schlägt Lösungen basierend auf einer Problemdiagnose vor."""
+        pass
+    
+    @ai_method
+    def guide_through_solution(self, solution: Dict) -> List[str]:
+        """Führt den Benutzer durch die Schritte einer Lösung."""
+        pass
+----
+
+=== Übungen zu KI-Assistenten
+
+==== Übung 1: Studienassistent
+Entwickeln Sie einen `StudyAssistant`, der:
+- Studienmaterial zusammenfasst
+- Fragen zu verschiedenen Fachbereichen beantwortet
+- Lernpläne erstellt
+- Prüfungsfragen generiert
+
+==== Übung 2: Ernährungsberater
+Implementieren Sie einen `NutritionAssistant`, der:
+- Ernährungspläne basierend auf Zielen und Einschränkungen erstellt
+- Rezepte vorschlägt
+- Nährwertinformationen zu Lebensmitteln bereitstellt
+- Den Fortschritt überwacht
+
+==== Übung 3: Projektmanager
+Erstellen Sie einen `ProjectAssistant`, der:
+- Projektaufgaben verwaltet
+- Meilensteine überwacht
+- Fortschrittsberichte generiert
+- Risiken identifiziert und Lösungen vorschlägt
+
+== Fortgeschrittene Themen
+
+=== Integration mit externen APIs
+
+PydanticAI kann mit externen APIs kombiniert werden, um die KI-Funktionen zu erweitern:
+
+[source,python]
+----
+import requests
+from pydantic import BaseModel
+from pydanticai import AIModel, ai_method
+
+class WeatherAwareAssistant(AIModel):
+    api_key: str
+    
+    def get_weather(self, location: str) -> dict:
+        """Ruft Wetterdaten von einer externen API ab."""
+        url = f"https://api.weatherapi.com/v1/current.json?key={self.api_key}&q={location}"
+        response = requests.get(url)
+        return response.json()
+    
+    @ai_method
+    def suggest_activities(self, location: str) -> List[str]:
+        """Schlägt Aktivitäten basierend auf dem aktuellen Wetter vor."""
+        weather_data = self.get_weather(location)
+        # Die KI verwendet die Wetterdaten, um Aktivitäten vorzuschlagen
+        pass
+----
+
+=== Feinabstimmung und Anpassung
+
+[source,python]
+----
+from pydanticai import configure, AIModel
+
+# Globale Konfiguration
+configure(
+    provider="openai",
+    api_key="YOUR_API_KEY",
+    model="gpt-4",
+    temperature=0.7,
+    request_timeout=60
+)
+
+# Modell-spezifische Überschreibungen
+class CustomizedAssistant(AIModel):
+    class Config:
+        ai_provider = "anthropic"
+        ai_model = "claude-2"
+        ai_temperature = 0.2
+        ai_max_tokens = 2000
+----
+
+=== Übungen zu fortgeschrittenen Themen
+
+==== Übung 1: Multimodaler Assistent
+Erstellen Sie einen `MediaAnalysisAssistant`, der:
+- Mit einer Bilderkennungs-API zusammenarbeitet
+- Bilder beschreibt und analysiert
+- Tags und Kategorien für Bilder generiert
+
+==== Übung 2: Mehrsprachiger Assistent
+Implementieren Sie einen `LanguageTutor`, der:
+- Mit einer Übersetzungs-API interagiert
+- Sprachübungen generiert
+- Grammatik- und Stilkorrekturen anbietet
+
+==== Übung 3: KI-Einstellungen
+Experimentieren Sie mit verschiedenen KI-Einstellungen (Temperatur, Modell, Token-Limit) und dokumentieren Sie, wie sich diese auf die Ausgabe auswirken.
+
+== Ethik und Best Practices
+
+=== Datenschutz und Sicherheit
+
+Bei der Arbeit mit KI-Modellen ist es wichtig, Datenschutz und Sicherheit zu berücksichtigen:
+
+* Vermeiden Sie die Übermittlung sensibler persönlicher Daten an KI-Modelle
+* Implementieren Sie Datenfilterung und -anonymisierung
+* Speichern Sie nur notwendige Daten und respektieren Sie die DSGVO
+
+=== Bias und Fairness
+
+KI-Modelle können Vorurteile aus ihren Trainingsdaten übernehmen:
+
+* Seien Sie sich möglicher Vorurteile in den Ausgaben bewusst
+* Implementieren Sie Überprüfungen und Gegenmaßnahmen
+* Testen Sie mit diversen Eingaben
+
+=== Transparenz
+
+* Informieren Sie Benutzer darüber, wann KI im Einsatz ist
+* Erklären Sie die Grenzen der KI-Funktionen
+* Bieten Sie Möglichkeiten für menschliche Überprüfung und Eingriffe
+
+=== Übungen zu Ethik und Best Practices
+
+==== Übung 1: Ethik-Prüfer
+Entwickeln Sie einen `ContentEthicsChecker`, der:
+- Texte auf problematische Inhalte prüft
+- Vorurteile identifiziert
+- Alternativen für problematische Formulierungen vorschlägt
+
+==== Übung 2: Transparenz-Framework
+Entwerfen Sie ein Framework, das:
+- Transparenz in KI-Anwendungen gewährleistet
+- Benutzer über den Einsatz von KI informiert
+- Die Grenzen der KI-Funktionalität kommuniziert
+
+==== Übung 3: Datenschutz-Integration
+Implementieren Sie ein `PrivacyAwareAIModel`, das:
+- Persönliche Daten automatisch anonymisiert
+- Protokollierung von KI-Interaktionen ermöglicht
+- Datenschutzeinstellungen respektiert
+
+== Abschlussprojekte
+
+=== Projekt 1: KI-gestützte Lernplattform
+
+Entwickeln Sie eine KI-gestützte Lernplattform mit PydanticAI, die:
+- Lernmaterialien analysiert und zusammenfasst
+- Personalisierte Lernpläne erstellt
+- Quizfragen generiert
+- Lernfortschritte überwacht
+- Feedback zu Antworten gibt
+
+=== Projekt 2: Intelligentes Dokumentenmanagement
+
+Erstellen Sie ein System zur intelligenten Dokumentenverwaltung, das:
+- Verschiedene Dokumenttypen erkennt
+- Wichtige Informationen extrahiert
+- Dokumente kategorisiert und verschlagwortet
+- Zusammenfassungen generiert
+- Die Suche nach Informationen ermöglicht
+
+=== Projekt 3: Kundenservice-Assistent
+
+Implementieren Sie einen Kundenservice-Assistenten, der:
+- Kundenanfragen analysiert und kategorisiert
+- Standardfragen automatisch beantwortet
+- Komplexe Fälle an menschliche Mitarbeiter weiterleitet
+- Antwortvorschläge für Servicemitarbeiter generiert
+- Die Kundenzufriedenheit bewertet
+
+== Ressourcen und weiterführende Materialien
+
+=== Dokumentation und Tutorials
+
+* [Pydantic-Dokumentation](https://docs.pydantic.dev/) - Offizielle Dokumentation zu Pydantic
+* [LangChain-Dokumentation](https://python.langchain.com/docs/get_started/introduction) - Framework für KI-Anwendungen
+* [OpenAI API-Dokumentation](https://platform.openai.com/docs/api-reference) - API-Referenz für OpenAI
+* [FastAPI mit Pydantic](https://fastapi.tiangolo.com/) - Web-Framework mit integrierter Pydantic-Unterstützung
+
+=== Community und Support
+
+* [Pydantic GitHub](https://github.com/pydantic/pydantic) - Offizielles Repository
+* [Pydantic Discord](https://discord.gg/pydantic) - Community-Chat
+* [LangChain GitHub](https://github.com/langchain-ai/langchain) - LangChain Repository
+* [Stack Overflow: Pydantic](https://stackoverflow.com/questions/tagged/pydantic) - Fragen und Antworten
+
+=== Verwandte Projekte und Alternativen
+
+* [Semantic Kernel](https://github.com/microsoft/semantic-kernel) - Microsoft's SDK für KI-Integration
+* [Guardrails AI](https://github.com/guardrails-ai/guardrails) - Validierung für LLM-Ausgaben
+* [LlamaIndex](https://www.llamaindex.ai/) - Framework für KI-gestützte Datenindexierung
+* [Instructor](https://github.com/jxnl/instructor) - Strukturierte Ausgaben mit OpenAI Function Calling
+
+=== Praxisbeispiele
+
+* [GitHub: LangChain-Beispiele](https://github.com/langchain-ai/langchain/tree/master/docs/docs/use_cases)
+* [Hugging Face Spaces: Pydantic-Beispiele](https://huggingface.co/spaces?sort=trending&search=pydantic)
+* [GitHub: FastAPI + Pydantic + LLM-Beispiele](https://github.com/topics/fastapi-pydantic-llm)
+
+=== Verwandte Projekte
+
+* LangChain
+* Semantic Kernel
+* FastAPI (für API-Integration)
+* Streamlit (für UI-Integration)
+
+== Glossar
+
+[glossary]
+KI-Modell:: Ein trainiertes System, das natürliche Sprache verarbeiten und generieren kann.
+Pydantic:: Eine Python-Bibliothek zur Datenvalidierung und -einschränkung basierend auf Typannotationen.
+LangChain:: Ein Framework zur Entwicklung von Anwendungen, die mit LLMs (Large Language Models) arbeiten.
+LLM:: Large Language Model - ein großes Sprachmodell wie GPT-4, das natürliche Sprache verstehen und generieren kann.
+Prompt Engineering:: Die Kunst, Eingabeaufforderungen für KI-Modelle zu gestalten, um die gewünschten Ergebnisse zu erzielen.
+API-Schlüssel:: Ein geheimer Schlüssel, der den Zugriff auf KI-Dienste wie OpenAI ermöglicht.
+Validierung:: Der Prozess der Überprüfung von Daten auf Korrektheit und Einhaltung definierter Regeln.
+Serialisierung:: Die Umwandlung von Objekten in ein Format, das gespeichert oder übertragen werden kann.
+Deserialisierung:: Die Umwandlung von serialisierten Daten zurück in Objekte.
+Token:: Die grundlegende Einheit, in die Text für LLMs aufgeteilt wird. Die Anzahl der Token beeinflusst Kosten und Leistung.
+Embedding:: Eine numerische Darstellung von Text, die semantische Bedeutung erfasst und für Ähnlichkeitsvergleiche verwendet werden kann.
+Fine-Tuning:: Der Prozess, ein vortrainiertes Modell mit spezifischen Daten anzupassen, um es für bestimmte Aufgaben zu optimieren.
+RAG:: Retrieval-Augmented Generation - eine Technik, die LLMs mit externen Informationsquellen kombiniert, um genauere Antworten zu generieren.
+Semantic Kernel:: Ein Open-Source-Framework von Microsoft zur Integration von KI-Diensten in Anwendungen.

@@ -6,8 +6,12 @@
 .codebuddy/
 .idea/
 .ipynb_checkpoints/
+*.html
 
 **/__pycache__/
+
+# Generated PDFs
+*.pdf
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -15,3 +19,36 @@
 # auto-import.
 *.iml
 *.ipr
+
+# Ergebnisse aus den Übungen
+analyse.txt
+highscore.txt
+
+# Environment variables
+.env
+.env.local
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Ruff cache
+.ruff_cache/
+
+# pytest cache
+.pytest_cache/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json

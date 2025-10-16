@@ -1,0 +1,33 @@
+image: gitpod/workspace-python-3.13
+
+tasks:
+  - name: Setup Python Environment
+    init: |
+      # Install uv package manager
+      pip install --upgrade pip
+      pip install uv
+      
+      # Install project dependencies
+      uv sync
+      
+      echo "✅ Python environment ready!"
+    command: |
+      echo "🚀 Workspace is ready!"
+      echo ""
+      echo "Available commands:"
+      echo "  - uv run python <script.py>  # Run Python script"
+      echo "  - jupyter notebook           # Start Jupyter Notebook"
+      echo "  - python                     # Start Python REPL"
+      echo ""
+
+ports:
+  - port: 8888
+    onOpen: notify
+    name: Jupyter Notebook
+    description: Jupyter Notebook Server
+
+vscode:
+  extensions:
+    - ms-python.python
+    - ms-toolsai.jupyter
+    - ms-toolsai.jupyter-renderers

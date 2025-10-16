@@ -2,8 +2,9 @@
 # twentyquestions.py
 #-----------------------------------------------------------------------
 
-import stdio
 import random
+
+import stdio
 
 # Generate a random integer. Repeatedly read user guesses from
 # standard input. Write 'Too low' or 'Too high' to standard output,
@@ -19,7 +20,7 @@ guess = 0
 while guess != secret:
     # Solicit one guess and provide one answer.
     stdio.write('What is your guess? ')
-    guess = stdio.read_int()
+    guess = stdio.read_number()
     if (guess < secret):
         stdio.writeln('Too low')
     elif (guess > secret):

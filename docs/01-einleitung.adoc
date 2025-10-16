@@ -1,0 +1,148 @@
+== Einführung ins Programmieren
+:imagesdir: images
+:sourcedir: scripts
+
+In den meisten Programmiersprachen - so auch in Python - ist ein Programm eine einfache Textdatei, welche mit einem beliebigen Texteditor bearbeitet werden kann.
+
+Das Ausführen des Programms bedeutet einfach, dass Python die Anweisungen in der Textdatei Zeile für Zeile durcharbeitet, bis es am Ende der Datei angelangt ist.
+
+Das erste Beispielprogramm, welches üblicherweise in einer Programmiersprache verfasst wird, ist ein sogenanntes "Hello World"-Programm, welches nichts anderes macht, als den Text "Hello World!" auf dem Bildschirm auszugeben.
+
+In Python ist ein solches Programm im Vergleich zu anderen Programmiersprachen sehr einfach umzusetzen.
+Es besteht nur aus einer Zeile:
+
+.hello.py
+[source,python,numbers]
+----
+include::{sourcedir}/hello.py[]
+----
+
+Die Zahl `1` vor dem Programm gehört nicht zum Programm.
+Dies ist die Zeilennummer.
+In diesem Skript sind alle Programme mit Zeilennummern versehen.
+Zeilennummern sind im Programmieren wichtig, um über Programme zu sprechen und Fehler zu finden.
+So wird zum Beispiel bei einer Fehlermeldung oft die Zeilennummer angegeben, wo der Fehler passiert ist.
+Die hilft dir dann, den Fehler in deinem Programm zu finden.
+
+=== Editoren und IDEs
+
+Wie oben erwähnt reicht zum Programmieren ein einfacher Texteditor.
+Im Gegensatz zu Textverarbeitungsprogrammen unterstützt reiner Text keine Formatierungen wie Schriftgrössen oder Schriftarten.
+Alle Farben, welche du im Texteditor siehst, werden vom Editor erstellt und sind nicht in der Datei selbst gespeichert.
+Sie dienen nur der Lesbarkeit vom Programmcode und werden vom Editor abhängig von der benutzen Programmiersprache festgelegt.
+
+Texteditoren wurden schon in den Anfängen der Computerprogrammierung benutzt, gewisse aus dieser Zeit werden heute noch in weiterentwickelter Form benutzt, unter ihnen zum Beispiel
+https://de.wikipedia.org/wiki/Emacs[Emacs] und https://de.wikipedia.org/wiki/Vim[Vim].
+
+Jedoch werden oft sogenannte IDEs (Integrated Development Environment) zum Schreiben von Programmen benutzt.
+Diese besitzen viele hilfreiche Funktionen, welche ein Texteditor nicht hat, welche einem beim Programmieren unterstützen:
+
+** Das Programm kann direkt im IDE ausgeführt werden und muss nicht separat aufgerufen werden.
+** Die Befehle werden automatisch vervollständigt, sodass man nicht die ganzen Befehle tippen musst.
+** Der Editor kann die Syntax der Programmiersprache hervorheben.
+
+==== Eine (unvollständige) Liste der beliebtesten IDEs
+
+1. https://www.jetbrains.com/de-de/pycharm/[PyCharm]
+2. https://code.visualstudio.com/[VS Code]
+3. https://www.spyder-ide.org/[Spyder]
+4. https://jupyter.org/[Jupyter Notebook]
+5. https://codeium.com/windsurf[WindSurf]
+6. https://www.cursor.com/[Cursor]
+
+In allen IDEs ist möglich, eine Konsole zu nutzen, um die Ausgabe des Programms anzuzeigen.
+Dies kann sehr hilfreich sein, wenn man ein Programm testen muss, bevor er in der Realwelt eingesetzt wird.
+
+.Beispiel einer Eeingabe in der Konsole
+[source,text]
+----
+$ python
+Python 3.13.2 (v3.13.2:4f8bb3947cf, Feb  4 2025, 11:51:10) [Clang 15.0.0] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+----
+
+Dies ist der Python Befehlsprompt, hier kannst du Befehle nicht als Programm speichern, du kannst sie nur einzeln hintereinander ausprobieren.
+In diesem Skript werden wir in Aufgaben oft kurze Beispiele im Befehlsprompt ausprobieren.
+Sie sind immer durch `>>>` markiert und haben keine Zeilennummern wie andere Programme.
+Du könntest also zum Beispiel
+
+[source,text]
+----
+>>> print('Hallo')
+----
+
+oder
+
+[source,text]
+----
+>>> 2 + 3
+----
+
+ausprobieren.
+Es macht aber oft keinen Sinn, die Befehle für ein Programm jedes Mal am Befehlsprompt von neuem einzutippen.
+Für diesen Fall benutzen wir die oben erstellte, neue Python-Datei.
+Dort kannst du mehrere Befehle hintereinander aufschreiben, um sie dann der Reihe nach ausführen zu lassen.
+So kannst du das Programm später auch wieder öffnen, verändern oder erneut ausführen.
+
+=== Ein- und Ausgabe
+
+Computer arbeiten grundsätzlich nach dem EVA-Prinzip.
+Die Abkürzung EVA steht für Eingabe, Verarbeitung und Ausgabe.
+Damit ist gemeint, dass wir dem Computer zu Beginn über eine Tastatur, eine Maus, einen Touchbildschirm oder über andere Eingabegeräte Daten oder Befehle zur Verarbeitung liefern.
+
+Anschliessend verarbeitet der Computer unsere Daten gemäss den erteilten Befehlen und gibt uns die berechnete Antwort über ein Ausgabegerät zurück.
+Dies kann ein Bildschirm, ein Drucker oder ein anderes, spezialisiertes Gerät zur Darstellung von Daten sein.
+
+Wir werden uns in den folgenden Kapiteln mit der einfachsten Art der Ein- und Ausgabe begnügen, in dem wir den Programmen vorerst nur Text übergeben und sie uns auch wieder Text zurückgeben.
+Wir haben schon gesehen, dass wir mit
+
+[source,text]
+----
+>>> print('Hallo')
+----
+
+Text ausgeben können.
+Umgekehrt können wir mit der Funktion `input()` Text einlesen.
+Dabei kannst du in der Klammer eine Frage an den Benutzer eingeben.
+Die folgende Zeile führt dazu, dass Text eingeben kannst.
+Der Computer fordert dabei den Benutzer zunächst auf `"Gib bitte etwas Text ein: "`, und warten anschliessen auf die Eingabe, welche mit Drücken der Enter-Taste abgeschlossen wird.
+
+[source,text]
+----
+>>> input("Gib bitte etwas Text ein: ")
+----
+
+Du kannst so gewissermassen einen eigenen Befehlsprompt programmieren.
+
+Hier folgt ein umfangreicheres Beispiel, welches wir in der Detai  `gui-beispiel-mit-tkinter.py` speichern wollen.
+
+.gui-beispiel-mit-tkinter.py
+[source,python,numbers]
+----
+include::{sourcedir}/gui-beispiel-mit-tkinter.py[lines=24..]
+----
+
+Tkinter ist die Standard-Bibliothek für grafische Benutzeroberflächen (GUIs) in Python.
+Der Name steht für "Tk interface" und basiert auf dem Tk-Toolkit, das ursprünglich für die Programmiersprache Tcl entwickelt wurde.
+
+Tkinter ist wie ein Werkzeugkasten, der euch hilft, grafische Programme mit Fenstern, Buttons und anderen Elementen zu erstellen.
+Statt nur Text in der Konsole anzuzeigen, könnt ihr damit richtige Anwendungen bauen, die aussehen wie andere Programme auf eurem Computer.
+
+Gestartet wird dieses Beispielprogramm mit dem Befehl `python gui-beispiel-mit-tkinter.py`.
+
+.Fenster nach dem Start des Programms
+image::gui-beispiel-mit-tkinter.png[width=50%]
+
+Alternativ das dasselbe Skript umgeschrieben werden, sodass das resultierende GUI in einem Webbrowser angezeigt wird.
+
+.gui-beispiel-mit-streamlit.py
+[source,python,numbers]
+----
+include::{sourcedir}/gui-beispiel-mit-streamlit.py[lines=24..]
+----
+
+In diesem Fall muss die Anwendung mit dem Befehl `streamlit run gui-beispiel-mit-streamlit.py` gestartet werden.
+
+.Fenster nach dem Start des Programms
+image::gui-beispiel-mit-streamlit.png[width=60%]

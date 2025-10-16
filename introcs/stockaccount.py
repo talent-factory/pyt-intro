@@ -2,12 +2,12 @@
 # stockaccount.py
 #-----------------------------------------------------------------------
 
-import sys
-import stdio
 import stdarray
+import stdio
 from instream import InStream
-from outstream import OutStream
+
 import stockquote
+
 
 #-----------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ class StockAccount:
         inStream = InStream(fileName)
         self._name = inStream.read_line()      # Customer name
         self._cash = inStream.read_float()     # Cash balance
-        self._stockCount = inStream.read_int() # Number of stocks
+        self._stockCount = inStream.read_number() # Number of stocks
         # Stock symbols
         self._stocks = stdarray.create_1d(self._stockCount, 0)
         # Share counts
         self._shares = stdarray.create_1d(self._stockCount, 0)
         for i in range(self._stockCount):
-            self._shares[i] = inStream.read_int()
+            self._shares[i] = inStream.read_number()
             self._stocks[i] = inStream.read_string()
 
     # Return the total value in dollars of self.

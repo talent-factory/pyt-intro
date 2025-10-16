@@ -1,16 +1,49 @@
-# This is a sample Python script.
+def hello(name="everybody"):
+    """Gibt eine personalisierte Begrüßungsnachricht aus.
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+    Diese Funktion erstellt und gibt eine Begrüßungsnachricht aus, die an eine
+    bestimmte Person oder Gruppe gerichtet sein kann. Wenn kein Name angegeben wird,
+    wird standardmäßig "everybody" verwendet.
+
+    Args:
+        name (str, optional): Der Name der zu begrüßenden Person oder Gruppe.
+            Standardwert ist "everybody".
+
+    Returns:
+        None: Die Funktion gibt nur Text auf der Konsole aus, hat aber keinen
+        Rückgabewert.
+
+    Beispiele:
+        Die Funktion kann auf verschiedene Weisen verwendet werden. Hier sind einige
+        typische Anwendungsfälle:
+
+        >>> hello()  # Standardaufruf ohne Parameter
+        Hello everybody!
+
+        >>> hello("Alice")  # Begrüßung einer bestimmten Person
+        Hello Alice!
+
+        >>> hello("Python Community")  # Begrüßung einer Gruppe
+        Hello Python Community!
+
+        Die Funktion akzeptiert auch leere Strings:
+        >>> hello("")  # Begrüßung mit leerem String
+        Hello !
+
+        Sowie Unicode-Zeichen für internationale Namen:
+        >>> hello("José")  # Begrüßung mit Unicode-Zeichen
+        Hello José!
+
+    Hinweise:
+        - Die Funktion verwendet f-Strings für die Formatierung
+        - Es findet keine Validierung des Eingabeparameters statt
+        - Die Ausgabe erfolgt immer mit einem Ausrufezeichen
+    """
+    print(f"Hello {name}!")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Strg+F8 to toggle the breakpoint.
+if __name__ == "__main__":
+    import doctest
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    hello("Daniel")
+    doctest.testmod(verbose=False)

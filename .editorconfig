@@ -1,0 +1,52 @@
+# EditorConfig hilft, konsistente Coding-Styles zwischen verschiedenen Editoren und IDEs zu wahren
+# https://editorconfig.org
+
+root = true
+
+# Standard für alle Dateien
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Python-Dateien
+[*.py]
+indent_size = 4
+max_line_length = 100
+
+# Markdown-Dateien
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = 120
+
+# AsciiDoc-Dateien
+[*.adoc]
+max_line_length = 120
+
+# YAML-Dateien
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON-Dateien
+[*.json]
+indent_size = 2
+
+# TOML-Dateien
+[*.toml]
+indent_size = 2
+
+# Shell-Skripte
+[*.sh]
+indent_size = 2
+
+# Makefile
+[Makefile]
+indent_style = tab
+
+# Jupyter Notebooks (nicht editieren, da JSON)
+[*.ipynb]
+indent_size = 1
+insert_final_newline = false

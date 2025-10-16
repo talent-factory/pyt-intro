@@ -1,0 +1,80 @@
+= Aufgabe 6: Pascal'sches Dreieck
+:author: Python Einführungskurs
+:revdate: 2025-03-27
+:source-highlighter: coderay
+
+== Beschreibung
+
+In dieser Aufgabe erstellen Sie eine Funktion, die das Pascal'sche Dreieck berechnet und ausgibt. Das Pascal'sche Dreieck ist ein mathematisches Muster, bei dem jede Zahl die Summe der beiden darüberliegenden Zahlen ist.
+
+== Aufgabenstellung
+
+1. Erstellen Sie eine Funktion `pascal_dreieck(zeilen)`, die:
+   * einen Parameter `zeilen` entgegennimmt, der angibt, wie viele Zeilen des Pascal'schen Dreiecks berechnet werden sollen
+   * das Pascal'sche Dreieck als Liste von Listen zurückgibt, wobei jede innere Liste eine Zeile des Dreiecks repräsentiert
+
+2. Erstellen Sie eine Funktion `pascal_dreieck_ausgeben(dreieck)`, die:
+   * das Pascal'sche Dreieck (als Liste von Listen) entgegennimmt
+   * das Dreieck formatiert auf der Konsole ausgibt, so dass es wie ein Dreieck aussieht (zentriert mit Leerzeichen)
+
+== Das Pascal'sche Dreieck
+
+Das Pascal'sche Dreieck beginnt mit einer 1 in der ersten Zeile. Jede weitere Zeile beginnt und endet mit einer 1. Jede andere Zahl im Dreieck ist die Summe der beiden Zahlen direkt darüber.
+
+Hier sind die ersten 5 Zeilen des Pascal'schen Dreiecks:
+```
+    1
+   1 1
+  1 2 1
+ 1 3 3 1
+1 4 6 4 1
+```
+
+== Beispiel
+
+[source,python]
+----
+# So könnten Ihre Funktionen aussehen:
+def pascal_dreieck(zeilen):
+    # Ihr Code hier
+    pass
+
+def pascal_dreieck_ausgeben(dreieck):
+    # Ihr Code hier
+    pass
+
+# Beispielaufrufe:
+dreieck = pascal_dreieck(5)
+print(dreieck)
+# Sollte ausgeben: [[1], [1, 1], [1, 2, 1], [1, 3, 3, 1], [1, 4, 6, 4, 1]]
+
+pascal_dreieck_ausgeben(dreieck)
+# Sollte formatiert ausgeben:
+#     1
+#    1 1
+#   1 2 1
+#  1 3 3 1
+# 1 4 6 4 1
+----
+
+== Hinweise
+
+* Eine leere Liste kann so erstellt werden: `[]`
+* Um eine neue Liste mit den Elementen einer anderen Liste zu erstellen, können Sie die Liste kopieren: `neue_liste = alte_liste.copy()`
+* Um ein Element am Ende einer Liste hinzuzufügen, können Sie die Methode `append()` verwenden: `liste.append(element)`
+* Um zwei Zahlen zu addieren, verwenden Sie den Operator `+`
+* Für die formatierte Ausgabe können Sie die Methode `center()` von Strings verwenden: `string.center(breite)`
+* Um eine Liste von Zahlen in einen String umzuwandeln, können Sie eine Schleife verwenden und die Zahlen zu Strings konvertieren: `str(zahl)`
+* Die maximale Breite einer Zeile im Pascal'schen Dreieck hängt von der Anzahl der Zeilen und der Größe der Zahlen ab
+
+== Fortgeschrittene Herausforderung (optional)
+
+Wenn Sie die Grundaufgabe gemeistert haben, versuchen Sie folgende Erweiterungen:
+
+* Optimieren Sie Ihre Funktion `pascal_dreieck()`, um die Berechnung effizient zu gestalten
+* Erweitern Sie die Ausgabefunktion, damit Sie die Zahlen mit unterschiedlichen Trennzeichen (z.B. Leerzeichen, Kommas) ausgeben können
+* Implementieren Sie eine Funktion, die einen bestimmten Wert im Pascal'schen Dreieck direkt berechnet, ohne das gesamte Dreieck zu erstellen
+
+== Abgabe
+
+Speichern Sie Ihre Lösung in einer Datei mit dem Namen `aufgabe6_loesung.py` und laden Sie diese hoch.

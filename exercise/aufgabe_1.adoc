@@ -1,0 +1,40 @@
+= Aufgabe 1: Einfache Funktion erstellen
+:author: Python Einführungskurs
+:revdate: 2025-03-27
+:source-highlighter: coderay
+
+== Beschreibung
+
+In dieser Aufgabe lernen Sie, wie man eine einfache Funktion in Python erstellt und verwendet.
+
+== Aufgabenstellung
+
+1. Erstellen Sie eine Funktion mit dem Namen `begruessung`, die einen Parameter `name` entgegennimmt.
+2. Die Funktion soll eine personalisierte Begrüßung in der Form "Hallo [name], willkommen zum Python-Kurs!" zurückgeben.
+3. Rufen Sie die Funktion dreimal mit verschiedenen Namen auf und geben Sie das Ergebnis aus.
+
+== Beispiel
+
+[source,python]
+----
+# So könnte Ihre Funktion aussehen:
+def begruessung(name):
+    # Hier kommt Ihr Code
+    pass  # Dieses "pass" müssen Sie durch Ihren Code ersetzen
+
+# Beispielaufrufe (Ihr Code sollte ähnliche Ausgaben erzeugen):
+print(begruessung("Maria"))  # Sollte ausgeben: "Hallo Maria, willkommen zum Python-Kurs!"
+----
+
+== Hinweise
+
+* Eine Funktion wird in Python mit dem Schlüsselwort `def` definiert.
+* Nach dem Funktionsnamen folgen runde Klammern mit den Parametern.
+* Vergessen Sie nicht den Doppelpunkt `:` am Ende der Funktionsdefinition.
+* Der Funktionskörper muss eingerückt sein (üblicherweise 4 Leerzeichen).
+* Um einen Wert aus der Funktion zurückzugeben, verwenden Sie das Schlüsselwort `return`.
+
+== Abgabe
+
+Speichern Sie Ihre Lösung in einer Datei mit dem Namen `aufgabe1_loesung.py` und laden Sie diese hoch.
+

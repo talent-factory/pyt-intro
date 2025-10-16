@@ -1,0 +1,56 @@
+# Git Attributes für konsistente Repository-Verwaltung
+# https://git-scm.com/docs/gitattributes
+
+# Auto-detect text files und normalisiere Line Endings zu LF
+* text=auto eol=lf
+
+# Explizit als Text markieren
+*.py text
+*.md text
+*.adoc text
+*.txt text
+*.yml text
+*.yaml text
+*.json text
+*.toml text
+*.sh text
+*.bat text
+
+# Explizit als binär markieren
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar.gz binary
+
+# Jupyter Notebooks als Text behandeln (für bessere Diffs)
+*.ipynb text
+
+# Python-spezifische Attribute
+*.py diff=python
+
+# Linguist-Konfiguration für GitHub
+# Dokumentation nicht in Sprachstatistiken einbeziehen
+docs/** linguist-documentation
+*.md linguist-documentation
+*.adoc linguist-documentation
+
+# Generierte Dateien
+*.html linguist-generated=true
+
+# Vendor-Code ausschließen
+.venv/** linguist-vendored
+venv/** linguist-vendored
+__pycache__/** linguist-vendored
+
+# Export-Ignore (Dateien, die nicht in Archiven enthalten sein sollen)
+.gitattributes export-ignore
+.gitignore export-ignore
+.editorconfig export-ignore
+.github/ export-ignore
+.devcontainer/ export-ignore
+.gitpod.yml export-ignore
+*.md export-ignore
