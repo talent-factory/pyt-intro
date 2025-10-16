@@ -67,9 +67,9 @@ def spiele_runde():
             continue
         
         if tipp < zahl:
-            print("Zu klein! Versuche es mit einer größeren Zahl.")
+            print("Zu klein! Versuche es mit einer grösseren Zahl.")
         elif tipp > zahl:
-            print("Zu groß! Versuche es mit einer kleineren Zahl.")
+            print("Zu gross! Versuche es mit einer kleineren Zahl.")
         else:
             print(f"\n🎉 Glückwunsch! Du hast die Zahl {zahl} erraten!")
             print(f"Du hast {versuche} Versuche gebraucht.")
