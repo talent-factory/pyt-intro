@@ -19,3 +19,7 @@
 # auto-import.
 *.iml
 *.ipr
+
+# Ergebnisse aus den Übungen
+analyse.txt
+highscore.txt
