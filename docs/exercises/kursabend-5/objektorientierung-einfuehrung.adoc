@@ -110,7 +110,7 @@ print(luna.fresse("Hundefutter"))
 Erstelle eine `Auto`-Klasse mit folgenden Eigenschaften:
 
 * Attribute: `marke`, `modell`, `farbe`, `kilometerstand`
-* Methoden: `fahre(km)`, `zeige_info()`, `tuecke_an()`
+* Methoden: `fahre(km)`, `zeige_info()`, `schalte_motor(ein=True)`
 
 *Hilfestellung:*
 
@@ -132,7 +132,7 @@ class Auto:
         # Dein Code hier
         pass
     
-    def tuecke_an(self):
+    def schalte_motor(self, ein=True):
         # Dein Code hier
         pass
 ----

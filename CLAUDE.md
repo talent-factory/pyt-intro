@@ -19,6 +19,12 @@ Der Kurs folgt einer didaktischen Progression:
 3. **Kursabend 4**: Dateiverarbeitung + Praxis-Workshop mit Übungen in 3 Levels
 4. **Kursabend 5**: Mini-Projekte (Tagebuch, Quiz, Ausgaben-Tracker, Passwort-Manager)
 
+### Fortgeschrittenen-Projekte
+
+Für Studierende, die den Einführungskurs abgeschlossen haben (30+ Stunden Erfahrung):
+
+- **Schachprogramm** (`docs/prp/schachprogramm-prp.md`): Vollständiges Demonstrationsprojekt mit Pygame-GUI, KI-Gegner (Minimax-Algorithmus), PGN-Persistierung und allen Schachregeln. Zeigt fortgeschrittene Konzepte wie MVC-Architektur, Event-Driven Programming, externe Bibliotheken (python-chess, pygame) und Algorithmen-Implementierung.
+
 ## Befehle
 
 ### Package Management
@@ -52,6 +58,7 @@ black <datei_oder_verzeichnis>   # Code formatieren (PEP 8)
   - `cheat-sheet.adoc` - Schnellreferenz für Kursabende 4 & 5
   - `tutorials/` - Umfassende Tutorials (Doctest, Grundlagen, Module, OOP, Pydantic, SQLAlchemy)
   - `exercises/` - Übungsaufgaben (kursabend-4-aufgaben.adoc, kursabend-5-projekte.adoc)
+  - `prp/` - Product Requirement Prompts für Fortgeschrittenen-Projekte (schachprogramm-prp.md)
 - **`solutions/`** - Musterlösungen für Kursabend 4 & 5
 - **`testdaten/`** - Testdateien für Übungen (beispieltext.txt, produkte.csv, server.log, vokabeln.txt, quiz.txt)
 - **`introcs/`** - 100+ Beispielmodule (Algorithmen, Datenstrukturen, Grafik)

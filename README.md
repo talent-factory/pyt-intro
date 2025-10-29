@@ -81,6 +81,21 @@ Einführungskurs in die Python-Programmierung für Anfänger ohne Vorkenntnisse.
 - Präsentation der Ergebnisse
 - Ausblick auf weiterführende Themen
 
+## Fortgeschrittenen-Projekte
+
+Nach Abschluss des Einführungskurses stehen umfangreichere Projekte zur Verfügung:
+
+### Python-Schachprogramm
+
+Vollständiges Demonstrationsprojekt für Fortgeschrittene (30+ Stunden Erfahrung):
+
+- **Features**: Pygame-GUI mit Drag-and-Drop, KI-Gegner (Minimax-Algorithmus), Spielstand speichern/laden (PGN), Zughistorie mit Undo
+- **Lernziele**: MVC-Architektur, Event-Driven Programming, externe Bibliotheken (python-chess, pygame), Algorithmen-Implementierung
+- **Dokumentation**: `docs/prp/schachprogramm-prp.md`
+- **Zeitaufwand**: ~52 Stunden (6 Wochen bei 8h/Woche)
+
+Das Projekt zeigt fortgeschrittene Konzepte und eignet sich als Portfolio-Projekt oder für einen weiterführenden Python-Kurs.
+
 ## Projektstruktur
 
 ```text
@@ -89,9 +104,11 @@ pyt-intro/
 │   ├── 01-einleitung.adoc  # Einführung ins Programmieren
 │   ├── cheat-sheet.adoc    # Schnellreferenz für Kursabende 4 & 5
 │   ├── tutorials/          # Umfassende Tutorials
-│   └── exercises/          # Übungsaufgaben
-│       ├── kursabend-4-aufgaben.adoc
-│       └── kursabend-5-projekte.adoc
+│   ├── exercises/          # Übungsaufgaben
+│   │   ├── kursabend-4-aufgaben.adoc
+│   │   └── kursabend-5-projekte.adoc
+│   └── prp/                # Product Requirement Prompts (Fortgeschrittene)
+│       └── schachprogramm-prp.md
 ├── ipynb/                  # Jupyter Notebooks
 │   ├── 00-hello.ipynb
 │   ├── 01-Introduction-to-Python.ipynb
