@@ -14,8 +14,19 @@ Diese Lösungen sind **Beispiele** und zeigen **einen** möglichen Lösungsweg. 
 
 Musterlösungen für die Übungsaufgaben von Kursabend 4:
 
+**Level 1: Aufwärmen**
 - `aufgabe_1_1_zahlenraten_highscore.py` - Zahlenraten mit Highscore-Funktion
+- `aufgabe_1_2_einkaufsliste.py` - Einkaufsliste mit Speicherfunktion
+- `aufgabe_1_3_notizen_app.py` - Notizen-App mit Zeitstempel
+
+**Level 2: Herausforderung**
 - `aufgabe_2_1_textanalyse.py` - Textanalyse-Tool
+- `aufgabe_2_2_csv_verarbeitung.py` - CSV-Verarbeitung für Produktdaten
+- `aufgabe_2_3_log_analyzer.py` - Log-File-Analyzer
+
+**Level 3: Für Schnelle**
+- `aufgabe_3_1_vokabeltrainer.py` - Vokabeltrainer mit Statistik
+- `aufgabe_3_2_kontaktverwaltung.py` - Kontaktverwaltung
 
 ### kursabend-5/
 

@@ -4,7 +4,7 @@
 :revnumber: 1.0
 :revdate: {localdate}
 :doctype: book
-include::../locale/attributes-de.adoc[]
+include::../../locale/attributes-de.adoc[]
 :toc: left
 :sectnums:
 :sectnumlevels: 2

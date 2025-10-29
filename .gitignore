@@ -3,6 +3,7 @@
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
+.claude/settings.local.json
 .codebuddy/
 .idea/
 .ipynb_checkpoints/
@@ -23,6 +24,12 @@
 # Ergebnisse aus den Übungen
 analyse.txt
 highscore.txt
+einkaufsliste.txt
+notizen/
+produkte.csv
+server.log
+errors.log
+vokabeln.txt
 
 # Environment variables
 .env
