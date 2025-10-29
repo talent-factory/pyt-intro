@@ -1,0 +1,205 @@
+= Kursabend 5: Objektorientierung leicht gemacht
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: article
+include::../../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+
+== Einführung in die Objektorientierte Programmierung (OOP)
+
+=== Was ist Objektorientierung?
+
+Stell dir vor, du möchtest ein Auto bauen. Statt alles von Grund neu zu erfinden, könntest du einen *Bauplan* verwenden. 
+
+* **Klasse** = Der Bauplan (z.B. "Auto")
+* **Objekt** = Das fertige Auto (z.B. "dein roter Golf")
+* **Attribut** = Eigenschaften (Farbe, Marke, PS)
+* **Methode** = Was das Auto kann (fahren, bremsen, hupen)
+
+=== Warum brauchen wir das?
+
+* **Struktur:** Ordnung in grossen Programmen
+* **Wiederverwendbarkeit:** Einmal schreiben, oft benutzen
+* **Logik:** Dinge zusammenfassen, die zusammengehören
+
+== Lektion 1: Deine erste Klasse
+
+=== Schritt 1: Eine einfache Klasse erstellen
+
+Wir erstellen eine Klasse für einen Hund:
+
+[source,python]
+----
+class Hund:
+    def __init__(self, name, alter, rasse):
+        # Das ist der "Konstruktor" - wird aufgerufen, wenn ein Hund geboren wird
+        self.name = name          # Attribut: Name des Hundes
+        self.alter = alter        # Attribut: Alter des Hundes
+        self.rasse = rasse        # Attribut: Rasse des Hundes
+        self.hungrig = True       # Attribut: Ist der Hund hungrig?
+    
+    def belle(self):
+        """Methode: Der Hund bellt"""
+        return f"{self.name} sagt: Wuff! Wuff!"
+    
+    def fresse(self, futter):
+        """Methode: Der Hund frisst"""
+        if self.hungrig:
+            self.hungrig = False
+            return f"{self.name} frisst {futter} und ist jetzt satt."
+        else:
+            return f"{self.name} ist nicht hungrig."
+    
+    def zeige_info(self):
+        """Methode: Zeigt Informationen über den Hund"""
+        return f"{self.name} ist ein {self.alter} Jahre alter {self.rasse}."
+----
+
+=== Schritt 2: Objekte erstellen und benutzen
+
+Jetzt erstellen wir konkrete Hunde (Objekte):
+
+[source,python]
+----
+# Erstelle zwei Hunde-Objekte
+bello = Hund("Bello", 3, "Golden Retriever")
+luna = Hund("Luna", 2, "Dackel")
+
+# Benutze die Methoden
+print(bello.zeige_info())
+print(bello.belle())
+print(bello.fresse("Knochen"))
+print(bello.fresse("Futter"))  # Jetzt ist er nicht mehr hungrig
+
+print("\n" + "="*30 + "\n")
+
+print(luna.zeige_info())
+print(luna.belle())
+print(luna.fresse("Hundefutter"))
+----
+
+=== Erklärung der wichtigsten Begriffe
+
+**`class Hund:`** 
+* Hier definieren wir den Bauplan für alle Hunde
+
+**`def __init__(self, name, alter, rasse):`**
+* Der Konstruktor - wird automatisch aufgerufen
+* `self` bezieht sich immer auf das aktuelle Objekt
+* Die anderen Parameter sind die Eigenschaften, die wir übergeben
+
+**`self.name = name`**
+* Wir speichern den übergebenen Namen als Attribut des Objekts
+* Jedes Hund-Objekt hat sein eigenes `name`
+
+**`def belle(self):`**
+* Eine Methode - etwas, das das Objekt tun kann
+* Hat immer `self` als ersten Parameter
+
+== Übungsaufgaben
+
+=== Aufgabe 1: Auto-Klasse
+
+Erstelle eine `Auto`-Klasse mit folgenden Eigenschaften:
+
+* Attribute: `marke`, `modell`, `farbe`, `kilometerstand`
+* Methoden: `fahre(km)`, `zeige_info()`, `tuecke_an()`
+
+*Hilfestellung:*
+
+[source,python]
+----
+class Auto:
+    def __init__(self, marke, modell, farbe):
+        self.marke = marke
+        self.modell = modell
+        self.farbe = farbe
+        self.kilometerstand = 0
+        self.motor_laeuft = False
+    
+    def fahre(self, km):
+        # Dein Code hier
+        pass
+    
+    def zeige_info(self):
+        # Dein Code hier
+        pass
+    
+    def tuecke_an(self):
+        # Dein Code hier
+        pass
+----
+
+=== Aufgabe 2: Student-Klasse
+
+Erstelle eine `Student`-Klasse für eine einfache Schulverwaltung:
+
+* Attribute: `name`, `matrikelnummer`, `noten` (Liste)
+* Methoden: `fuege_note_hinzu(note)`, `berechne_durchschnitt()`, `zeige_zeugnis()`
+
+*Beispiel-Nutzung:*
+
+[source,python]
+----
+anna = Student("Anna Schmidt", "2025-001")
+anna.fuege_note_hinzu(85)
+anna.fuege_note_hinzu(92)
+anna.fuege_note_hinzu(78)
+print(anna.zeige_zeugnis())
+print(f"Durchschnitt: {anna.berechne_durchschnitt():.1f}")
+----
+
+=== Aufgabe 3: Für Schnelle
+
+Erweitere deine `Hund`-Klasse um:
+
+* Eine Methode `altern()` die das Alter um 1 Jahr erhöht
+* Eine Methode `spielen()` die den Hund hungrig macht
+* Ein Attribut `lieblingsspielzeug`
+
+== Tipps für den Erfolg
+
+[TIP]
+====
+* **Denke in Objekten:** Was sind die "Dinge" in deinem Programm?
+* **Kleine Schritte:** Beginne mit 1-2 Attributen und 1 Methode
+* **Teste oft:** Erstelle sofort ein Objekt und teste es
+* **Nutze `self`:** Jede Methode braucht `self` als ersten Parameter
+====
+
+[WARNING]
+====
+* **Häufige Fehler:**
+  * `self` bei Methoden vergessen
+  * Attributnamen falsch geschrieben (`self.name` vs `self.nam`)
+  * Methode ohne Klammern aufrufen: `bello.belle` statt `bello.belle()`
+====
+
+== Reflexionsfragen
+
+1. Was ist der Unterschied zwischen einer Klasse und einem Objekt?
+2. Warum braucht jede Methode `self` als ersten Parameter?
+3. Wie könntest du Klassen in deinen bisherigen Programmen nutzen?
+4. Welche Alltagsgegenstände könntest du als Klassen modellieren?
+
+== Hausaufgabe
+
+Denk dir 3 Alltagsgegenstände aus deinem Zimmmer aus und modelliere sie als Klassen. Schreibe jeweils:
+
+* 3-4 Attribute
+* 2-3 Methoden
+* Ein kurzes Beispiel, wie du die Klasse benutzen würdest
+
+*Beispiele:*
+
+* Handy, Kaffeetasse, Schreibtischstuhl, Buch, Lampe...
+
+---
+_Viel Erfolg beim Entdecken der Objektorientierung! 🚀_

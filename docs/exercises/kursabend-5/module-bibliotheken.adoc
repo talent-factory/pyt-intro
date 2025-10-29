@@ -1,0 +1,429 @@
+= Kursabend 5: Module und Bibliotheken
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: article
+include::../../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+
+== Lektion 3: Module und Bibliotheken
+
+=== Was sind Module und Bibliotheken?
+
+Stell dir vor, du baust mit LEGO:
+
+* **Module** = Eigene LEGO-Bausteine, die du selbst entwirfst
+* **Bibliotheken** = Fertige LEGO-Sets von anderen Leuten
+* **Import** = Du nimmst die Bausteine und verwendest sie
+
+=== Warum ist das nützlich?
+
+* **Wiederverwendbarkeit:** Einmal schreiben, oft benutzen
+* **Organisation:** Grössere Programme in kleine Teile zerlegen
+* **Zusammenarbeit:** Verschiedene Leute können an verschiedenen Modulen arbeiten
+* **Zeitersparnis:** Nutze fertigen Code von anderen
+
+== Teil 1: Python Standardbibliothek nutzen
+
+Python kommt mit vielen eingebauten Modulen - wie ein riesiger LEGO-Kasten!
+
+=== Wichtige Standardmodule
+
+==== `random` - Zufallszahlen
+
+[source,python]
+----
+import random
+
+# Zufällige Ganzzahl zwischen 1 und 100
+zahl = random.randint(1, 100)
+print(f"Zufallszahl: {zahl}")
+
+# Zufällige Auswahl aus einer Liste
+fruechte = ["Apfel", "Banane", "Orange", "Birne"]
+gewaehlt = random.choice(fruechte)
+print(f"Gewählte Frucht: {gewaehlt}")
+
+# Liste mischen
+karten = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+random.shuffle(karten)
+print(f"Gemischte Karten: {karten}")
+----
+
+==== `datetime` - Datum und Zeit
+
+[source,python]
+----
+from datetime import datetime, date, timedelta
+
+# Aktuelles Datum und Zeit
+jetzt = datetime.now()
+print(f"Jetzt: {jetzt}")
+print(f"Formatiert: {jetzt.strftime('%d.%m.%Y %H:%M')}")
+
+# Nur das Datum
+heute = date.today()
+print(f"Heute: {heute}")
+
+# Berechnungen
+morgen = heute + timedelta(days=1)
+print(f"Morgen: {morgen}")
+
+# Geburtstagsrechner
+geburtstag = date(1990, 5, 15)
+alter = heute.year - geburtstag.year
+if (heute.month, heute.day) < (geburtstag.month, geburtstag.day):
+    alter -= 1
+print(f"Alter: {alter} Jahre")
+----
+
+==== `math` - Mathematische Funktionen
+
+[source,python]
+----
+import math
+
+# Wichtige Konstanten
+print(f"Pi: {math.pi}")
+print(f"Eulersche Zahl: {math.e}")
+
+# Wurzelziehen
+print(f"Wurzel aus 16: {math.sqrt(16)}")
+
+# Runden
+print(f"Aufgerundet: {math.ceil(3.2)}")
+print(f"Abgerundet: {math.floor(3.8)}")
+
+# Trigonometrie
+winkel = math.radians(45)  # Grad in Radiant umrechnen
+print(f"Sinus von 45°: {math.sin(winkel)}")
+----
+
+==== `os` - Betriebssystem-Funktionen
+
+[source,python]
+----
+import os
+
+# Aktuelles Verzeichnis
+print(f"Aktuelles Verzeichnis: {os.getcwd()}")
+
+# Verzeichnis erstellen
+os.makedirs('mein_Ordner', exist_ok=True)
+
+# Dateien auflisten
+dateien = os.listdir('.')
+print(f"Dateien im aktuellen Verzeichnis: {dateien[:5]}...")  # Nur erste 5
+
+# Prüfen, ob Datei existiert
+if os.path.exists('test.txt'):
+    print("test.txt existiert!")
+else:
+    print("test.txt existiert nicht.")
+----
+
+== Teil 2: Eigene Module erstellen
+
+Jetzt baust du deine eigenen LEGO-Bausteine!
+
+=== Schritt 1: Modul-Datei erstellen
+
+Erstelle eine Datei `mein_modul.py`:
+
+[source,python]
+----
+# mein_modul.py
+
+def begruesse(name):
+    """Begrüsst eine Person."""
+    return f"Hallo {name}! Schön, dich zu sehen!"
+
+def berechne_quadrat(zahl):
+    """Berechnet das Quadrat einer Zahl."""
+    return zahl ** 2
+
+class Taschenrechner:
+    """Einfacher Taschenrechner."""
+    
+    def __init__(self):
+        self.ergebnis = 0
+    
+    def addieren(self, a, b):
+        self.ergebnis = a + b
+        return self.ergebnis
+    
+    def multiplizieren(self, a, b):
+        self.ergebnis = a * b
+        return self.ergebnis
+    
+    def get_ergebnis(self):
+        return self.ergebnis
+
+# Konstante
+VERSION = "1.0.0"
+AUTOR = "Dein Name"
+----
+
+=== Schritt 2: Modul verwenden
+
+Erstelle eine Datei `test_modul.py`:
+
+[source,python]
+----
+# test_modul.py
+
+import mein_modul
+
+# Funktionen verwenden
+print(mein_modul.begruesse("Anna"))
+print(f"3² = {mein_modul.berechne_quadrat(3)}")
+
+# Klasse verwenden
+calc = mein_modul.Taschenrechner()
+print(f"5 + 3 = {calc.addieren(5, 3)}")
+print(f"4 * 7 = {calc.multiplizieren(4, 7)}")
+
+# Konstanten verwenden
+print(f"Modul-Version: {mein_modul.VERSION}")
+print(f"Autor: {mein_modul.AUTOR}")
+----
+
+=== Alternative Import-Methoden
+
+[source,python]
+----
+# Methode 1: Nur bestimmte Funktionen importieren
+from mein_modul import begruesse, berechne_quadrat
+
+print(begruesse("Bob"))  # Ohne mein_modul.
+print(berechne_quadrat(5))
+
+# Methode 2: Mit Alias
+import mein_modul as mm
+
+print(mm.begruesse("Charlie"))
+
+# Methode 3: Alles importieren (nicht empfohlen bei grossen Modulen)
+from mein_modul import *
+
+print(begruesse("Diana"))
+----
+
+== Teil 3: Nützliche Bibliotheken für Anfänger
+
+Diese Bibliotheken musst du zuerst installieren:
+`pip install bibliotheksname`
+
+=== `requests` - Web-Anfragen
+
+[source,python]
+----
+# Zuerst installieren: pip install requests
+import requests
+
+# JSON-Daten von einer API abrufen
+try:
+    response = requests.get("https://api.github.com/users/python")
+    if response.status_code == 200:
+        daten = response.json()
+        print(f"Python GitHub Follower: {daten['followers']}")
+    else:
+        print("Fehler bei der Anfrage")
+except:
+    print("Keine Internetverbindung")
+----
+
+=== `pandas` - Datenanalyse (Light-Version)
+
+[source,python]
+----
+# Zuerst installieren: pip install pandas
+import pandas as pd
+
+# Einfache Daten erstellen
+daten = {
+    'Name': ['Anna', 'Bob', 'Charlie', 'Diana'],
+    'Alter': [25, 30, 35, 28],
+    'Stadt': ['Zürich', 'Bern', 'Basel', 'Genf']
+}
+
+# DataFrame erstellen
+df = pd.DataFrame(daten)
+
+# Daten anzeigen
+print("Originaldaten:")
+print(df)
+
+# Einfache Statistik
+print(f"\nDurchschnittsalter: {df['Alter'].mean():.1f}")
+print(f"Älteste Person: {df.loc[df['Alter'].idxmax(), 'Name']}")
+----
+
+=== `matplotlib` - Diagramme (Light-Version)
+
+[source,python]
+----
+# Zuerst installieren: pip install matplotlib
+import matplotlib.pyplot as plt
+
+# Einfache Daten
+x = [1, 2, 3, 4, 5]
+y = [2, 4, 6, 8, 10]
+
+# Diagramm erstellen
+plt.figure(figsize=(8, 6))
+plt.plot(x, y, marker='o', linewidth=2, markersize=8)
+plt.title('Einfache Linie')
+plt.xlabel('X-Achse')
+plt.ylabel('Y-Achse')
+plt.grid(True, alpha=0.3)
+plt.show()
+
+# Balkendiagramm
+kategorien = ['A', 'B', 'C', 'D']
+werte = [15, 30, 45, 20]
+
+plt.figure(figsize=(8, 6))
+plt.bar(kategorien, werte, color=['red', 'green', 'blue', 'orange'])
+plt.title('Balkendiagramm')
+plt.xlabel('Kategorien')
+plt.ylabel('Werte')
+plt.show()
+----
+
+== Übungsaufgaben
+
+=== Aufgabe 1: Eigenes Mathe-Modul
+
+Erstelle ein Modul `mathe_tools.py` mit folgenden Funktionen:
+
+* `berechne_durchschnitt(zahlen)` - Mittelwert einer Liste
+* `finde_maximum(zahlen)` - Grösste Zahl in einer Liste
+* `ist_gerade(zahl)` - Prüft, ob Zahl gerade ist
+* `umkehren_string(text)` - Kehrt einen Text um
+
+*Teste dein Modul in einer separaten Datei!*
+
+=== Aufgabe 2: Datum-Modul
+
+Erstelle ein Modul `datum_tools.py` mit:
+
+* `tage_bis_geburtstag(geburtstag)` - Berechnet Tage bis zum nächsten Geburtstag
+* `woechentlich(datum)` - Gibt den Wochentag zurück
+* `formatiere_datum(datum, format)` - Formatiert Datum nach Wunsch
+
+=== Aufgabe 3: Für Schnelle
+
+Erstelle ein Modul `datei_manager.py` mit:
+
+* `zaehle_zeilen(dateiname)` - Zählt Zeilen in einer Datei
+* `finde_wort(dateiname, wort)` - Sucht ein Wort in einer Datei
+* `sichere_kopie(dateiname)` - Erstellt eine Sicherheitskopie
+
+== Mini-Projekt: Modul-Sammlung
+
+Erstelle eine kleine Sammlung von nützlichen Modulen:
+
+=== `text_tools.py`
+[source,python]
+----
+def zaehle_woerter(text):
+    """Zählt die Wörter in einem Text."""
+    return len(text.split())
+
+def bereinige_text(text):
+    """Entfernt überflüssige Leerzeichen."""
+    return ' '.join(text.split())
+
+def ist_palindrom(text):
+    """Prüft, ob ein Text ein Palindrom ist."""
+    text = text.lower().replace(' ', '')
+    return text == text[::-1]
+----
+
+=== `listen_tools.py`
+[source,python]
+----
+def entferne_duplikate(liste):
+    """Entfernt Duplikate aus einer Liste."""
+    return list(set(liste))
+
+def teile_liste(liste, groesse):
+    """Teilt eine Liste in kleinere Stücke."""
+    return [liste[i:i + groesse] for i in range(0, len(liste), groesse)]
+
+def mische_listen(liste1, liste2):
+    """Mischt zwei Listen abwechselnd."""
+    ergebnis = []
+    for a, b in zip(liste1, liste2):
+        ergebnis.extend([a, b])
+    return ergebnis
+----
+
+=== Hauptprogramm `mein_werkzeugkasten.py`
+[source,python]
+----
+import text_tools
+import listen_tools
+
+def demo():
+    """Demonstriert alle Werkzeuge."""
+    
+    # Text-Tools
+    text = "  Hallo   Welt!  Wie   geht's?  "
+    print(f"Original: '{text}'")
+    print(f"Bereinigt: '{text_tools.bereinige_text(text)}'")
+    print(f"Wörter: {text_tools.zaehle_woerter(text)}")
+    print(f"Palindrom 'anna': {text_tools.ist_palindrom('anna')}")
+    
+    print("\n" + "="*40 + "\n")
+    
+    # Listen-Tools
+    zahlen = [1, 2, 3, 1, 4, 5, 2, 6]
+    print(f"Original: {zahlen}")
+    print(f"Ohne Duplikate: {listen_tools.entferne_duplikate(zahlen)}")
+    print(f"In Zweiergruppen: {listen_tools.teile_liste(zahlen, 2)}")
+    
+    liste1 = ['a', 'b', 'c']
+    liste2 = [1, 2, 3]
+    print(f"Gemischt: {listen_tools.mische_listen(liste1, liste2)}")
+
+if __name__ == '__main__':
+    demo()
+----
+
+== Tipps und Best Practices
+
+[TIP]
+====
+* **Modul-Namen:** Verwende Kleinbuchstaben und Unterstriche (`mein_modul.py`)
+* **Dokumentation:** Schreibe immer Docstrings für deine Funktionen
+* **Organisation:** Gruppiere verwandte Funktionen in einem Modul
+* **Testing:** Erstelle immer eine Test-Datei für deine Module
+====
+
+[WARNING]
+====
+* **Häufige Fehler:**
+  * Modul nicht gefunden: Stelle sicher, dass die Datei im selben Verzeichnis ist
+  * Zirkuläre Importe: Modul A importiert B, B importiert A
+  * Namenskonflikte: Zwei Module haben gleiche Funktionsnamen
+====
+
+== Ausblick: Weitere Bibliotheken
+
+Wenn du mehr entdecken möchtest:
+
+* **Web-Entwicklung:** `flask`, `django`
+* **Datenwissenschaft:** `numpy`, `scipy`, `jupyter`
+* **Grafik:** `pygame`, `tkinter` (eingebaut)
+* **Automatisierung:** `selenium`, `beautifulsoup4`
+
+---
+_Viel Erfolg beim Entdecken der Python-Welt! 🌍_

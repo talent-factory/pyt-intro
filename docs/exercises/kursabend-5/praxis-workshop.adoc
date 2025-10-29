@@ -1,0 +1,387 @@
+= Kursabend 5: Praxis-Workshop mit Klassen
+:author: Daniel Senften
+:email: daniel.senften@talent-factory.ch
+:revnumber: 1.0
+:revdate: {localdate}
+:doctype: article
+include::../../locale/attributes-de.adoc[]
+:toc: left
+:sectnums:
+:sectnumlevels: 2
+:imagesdir: images
+:source-highlighter: highlight.js
+:icons: font
+
+== Lektion 2: Mini-Projekt mit Klassen
+
+=== Projekt-Ideen
+
+Wähle eines der folgenden Projekte für die Praxis-Phase:
+
+**Option A: Mini-Bibliothek**
+
+* Verwalte Bücher mit Titel, Autor und ISBN
+* Funktionen: Buch hinzufügen, ausleihen, zurückgeben, suchen
+
+**Option B: Kontaktverwaltung 2.0**
+
+* Erweitere deine bisherige Kontaktverwaltung mit Klassen
+* Funktionen: Kontakt hinzufügen, bearbeiten, Geburtstage anzeigen
+
+**Option C: einfache Bank**
+
+* Verwalte Konten mit Kontostand und Transaktionen
+* Funktionen: Geld einzahlen/abheben, Kontostand anzeigen
+
+**Option D: Spiel-Sammlung**
+
+* Verwalte deine Brettspiele oder Videospiele
+* Funktionen: Spiel hinzufügen, bewerten, nach Genre filtern
+
+=== Projektstruktur
+
+Jedes Projekt sollte folgende Struktur haben:
+
+[source,text]
+----
+projekt_ordner/
+├── projekt.py           # Hauptprogramm mit Klassen
+├── test_projekt.py      # Test-Datei zum Ausprobieren
+└── daten.txt           # Zum Speichern der Daten (optional)
+----
+
+=== Detaillierte Projekt-Beschreibungen
+
+== Option A: Mini-Bibliothek
+
+=== Klassen-Design
+
+[source,python]
+----
+class Buch:
+    def __init__(self, titel, autor, isbn):
+        self.titel = titel
+        self.autor = autor
+        self.isbn = isbn
+        self.ausgeliehen = False
+        self.ausleiher = None
+    
+    def ausleihen(self, person):
+        """Leiht das Buch an eine Person aus."""
+        if not self.ausgeliehen:
+            self.ausgeliehen = True
+            self.ausleiher = person
+            return True
+        return False
+    
+    def zurueckgeben(self):
+        """Gibt das Buch zurück."""
+        if self.ausgeliehen:
+            self.ausgeliehen = False
+            self.ausleiher = None
+            return True
+        return False
+    
+    def zeige_info(self):
+        """Zeigt Buch-Informationen an."""
+        status = "Ausgeliehen" if self.ausgeliehen else "Verfügbar"
+        return f"'{self.titel}' von {self.autor} (ISBN: {self.isbn}) - {status}"
+
+class Bibliothek:
+    def __init__(self, name):
+        self.name = name
+        self.buecher = []
+    
+    def buch_hinzufuegen(self, buch):
+        """Fügt ein neues Buch zur Bibliothek hinzu."""
+        self.buecher.append(buch)
+    
+    def suche_nach_titel(self, titel):
+        """Sucht Bücher nach Titel."""
+        treffer = []
+        for buch in self.buecher:
+            if titel.lower() in buch.titel.lower():
+                treffer.append(buch)
+        return treffer
+    
+    def zeige_alle_buecher(self):
+        """Zeigt alle Bücher in der Bibliothek an."""
+        print(f"\n=== {self.name} - Alle Bücher ===")
+        if not self.buecher:
+            print("Keine Bücher vorhanden.")
+            return
+        
+        for i, buch in enumerate(self.buecher, 1):
+            print(f"{i}. {buch.zeige_info()}")
+----
+
+=== Start-Code
+
+[source,python]
+----
+# test_bibliothek.py
+from bibliothek import Buch, Bibliothek
+
+# Erstelle eine Bibliothek
+meine_bibliothek = Bibliothek("Stadtbibliothek")
+
+# Füge einige Bücher hinzu
+buch1 = Buch("Der kleine Prinz", "Antoine de Saint-Exupéry", "978-3-423-08496-8")
+buch2 = Buch("1984", "George Orwell", "978-3-8321-9703-3")
+buch3 = Buch("Python für Anfänger", "Daniel Senften", "978-3-123-45678-9")
+
+meine_bibliothek.buch_hinzufuegen(buch1)
+meine_bibliothek.buch_hinzufuegen(buch2)
+meine_bibliothek.buch_hinzufuegen(buch3)
+
+# Zeige alle Bücher
+meine_bibliothek.zeige_alle_buecher()
+
+# Leihe ein Buch aus
+if buch1.ausleihen("Anna"):
+    print(f"\nAnna hat '{buch1.titel}' ausgeliehen")
+
+# Zeige aktualisierten Status
+meine_bibliothek.zeige_alle_buecher()
+----
+
+== Option B: Kontaktverwaltung 2.0
+
+=== Klassen-Design
+
+[source,python]
+----
+from datetime import datetime
+
+class Kontakt:
+    def __init__(self, name, telefon, email, geburtstag=None):
+        self.name = name
+        self.telefon = telefon
+        self.email = email
+        self.geburtstag = geburtstag  # Format: YYYY-MM-DD
+        self.notizen = []
+    
+    def notiz_hinzufuegen(self, notiz):
+        """Fügt eine Notiz zum Kontakt hinzu."""
+        zeitpunkt = datetime.now().strftime('%Y-%m-%d %H:%M')
+        self.notizen.append(f"[{zeitpunkt}] {notiz}")
+    
+    def alter_berechnen(self):
+        """Berechnet das Alter des Kontakts."""
+        if not self.geburtstag:
+            return None
+        
+        heute = datetime.now()
+        geb_datum = datetime.strptime(self.geburtstag, '%Y-%m-%d')
+        alter = heute.year - geb_datum.year
+        
+        # Korrektur, wenn Geburtstag dieses Jahr noch nicht war
+        if (heute.month, heute.day) < (geb_datum.month, geb_datum.day):
+            alter -= 1
+        
+        return alter
+    
+    def zeige_info(self):
+        """Zeigt Kontakt-Informationen an."""
+        info = f"\n=== {self.name} ==="
+        info += f"\nTelefon: {self.telefon}"
+        info += f"\nE-Mail: {self.email}"
+        
+        if self.geburtstag:
+            alter = self.alter_berechnen()
+            info += f"\nGeburtstag: {self.geburtstag} ({alter} Jahre)"
+        
+        if self.notizen:
+            info += "\nNotizen:"
+            for notiz in self.notizen[-3:]:  # Zeige die letzten 3 Notizen
+                info += f"\n  {notiz}"
+        
+        return info
+
+class Kontaktverwaltung:
+    def __init__(self):
+        self.kontakte = []
+    
+    def kontakt_hinzufuegen(self, kontakt):
+        """Fügt einen neuen Kontakt hinzu."""
+        self.kontakte.append(kontakt)
+    
+    def suche_kontakt(self, suchbegriff):
+        """Sucht Kontakte nach Namen."""
+        treffer = []
+        for kontakt in self.kontakte:
+            if suchbegriff.lower() in kontakt.name.lower():
+                treffer.append(kontakt)
+        return treffer
+    
+    def naechste_geburtstage(self, tage=30):
+        """Zeigt Kontakte mit Geburtstag in den nächsten X Tagen."""
+        heute = datetime.now()
+        naechste = []
+        
+        for kontakt in self.kontakte:
+            if kontakt.geburtstag:
+                geb_datum = datetime.strptime(kontakt.geburtstag, '%Y-%m-%d')
+                # Geburtstag dieses Jahr berechnen
+                geb_this_year = datetime(heute.year, geb_datum.month, geb_datum.day)
+                
+                # Differenz berechnen
+                diff_tage = (geb_this_year - heute).days
+                
+                if 0 <= diff_tage <= tage:
+                    naechste.append((kontakt, diff_tage))
+        
+        return sorted(naechste, key=lambda x: x[1])
+----
+
+== Option C: einfache Bank
+
+=== Klassen-Design
+
+[source,python]
+----
+from datetime import datetime
+
+class Konto:
+    def __init__(self, kontonummer, inhaber, startguthaben=0):
+        self.kontonummer = kontonummer
+        self.inhaber = inhaber
+        self.kontostand = startguthaben
+        self.transaktionen = []
+        
+        if startguthaben > 0:
+            self._transaktion_eintragen("Einzahlung", startguthaben)
+    
+    def _transaktion_eintragen(self, typ, betrag):
+        """Private Methode zum Eintragen von Transaktionen."""
+        zeitpunkt = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        self.transaktionen.append({
+            'zeitpunkt': zeitpunkt,
+            'typ': typ,
+            'betrag': betrag,
+            'kontostand': self.kontostand
+        })
+    
+    def einzahlen(self, betrag):
+        """Zahlt Geld auf das Konto ein."""
+        if betrag > 0:
+            self.kontostand += betrag
+            self._transaktion_eintragen("Einzahlung", betrag)
+            return True
+        return False
+    
+    def abheben(self, betrag):
+        """Hebt Geld vom Konto ab."""
+        if betrag > 0 and self.kontostand >= betrag:
+            self.kontostand -= betrag
+            self._transaktion_eintragen("Auszahlung", betrag)
+            return True
+        return False
+    
+    def ueberweisen(self, ziel_konto, betrag):
+        """Überweist Geld auf ein anderes Konto."""
+        if self.abheben(betrag):
+            ziel_konto.einzahlen(betrag)
+            self._transaktion_eintragen(f"Überweisung an {ziel_konto.kontonummer}", betrag)
+            return True
+        return False
+    
+    def kontoauszug(self):
+        """Erstellt einen Kontoauszug."""
+        auszug = f"\n=== Kontoauszug für {self.inhaber} ==="
+        auszug += f"\nKontonummer: {self.kontonummer}"
+        auszug += f"\nAktueller Kontostand: CHF {self.kontostand:.2f}"
+        auszug += "\n\nLetzte Transaktionen:"
+        
+        for trans in self.transaktionen[-5:]:  # Zeige die letzten 5 Transaktionen
+            auszug += f"\n{trans['zeitpunkt']} - {trans['typ']}: CHF {trans['betrag']:.2f}"
+        
+        return auszug
+
+class Bank:
+    def __init__(self, name):
+        self.name = name
+        self.konten = {}
+    
+    def konto_erstellen(self, inhaber, startguthaben=0):
+        """Erstellt ein neues Konto."""
+        kontonummer = f"CH{len(self.konten) + 1:04d}"
+        neues_konto = Konto(kontonummer, inhaber, startguthaben)
+        self.konten[kontonummer] = neues_konto
+        return neues_konto
+    
+    def konto_suchen(self, kontonummer):
+        """Sucht ein Konto nach Kontonummer."""
+        return self.konten.get(kontonummer)
+    
+    def alle_konten_anzeigen(self):
+        """Zeigt alle Konten der Bank an."""
+        print(f"\n=== {self.name} - Alle Konten ===")
+        for konto in self.konten.values():
+            print(f"{konto.kontonummer} - {konto.inhaber}: CHF {konto.kontostand:.2f}")
+----
+
+== Arbeitsanweisungen für die Praxis-Phase
+
+=== Schritt 1: Projekt auswählen (5 Min)
+
+* Wähle eine der Optionen A-D
+* Überlege kurz, welche Funktionen du umsetzen möchtest
+* Schreibe einen kleinen Plan auf
+
+=== Schritt 2: Grundgerüst erstellen (15 Min)
+
+* Erstelle die Haupt-Klasse mit `__init__`
+* Implementiere 2-3 wichtige Methoden
+* Erstelle ein Test-Objekt und teste die Grundfunktionen
+
+=== Schritt 3: Funktionen erweitern (15 Min)
+
+* Füge weitere Methoden hinzu
+* Implementiere die Verwaltungs-Klasse (falls vorhanden)
+* Teste jede neue Funktion sofort
+
+=== Schritt 4: Finetuning (5 Min)
+
+* Füge Kommentare hinzu
+* Teste das komplette Programm
+* Überlege, was du noch verbessern könntest
+
+=== Präsentations-Vorbereitung
+
+Bereite eine kurze Präsentation (2-3 Minuten) vor:
+
+* Welches Projekt hast du gewählt?
+* Welche Klassen hast du erstellt?
+* Welche Funktionen funktionieren?
+* Was war die grösste Herausforderung?
+
+== Hilfestellungen und Tipps
+
+[TIP]
+====
+* **Fang klein an:** Implementiere zuerst die wichtigsten Funktionen
+* **Teste oft:** Erstelle nach jeder Methode ein Test-Objekt
+* **Nutze die Konsole:** `print()` ist dein bester Freund beim Debuggen
+* **Schaue in die Beispiele:** Die Start-Codes geben dir gute Hinweise
+====
+
+[WARNING]
+====
+* **Häufige Probleme:**
+  * Vergessen, `self` bei Methoden zu verwenden
+  * Variablennamen falsch geschrieben
+  * Logikfehler bei Bedingungen (z.B. `if betrag > 0` vergessen)
+====
+
+== Bonus-Aufgaben (für Schnelle)
+
+Wenn du mit deinem Hauptprojekt fertig bist:
+
+1. **Speichern:** Implementiere das Speichern und Laden der Daten in eine Datei
+2. **Suche:** Füge erweiterte Suchfunktionen hinzu
+3. **GUI:** Erstelle eine einfache Benutzeroberfläche mit `input()`/`print()`
+4. **Validierung:** Füge Eingabeprüfungen hinzu (z.B. für E-Mail-Formate)
+
+---
+_Viel Erfolg bei deinem Projekt! 🚀_
